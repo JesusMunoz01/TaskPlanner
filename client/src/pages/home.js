@@ -4,8 +4,20 @@ export const Home = () => {
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
 
-    function sendTask(e){
+    async function sendTask(e){
         e.preventDefault();
+        await fetch(`${process.env.REACT_APP_BASE_URL}/addTask`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title,
+                desc,
+                })
+            });
+
+        setTitle('');
+        setDesc('');
     }
 
     return <div>
