@@ -12,8 +12,8 @@ app.use(cors());
 
 app.post("/addTask", async (req, res) =>{
     const newTask = new TaskModel({
-        title: 'Finish backend',
-        description: 'Finished backend setup by end of day'
+        title: req.body.title,
+        description: req.body.desc
     });
     const createdTask = await newTask.save();
     res.json(createdTask)
