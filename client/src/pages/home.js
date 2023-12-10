@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useEffect } from "react";
 
 export const Home = () => {
+    const [tasks, setTasks] = useState([]);
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
 
@@ -20,8 +22,32 @@ export const Home = () => {
         setDesc('');
     }
 
+    useEffect(() => {
+        console.log("...calling effect");
+          (async () => {
+            try{
+            console.log("...making fetch call");
+            const taskResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/fetchTasks`);
+            const taskData = await taskResponse.json();
+            console.log("...updating state");
+            setTasks(taskData);
+          } catch(error){
+
+          }
+        })();
+      }, []);
+
     return <div>
+        <div className="intro">
         <h1>Checklist</h1>
+            <div className="tasks">
+                {tasks.map((task)=> (
+                    <li key={task._id}>
+                        {task.title}
+                    </li>
+                ))}
+            </div>
+        </div>
         <h2>Add Task</h2>
         <form>
             <label>Title: </label>
