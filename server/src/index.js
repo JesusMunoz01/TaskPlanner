@@ -44,4 +44,10 @@ app.post("/addTask", async (req, res) =>{
     res.json(createdTask)
 })
 
+app.delete('/tasks/:taskID', async (req, res) => {
+    const taskID = req.params.taskID;
+    const delTask = await TaskModel.findByIdAndDelete(taskID)
+    res.json(delTask)
+})
+
 app.listen(process.env.APP_PORT, () => console.log(`Server listening on port ${process.env.APP_PORT}`));
