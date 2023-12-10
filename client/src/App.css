@@ -1,16 +1,16 @@
 .App {
+  display: flex;
   text-align: center;
+  flex-direction: column;
+  gap: 10px;
+  height: 100vh;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.App form {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 .App-header {
@@ -35,4 +35,82 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.pageFormat {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: left;
+}
+
+.navbar {
+  width: 6%;
+  float: left;
+  display: flex;
+  grid-gap: 10px;
+  justify-content: center;
+  align-items:start;
+  background-color: #282c34;
+}
+
+.links {
+  display: grid;
+  grid-gap: 30px;
+  justify-content: center;
+  align-items:start;
+  background-color: #282c34;
+}
+
+.navbar li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar a:link, a:visited{
+  color: white;
+  text-decoration: none;
+}
+
+.navbar a:hover{
+  color: green;
+}
+
+.home{
+  display: flex;
+  flex-direction: column;
+  grid-gap: 10px;
+  align-items:center;
+  height: 100%;
+  width: 100%;
+}
+
+.tasks {
+  display: grid;
+  grid-gap: 5px;
+  width: 70vw;
+  margin: 0 auto;
+  grid-template-columns: repeat(1, 1fr);
+  border-radius: 10px;
+  border-style: solid;
+}
+
+.tasks li {
+  margin: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 99%;
+  height: 30px;
+  border-radius: 10px;
+  border-style: groove;
+}
+
+.intro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
