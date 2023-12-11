@@ -8,6 +8,8 @@ export const Login = () => {
 
     async function createUser(e){
         e.preventDefault();
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
+        if(passwordRegex.test(newPassword))
         await fetch(`${process.env.REACT_APP_BASE_URL}/addUser`, {
             method: "POST", headers: {
                 'Content-Type': 'application/json'
@@ -17,6 +19,8 @@ export const Login = () => {
                 password,
                 })
             });
+        else
+            console.log("Failed")
 
         setUsername('');
         setPassword('');
@@ -52,7 +56,8 @@ export const Login = () => {
             <label>Username: </label>
             <input id="createUser" value={newUsername} onChange={(e) => setNewUsername(e.target.value)}></input>
             <label>Password: </label>
-            <input id="createPassword" type={password} value={newPassword} onChange={(e) => setNewPassword(e.target.value)}></input>
+            <input id="createPassword" type={password} value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}></input>
             <button onClick={(e) => createUser(e)}>Create Account</button>
         </form>
     </div>
