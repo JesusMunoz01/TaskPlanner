@@ -1,15 +1,17 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import { useCookies } from 'react-cookie'
 import { useNavigate } from "react-router-dom";
 
-export const Login = () => {
+
+export const Login = ({loginStatus}) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [newUsername, setNewUsername] = useState("");
     const [newPassword, setNewPassword] = useState("");
-    const [_, setCookies] = useCookies(["access_token"]);
+    const [, setCookies] = useCookies(["access_token"]);
     const navigate = useNavigate();
-
+    
     async function createUser(e){
         e.preventDefault();
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
@@ -40,6 +42,7 @@ export const Login = () => {
 
     async function logUser(e){
         e.preventDefault();
+
         try{
             const response = await fetch(`${process.env.REACT_APP_BASE_URL}/userLogin`, {
                 method: "POST", headers: {
@@ -54,6 +57,7 @@ export const Login = () => {
             if(data.token){
                 setCookies("access_token", data.token, {maxAge: 3600});
                 window.localStorage.setItem("userId", data.userId);
+                loginStatus("Now logged");
                 navigate('/');
             }
         }   catch(error){

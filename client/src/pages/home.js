@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useEffect } from "react";
 import { useCookies } from 'react-cookie'
 
 export const Home = (data) => {
@@ -7,23 +6,30 @@ export const Home = (data) => {
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
+    console.log(tasks)
 
     async function sendTask(e){
         e.preventDefault();
-        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addTask`, {
-            method: "POST", headers: {
-                'Content-Type': 'application/json',
-                auth: cookies.access_token
-            },
-            body: JSON.stringify({
-                title,
-                desc,
-                })
-            });
-        console.log(res)
-        const task = await res.json()
-        console.log(task)
-        setTasks([...tasks, task])
+        try{
+            const userID = window.localStorage.getItem("userId");
+            console.log(userID)
+            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addTask`, {
+                method: "POST", headers: {
+                    'Content-Type': 'application/json',
+                    auth: cookies.access_token
+                },
+                body: JSON.stringify({
+                    userID,
+                    title,
+                    desc,
+                    })
+                });
+            const task = await res.json()
+            console.log(task)
+            setTasks([...tasks, task])
+        }catch(error){
+            console.log(error)
+        }
 
         setTitle('');
         setDesc('');

@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie'
 
-export const Navbar = () => {
+export const Navbar = ({loginStatus}) => {
     const [cookies, setCookies] = useCookies(["access_token"]);
 
     const logout = () => {
         setCookies('access_token', "")
         window.localStorage.removeItem("userId");
+        loginStatus("Logged out");
     }
 
     return <div className='navbar'>
