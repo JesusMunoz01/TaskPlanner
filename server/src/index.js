@@ -3,7 +3,9 @@ const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const TaskModel = require('./models/tasks')
+const UserModel = require('./models/users.js')
 const userRouter = require('./routes/users.js')
+var jwt = require('jsonwebtoken');
 
 const app = express()
 const db = mongoose.connect(process.env.MONGO_DB)
@@ -29,14 +31,24 @@ app.get("/fetchTasks", async (req, res) =>{
     res.json(tasks);
 })
 
+app.get("/fetchTasks/:userID", async (req, res) =>{
+    const userCheck = req.params.userID
+    const tasks = await UserModel.findOne({_id: userCheck});
+    console.log(tasks)
+    res.json(tasks.tasks);
+})
+
 app.post("/addTask", verifyToken , async (req, res) =>{
+    const user = req.body.userID;
+    const userCheck = await UserModel.findOne({_id: user})
     const newTask = new TaskModel({
         title: req.body.title,
         description: req.body.desc
     });
     try{
-        const createdTask = await newTask.save();
-        res.json(createdTask)
+        userCheck.tasks.push(newTask);
+        await userCheck.save();
+        res.json(newTask)
     }catch(error){
         res.json({error: error, message: "Title and description is required"})
     }
