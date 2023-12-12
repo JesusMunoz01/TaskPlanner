@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import { useCookies } from 'react-cookie'
 
 export const Home = (data) => {
     const [tasks, setTasks] = useState(data.data);
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
+    const [cookies, ] = useCookies(["access_token"]);
 
     async function sendTask(e){
         e.preventDefault();
         const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addTask`, {
             method: "POST", headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                auth: cookies.access_token
             },
             body: JSON.stringify({
                 title,
@@ -28,7 +31,7 @@ export const Home = (data) => {
 
     async function delTask(taskId){
         await fetch(`${process.env.REACT_APP_BASE_URL}/tasks/${taskId}`, {
-            method: "DELETE"});
+            method: "DELETE", headers: {auth: cookies.access_token}});
 
         setTasks(tasks.filter((task) => task._id !== taskId))
     }
