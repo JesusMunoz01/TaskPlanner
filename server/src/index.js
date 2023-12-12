@@ -26,7 +26,6 @@ const verifyToken = (req, res, next) => {
 
 app.get("/fetchTasks", async (req, res) =>{
     const tasks = await TaskModel.find();
-    console.log(tasks)
     res.json(tasks);
 })
 
@@ -35,8 +34,13 @@ app.post("/addTask", verifyToken , async (req, res) =>{
         title: req.body.title,
         description: req.body.desc
     });
-    const createdTask = await newTask.save();
-    res.json(createdTask)
+    try{
+        const createdTask = await newTask.save();
+        res.json(createdTask)
+    }catch(error){
+        res.json({error: error, message: "Title and description is required"})
+    }
+    
 })
 
 app.delete('/tasks/:taskID', verifyToken, async (req, res) => {
