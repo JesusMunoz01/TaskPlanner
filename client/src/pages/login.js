@@ -14,18 +14,22 @@ export const Login = () => {
         e.preventDefault();
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
         if(passwordRegex.test(newPassword)){
-            const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addUser`, {
-                method: "POST", headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    newUsername,
-                    newPassword,
-                    })
-                });
-            alert("Registration Completed")
-            const data = await res.json()
-            console.log(data)
+            try{
+                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addUser`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        newUsername,
+                        newPassword,
+                        })
+                    });
+                alert("Registration Completed")
+                const data = await res.json()
+                console.log(data)
+            }catch(error){
+                console.log(error)
+            }
         }
         else
             console.error("Failed Registration")
@@ -48,7 +52,7 @@ export const Login = () => {
                 });
             const data = await response.json();
             if(data.token){
-                setCookies("access_token", data.token);
+                setCookies("access_token", data.token, {maxAge: 3600});
                 window.localStorage.setItem("userId", data.userId);
                 navigate('/');
             }

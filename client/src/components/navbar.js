@@ -11,8 +11,8 @@ export const Navbar = () => {
 
     return <div className='navbar'>
         <div className="links">
-            <li><Link to={"/login"}>Login</Link></li>
-            <li>{!cookies.access_token ? (<Link to={"/"}>Home</Link>) : <button onClick={logout}>Logout</button>}</li>
+            <li>{!cookies.access_token ? (<Link to={"/login"}>Login</Link>) : <button onClick={logout}>Logout</button>}</li>
+            <li><Link to={"/"}>Home</Link></li>
         </div>
     </div>
 }
