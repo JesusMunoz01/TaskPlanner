@@ -9,23 +9,46 @@ import { Login } from './pages/login';
 function App() {
   const [taskData, setTaskData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [logStatus, setLogStatus] = useState("Not Logged");
+
+  const loginStatus = (stat) => {
+    setLogStatus(stat);
+    setLoading(true);
+  }
 
   useEffect(() => {
     console.log("...calling effect");
       (async () => {
-        try{
-        setLoading(true);
-        console.log("...making fetch call");
-        const taskResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/fetchTasks`);
-        const taskData = await taskResponse.json();
-        console.log("...updating state");
-        setLoading(false);
-        setTaskData(taskData);
-      } catch(error){
+        if(window.localStorage.getItem("userId") !== null){
+          try{
+            console.log("user data now")
+            setLoading(true);
+            console.log("...making fetch call");
+            const id = window.localStorage.getItem("userId")
+            const taskResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/fetchTasks/${id}`);
+            const taskData = await taskResponse.json();
+            console.log("...updating state");
+            setLoading(false);
+            setTaskData(taskData);
+            console.log(taskData)
+            }catch(error){
+        
+            }
+        }else{
+          try{
+          setLoading(true);
+          console.log("...making fetch call");
+          const taskResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/fetchTasks`);
+          const taskData = await taskResponse.json();
+          console.log("...updating state");
+          setLoading(false);
+          setTaskData(taskData);
+          } catch(error){
 
+          }
       }
     })();
-  }, []);
+  }, [logStatus]);
 
   return (
     <>
@@ -36,12 +59,12 @@ function App() {
       <Router>
         <div className='pageFormat'>
           <div className='navbar'>
-            <Navbar />
+            <Navbar loginStatus={loginStatus}/>
           </div>
           <div className='home'>
           <Routes>
             <Route path="/" element={<Home data={taskData}/>} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login loginStatus={loginStatus}/>} />
           </Routes>
           </div>
         </div>
