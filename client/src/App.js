@@ -9,11 +9,13 @@ import { Login } from './pages/login';
 function App() {
   const [taskData, setTaskData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userLogin, setLogin] = useState(false);
   const [logStatus, setLogStatus] = useState("Not Logged");
 
   const loginStatus = (stat) => {
     setLogStatus(stat);
     setLoading(true);
+    setLogin(true);
   }
 
   useEffect(() => {
@@ -37,12 +39,11 @@ function App() {
         }else{
           try{
           setLoading(true);
-          console.log("...making fetch call");
-          const taskResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/fetchTasks`);
-          const taskData = await taskResponse.json();
-          console.log("...updating state");
+          console.log("Searching local Storage");
+          const localTasks = window.localStorage.getItem("localTaskData");
+          console.log("Updating data");
           setLoading(false);
-          setTaskData(taskData);
+          setTaskData(localTasks);
           } catch(error){
 
           }
@@ -63,7 +64,7 @@ function App() {
           </div>
           <div className='home'>
           <Routes>
-            <Route path="/" element={<Home data={taskData}/>} />
+            <Route path="/" element={<Home data={taskData} isLogged={userLogin}/>} />
             <Route path="/login" element={<Login loginStatus={loginStatus}/>} />
           </Routes>
           </div>
