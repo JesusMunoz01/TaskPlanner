@@ -10,10 +10,10 @@ export const Navbar = ({loginStatus}) => {
         loginStatus("Logged out");
     }
 
-    return <div className='navbar'>
+    return <div>
         <div className="links">
-            <li>{!cookies.access_token ? (<Link to={"/login"}>Login</Link>) : <button onClick={logout}>Logout</button>}</li>
-            <li><Link to={"/"}>Home</Link></li>
+            <li>{!cookies.access_token ? (<Link to={"/login"}><span>Login</span></Link>) : <button onClick={logout}>Logout</button>}</li>
+            <li><Link to={"/"}><span>Home</span></Link></li>
         </div>
     </div>
 }
