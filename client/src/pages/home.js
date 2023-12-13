@@ -35,10 +35,12 @@ export const Home = (data) => {
             const getLocal = window.localStorage.getItem("localTaskData");
             let nextId = 0;
             let localTask = [];
+            let lastTask = [];
             if(getLocal)
                 localTask = JSON.parse(window.localStorage.getItem("localTaskData"))
             let localCopy = JSON.parse(window.localStorage.getItem("localTaskData"))
-            let lastTask = localCopy.pop();
+            if(localCopy)
+                lastTask = localCopy.pop();
             if(lastTask)
                 nextId = lastTask._id + 1;
 
@@ -68,8 +70,15 @@ export const Home = (data) => {
         else{
             const delItem = JSON.parse(tasks).filter((task) => task._id !== taskId)
             window.localStorage.setItem("localTaskData", JSON.stringify(delItem))
-            const getUpdatedLocal = window.localStorage.getItem("localTaskData");
-            setTasks(getUpdatedLocal);
+            console.log(JSON.parse(tasks).length)
+            console.log(JSON.parse(tasks).length === 0)
+            if(JSON.parse(tasks).length === 1){
+                window.localStorage.removeItem("localTaskData");
+                setTasks(null);
+            }else{
+                const getUpdatedLocal = window.localStorage.getItem("localTaskData");
+                setTasks(getUpdatedLocal);
+            }
         }
     }
 
@@ -97,13 +106,15 @@ export const Home = (data) => {
                 }
             </div>
         </div>
-        <h2>Add Task</h2>
-        <form>
-            <label>Title: </label>
-            <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
-            <label>Description: </label>
-            <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
-            <button onClick={(e) => sendTask(e)}>Submit</button>
-        </form>
+        <div className="addTask">
+            <h2>Add Task</h2>
+            <form>
+                <label>Title: </label>
+                <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                <label>Description: </label>
+                <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
+                <button onClick={(e) => sendTask(e)}>Submit</button>
+            </form>
+        </div>
     </div>
 }

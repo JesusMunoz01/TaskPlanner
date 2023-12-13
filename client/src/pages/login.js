@@ -67,22 +67,26 @@ export const Login = ({loginStatus}) => {
         setPassword('');
     }
 
-    return <div>
+    return <div className="loginPage">
         <h1>Login</h1>
-        <form>
-            <label>Username: </label>
-            <input id="logUser" value={username} onChange={(e) => setUsername(e.target.value)}></input>
-            <label>Password: </label>
-            <input id="logPassword" type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
-            <button onClick={(e) => logUser(e)}>Login</button>
-        </form>
+        <div className="loginPage-loginPrompt">
+            <form>
+                <label>Username: </label>
+                <input id="logUser" value={username} onChange={(e) => setUsername(e.target.value)}></input>
+                <label>Password: </label>
+                <input id="logPassword" type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
+                <button onClick={(e) => logUser(e)}>Login</button>
+            </form>
+        </div>
         <h1>Create an Account</h1>
-        <form>
-            <label htmlFor="createUser">Username: </label>
-            <input id="createUser" type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value)}></input>
-            <label htmlFor="createPassword">Password: </label>
-            <input id="createPassword" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}></input>
-            <button onClick={(e) => createUser(e)}>Create Account</button>
-        </form>
+        <div className="loginPage-createAccountPrompt">
+            <form>
+                <label htmlFor="createUser">Username: </label>
+                <input id="createUser" type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value)}></input>
+                <label htmlFor="createPassword">Password: </label>
+                <input id="createPassword" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}></input>
+                <button onClick={(e) => createUser(e)}>Create Account</button>
+            </form>
+        </div>
     </div>
 }
