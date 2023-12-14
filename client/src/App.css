@@ -85,7 +85,6 @@
 .home{
   display: flex;
   flex-direction: column;
-  grid-gap: 10px;
   align-items:center;
   height: 100%;
   width: 100%;
@@ -95,8 +94,7 @@
   display: flex;
   flex-direction: column;
   width: 70vw;
-  height: 500px;
-  margin: 0 auto;
+  height: 50vh;
   border-radius: 10px;
   border-style: solid;
   overflow-y: auto;
@@ -128,11 +126,21 @@
   left: 96%;
 }
 
+.addTask{
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  flex-direction: column;
+  width: 99%;
+  height: 20%;
+}
+
 .intro {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  height: fit-content;
 }
 
 .loginPage{
@@ -160,6 +168,7 @@
   height: 50%;
   justify-content: center;
   align-self: center;
+  width: 40%;
 }
 
 .loginPage-loginPrompt form label{
@@ -167,15 +176,18 @@
   font-weight: bold;
 }
 
+.loginPage-loginPrompt form input{
+  display: flex;
+  height: 10%;
+  margin: 0;
+  padding: 1px;
+}
+
 .loginPage-loginPrompt form button{
   margin-top: 5%;
   border-radius: 10px;
   font-size: large;
   background-color: white;
-}
-
-.loginPage-loginPrompt form input{
-  width: 80%;
 }
 
 .loginPage-createAccountPrompt{
@@ -194,6 +206,7 @@
   height: 50%;
   justify-content: center;
   align-self: center;
+  width: 40%;
 }
 
 .loginPage-createAccountPrompt form label{
@@ -202,7 +215,10 @@
 }
 
 .loginPage-createAccountPrompt form input{
-  width: 80%;
+  display: flex;
+  height: 10%;
+  margin: 0;
+  padding: 2px;
 }
 
 .loginPage-createAccountPrompt form button{
@@ -223,6 +239,7 @@
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   .pageFormat {
@@ -342,7 +359,7 @@
     display: flex;
     flex-direction: column;
     height: 95%;
-    width: 50%;
+    width: 90%;
     justify-content: flex-start;
     align-items: center;
   }
@@ -350,7 +367,7 @@
   .loginPage-loginPrompt{
     display: flex;
     height: 40%;
-    width: 80%;
+    width: 100%;
     justify-content: center;
     border-style: ridge;
     border-radius: 10px;
@@ -375,6 +392,7 @@
     border-radius: 10px;
     font-size: large;
     background-color: white;
+    margin-bottom: 5%;
   }
   
   .loginPage-loginPrompt form input{
@@ -384,7 +402,7 @@
   .loginPage-createAccountPrompt{
     display: flex;
     height: 40%;
-    width: 80%;
+    width: 100%;
     justify-content: center;
     border-style: ridge;
     border-radius: 10px;
@@ -413,5 +431,6 @@
     border-radius: 10px;
     font-size: large;
     background-color: white;
+    margin-bottom: 5%;
   }
 }
