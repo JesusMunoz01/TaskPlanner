@@ -105,16 +105,16 @@ export const Home = (data) => {
                         <span>Currently no tasks</span>
                 }
             </div>
-        </div>
-        <div className="addTask">
-            <h2>Add Task</h2>
-            <form>
-                <label>Title: </label>
-                <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
-                <label>Description: </label>
-                <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
-                <button onClick={(e) => sendTask(e)}>Submit</button>
-            </form>
+            <div className="addTask">
+                <h2>Add Task</h2>
+                <form>
+                    <label>Title: </label>
+                    <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                    <label>Description: </label>
+                    <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
+                    <button onClick={(e) => sendTask(e)}>Submit</button>
+                </form>
+            </div>
         </div>
     </div>
 }
