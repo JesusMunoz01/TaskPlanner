@@ -7,6 +7,7 @@ export const Home = (data) => {
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
+    const [filterOptn, setFiler] = useState(1)
 
     async function sendTask(e){
         e.preventDefault();
@@ -82,9 +83,36 @@ export const Home = (data) => {
         }
     }
 
+    function filterTask(action){
+        const selected = document.getElementById(`${action}`)
+        switch(action){
+            case "filter1":
+                selected.style.color = "green"
+                document.getElementById("filter2").style.color = "white"
+                document.getElementById("filter3").style.color = "white"
+                break;
+            case "filter2":
+                selected.style.color = "green"
+                document.getElementById("filter1").style.color = "white"
+                document.getElementById("filter3").style.color = "white"
+                break;
+            case "filter3":
+                selected.style.color = "green"
+                document.getElementById("filter1").style.color = "white"
+                document.getElementById("filter2").style.color = "white"
+                break;
+        }
+
+    }
+
     return <div>
         <div className="intro">
         <h1>Checklist</h1>
+            <span className="filterClass">
+                <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id)}>All Tasks</button>
+                <button id="filter2" onClick={(e) => filterTask(e.target.id)}>Completed</button>
+                <button id="filter3" onClick={(e) => filterTask(e.target.id)}>Incompleted</button>
+            </span>
             <div className="tasks">
                 {isUserLogged ?
                     tasks ? 
