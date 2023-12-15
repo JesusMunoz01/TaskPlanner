@@ -113,6 +113,26 @@
     align-items: center;
     flex-direction: column;
     height: fit-content;
+    height: 100%;
+    width: 100%;
+  }
+
+  .filterClass{
+    display: flex;
+    align-items: flex-start;
+    width: 98%;
+  }
+
+  .filterClass button{
+    display:flex;
+    width: 10vw;
+    height: 2.5svh;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #282c34;
+    color: white;
+    border-style: ridge;
   }
 
   .loginPage{
@@ -343,6 +363,28 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  .filterClass{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 98%;
+  }
+
+  .filterClass button{
+    font-size: 70%;
+    display:flex;
+    width: 23vw;
+    height: 4vh;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #282c34;
+    color: white;
+    border-style: groove;
   }
   
   .loginPage{

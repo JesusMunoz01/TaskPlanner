@@ -43,7 +43,8 @@ app.post("/addTask", verifyToken , async (req, res) =>{
     const userCheck = await UserModel.findOne({_id: user})
     const newTask = new TaskModel({
         title: req.body.title,
-        description: req.body.desc
+        description: req.body.desc,
+        status: req.body.status
     });
     try{
         userCheck.tasks.push(newTask);
