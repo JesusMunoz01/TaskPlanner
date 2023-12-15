@@ -3,11 +3,11 @@ import { useCookies } from 'react-cookie'
 
 export const Home = (data) => {
     const [tasks, setTasks] = useState(data.data);
+    const [taskFilter, setCurrentFilter] = useState(data.data);
     const [isUserLogged, ] = useState(data.isLogged)
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
-    const [filterOptn, setFiler] = useState(1)
 
     async function sendTask(e){
         e.preventDefault();
@@ -24,11 +24,12 @@ export const Home = (data) => {
                         userID,
                         title,
                         desc,
+                        status: "incomplete"
                         })
                     });
                 const task = await res.json()
-                console.log(task)
                 setTasks([...tasks, task])
+                setCurrentFilter([...tasks, task])
             }catch(error){
                 console.log(error)
             }
@@ -42,19 +43,18 @@ export const Home = (data) => {
             let localCopy = JSON.parse(window.localStorage.getItem("localTaskData"))
             if(localCopy)
                 lastTask = localCopy.pop();
-            if(lastTask)
+            if(lastTask.length !== 0)
                 nextId = lastTask._id + 1;
 
                 const newTask = {
-                    title: title, description: desc, _id: nextId
+                    title: title, description: desc, _id: nextId, status:"incomplete"
                 }
 
             localTask.push(newTask)
             window.localStorage.setItem("localTaskData", JSON.stringify(localTask))
-            console.log(window.localStorage.getItem("localTaskData"))
             const getUpdatedLocal = window.localStorage.getItem("localTaskData");
             setTasks(getUpdatedLocal);
-            
+            setCurrentFilter(getUpdatedLocal);
         }
 
         setTitle('');
@@ -67,39 +67,56 @@ export const Home = (data) => {
             method: "DELETE", headers: {auth: cookies.access_token}});
 
         setTasks(tasks.filter((task) => task._id !== taskId))
+        setCurrentFilter(tasks);
     }
         else{
             const delItem = JSON.parse(tasks).filter((task) => task._id !== taskId)
             window.localStorage.setItem("localTaskData", JSON.stringify(delItem))
-            console.log(JSON.parse(tasks).length)
-            console.log(JSON.parse(tasks).length === 0)
             if(JSON.parse(tasks).length === 1){
                 window.localStorage.removeItem("localTaskData");
                 setTasks(null);
+                setCurrentFilter(null);
             }else{
                 const getUpdatedLocal = window.localStorage.getItem("localTaskData");
                 setTasks(getUpdatedLocal);
+                setCurrentFilter(tasks);
             }
         }
     }
 
     function filterTask(action){
         const selected = document.getElementById(`${action}`)
+        let data = [];
+        if(!isUserLogged)
+        data = JSON.parse(tasks)
+        else
+        data = tasks;
         switch(action){
             case "filter1":
                 selected.style.color = "green"
                 document.getElementById("filter2").style.color = "white"
                 document.getElementById("filter3").style.color = "white"
+                isUserLogged ? 
+                setCurrentFilter(data) : 
+                setCurrentFilter(JSON.stringify(data));
                 break;
             case "filter2":
                 selected.style.color = "green"
                 document.getElementById("filter1").style.color = "white"
                 document.getElementById("filter3").style.color = "white"
+                isUserLogged ?
+                setCurrentFilter(data.filter((task) => task.status === "completed")) :
+                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "completed")))
                 break;
             case "filter3":
                 selected.style.color = "green"
                 document.getElementById("filter1").style.color = "white"
                 document.getElementById("filter2").style.color = "white"
+                isUserLogged ?
+                setCurrentFilter(data.filter((task) => task.status === "incomplete")) :
+                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "incomplete")))
+                break;
+            default:
                 break;
         }
 
@@ -111,20 +128,20 @@ export const Home = (data) => {
             <span className="filterClass">
                 <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id)}>All Tasks</button>
                 <button id="filter2" onClick={(e) => filterTask(e.target.id)}>Completed</button>
-                <button id="filter3" onClick={(e) => filterTask(e.target.id)}>Incompleted</button>
+                <button id="filter3" onClick={(e) => filterTask(e.target.id)}>Incomplete</button>
             </span>
             <div className="tasks">
                 {isUserLogged ?
-                    tasks ? 
-                        tasks.map((task)=> (
+                    taskFilter ? 
+                        taskFilter.map((task)=> (
                             <li key={task._id}>
                                 {task.title}
                                 <button onClick={() => delTask(task._id)}>x</button>
                             </li>
                         )) : 
                         <span>Currently no tasks</span> :
-                    tasks ?
-                        JSON.parse(tasks).map((task)=> (
+                    taskFilter ?
+                        JSON.parse(taskFilter).map((task)=> (
                             <li key={task._id}>
                                 {task.title}
                                 <button onClick={() => delTask(task._id)}>x</button>

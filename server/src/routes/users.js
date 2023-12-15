@@ -19,7 +19,8 @@ userRouter.post("/addUser", async (req, res) =>{
 
         const newUser = new UserModel({
             username: newUsername,
-            password: hashedPassword
+            password: hashedPassword,
+            tasks: null
         });
 
         try{

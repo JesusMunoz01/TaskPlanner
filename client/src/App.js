@@ -24,6 +24,7 @@ function App() {
         if(window.localStorage.getItem("userId") !== null){
           try{
             console.log("user data now")
+            setLogin(true)
             setLoading(true);
             console.log("...making fetch call");
             const id = window.localStorage.getItem("userId")
@@ -39,6 +40,7 @@ function App() {
         }else{
           try{
           setLoading(true);
+          setLogin(false)
           console.log("Searching local Storage");
           const localTasks = window.localStorage.getItem("localTaskData");
           console.log("Updating data");
