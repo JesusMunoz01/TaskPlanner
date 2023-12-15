@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie';
+import { BsGearFill } from "react-icons/bs";
 
 export const Home = (data) => {
     const [tasks, setTasks] = useState(data.data);
@@ -135,6 +136,9 @@ export const Home = (data) => {
                     taskFilter ? 
                         taskFilter.map((task)=> (
                             <li key={task._id}>
+                                <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => {document.getElementById(`setting${task._id}`).style.display = "flex"}}/>
+                                <label for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                <BsGearFill></BsGearFill>
                                 {task.title}
                                 <button onClick={() => delTask(task._id)}>x</button>
                             </li>
@@ -142,10 +146,31 @@ export const Home = (data) => {
                         <span>Currently no tasks</span> :
                     taskFilter ?
                         JSON.parse(taskFilter).map((task)=> (
-                            <li key={task._id}>
-                                {task.title}
-                                <button onClick={() => delTask(task._id)}>x</button>
-                            </li>
+                            <div>
+                                <li key={task._id}>
+                                    <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => {document.getElementById(`setting${task._id}`).style.display = "flex"}}/>
+                                    <label for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    {task.title}
+                                    <button onClick={() => delTask(task._id)}>x</button>
+                                </li>
+                                <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
+                                    <li>
+                                        <label id="taskState">Status: </label>
+                                        <select for="taskState">
+                                            <option>Incomplete</option>
+                                            <option>Complete</option>
+                                        </select>
+                                    </li>
+                                    <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
+                                        <label>Edit title:</label>
+                                        <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                                    </li>
+                                    <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
+                                        <label>Edit Description:</label>
+                                        <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
+                                    </li>
+                                </ul>
+                            </div>
                         )) :
                         <span>Currently no tasks</span>
                 }
