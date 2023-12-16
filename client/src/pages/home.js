@@ -29,6 +29,8 @@ export const Home = (data) => {
                         })
                     });
                 const task = await res.json()
+                if(tasks == null)
+                setTasks([task])
                 setTasks([...tasks, task])
                 setCurrentFilter([...tasks, task])
             }catch(error){
@@ -85,6 +87,39 @@ export const Home = (data) => {
         }
     }
 
+    async function changeStatus(taskStatus, taskID){
+        console.log(taskStatus)
+        if(isUserLogged)
+            try{
+                const userID = window.localStorage.getItem("userId");
+                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/updateTask`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        taskID,
+                        taskStatus
+                        })
+                    });
+                const task = await res.json()
+                setTasks([...tasks, task])
+                setCurrentFilter([...tasks, task])
+            }catch(error){
+                console.log(error)
+            }
+        else{
+            const localTask = JSON.parse(window.localStorage.getItem("localTaskData"))
+            const index = localTask.findIndex((task => task._id === taskID))
+            localTask[index].status = `${taskStatus}`
+            window.localStorage.setItem("localTaskData", JSON.stringify(localTask))
+            const getUpdatedLocal = window.localStorage.getItem("localTaskData");
+            setTasks(getUpdatedLocal);
+            setCurrentFilter(getUpdatedLocal);
+        }
+    }
+
     function filterTask(action){
         const selected = document.getElementById(`${action}`)
         let data = [];
@@ -106,8 +141,8 @@ export const Home = (data) => {
                 document.getElementById("filter1").style.color = "white"
                 document.getElementById("filter3").style.color = "white"
                 isUserLogged ?
-                setCurrentFilter(data.filter((task) => task.status === "completed")) :
-                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "completed")))
+                setCurrentFilter(data.filter((task) => task.status === "complete")) :
+                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "complete")))
                 break;
             case "filter3":
                 selected.style.color = "green"
@@ -135,13 +170,31 @@ export const Home = (data) => {
                 {isUserLogged ?
                     taskFilter ? 
                         taskFilter.map((task)=> (
+                            <div>
                             <li key={task._id}>
                                 <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => {document.getElementById(`setting${task._id}`).style.display = "flex"}}/>
                                 <label for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                <BsGearFill></BsGearFill>
                                 {task.title}
                                 <button onClick={() => delTask(task._id)}>x</button>
                             </li>
+                            <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
+                                <li>
+                                    <label id="taskState">Status: </label>
+                                    <select for="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
+                                        <option value={"incomplete"}>Incomplete</option>
+                                        <option value={"complete"}>Complete</option>
+                                    </select>
+                                </li>
+                                <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
+                                    <label>Edit title:</label>
+                                    <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                                </li>
+                                <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
+                                    <label>Edit Description:</label>
+                                    <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
+                                </li>
+                            </ul>
+                        </div>
                         )) : 
                         <span>Currently no tasks</span> :
                     taskFilter ?
@@ -156,9 +209,9 @@ export const Home = (data) => {
                                 <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
                                     <li>
                                         <label id="taskState">Status: </label>
-                                        <select for="taskState">
-                                            <option>Incomplete</option>
-                                            <option>Complete</option>
+                                        <select for="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
+                                            <option value={"incomplete"}>Incomplete</option>
+                                            <option value={"complete"}>Complete</option>
                                         </select>
                                     </li>
                                     <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
