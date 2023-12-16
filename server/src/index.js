@@ -41,6 +41,8 @@ app.get("/fetchTasks/:userID", async (req, res) =>{
 app.post("/addTask", verifyToken , async (req, res) =>{
     const user = req.body.userID;
     const userCheck = await UserModel.findOne({_id: user})
+    if(userCheck.tasks === null)
+    userCheck.tasks = [];
     const newTask = new TaskModel({
         title: req.body.title,
         description: req.body.desc,
@@ -50,6 +52,24 @@ app.post("/addTask", verifyToken , async (req, res) =>{
         userCheck.tasks.push(newTask);
         await userCheck.save();
         res.json(newTask)
+    }catch(error){
+        res.json({error: error, message: "Title and description is required"})
+    }
+    
+})
+
+app.post("/updateTask", verifyToken , async (req, res) =>{
+    const user = req.body.userID;
+    const taskUpdate = `${req.body.taskID}`
+    console.log(taskUpdate.toString())
+    const userCheck = await UserModel.findOne({_id: user})
+    const updateTask = userCheck.tasks
+    const index = updateTask.findIndex((task => task._id.valueOf() === taskUpdate))
+    try{
+        
+        userCheck.tasks.findByIdAndUpdate(taskUpdate, { status: `${req.body.taskStatus}`})
+        await userCheck.save();
+        res.json(userCheck)
     }catch(error){
         res.json({error: error, message: "Title and description is required"})
     }
