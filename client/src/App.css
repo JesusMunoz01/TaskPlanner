@@ -71,6 +71,7 @@
     border-style: solid;
     overflow-y: auto;
     overflow-x: hidden;
+    margin-bottom: 2%;
     
   }
 
@@ -80,7 +81,7 @@
     justify-content: center;
     align-items: center;
     width: 99%;
-    height: 30px;
+    min-height: 40px;
     border-radius: 10px;
     border-style: groove;
 
@@ -105,6 +106,9 @@
     margin: 0;
     padding: 0;
     border-style: none;
+    background-color: rgba(119, 136, 153, 0.377);
+    position: relative;
+    top: -3px;
   }
 
   .editTask li{
@@ -123,7 +127,41 @@
     align-items: center;
     flex-direction: column;
     width: 99%;
-    height: 20%;
+    min-height: 25vh;
+    border-style: solid;
+    overflow-y: auto;
+  }
+
+  .addTask form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .addTask form label{
+    display: flex;
+    flex-direction: column;
+    margin-top: 1%;
+    margin-bottom: 1%;
+  }
+
+  .addTask form input{
+    display: flex;
+    flex-direction: column;
+    border-style: 1px solid;
+    margin-top: 5%;
+    margin-bottom: 5%;
+  }
+
+  .addTask button{
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 10%;
+    color: white;
+    background-color: #282c34;
+    border-radius: 10px;
   }
 
   .intro {
@@ -131,8 +169,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: fit-content;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
   }
 
@@ -145,7 +182,7 @@
   .filterClass button{
     display:flex;
     width: 10vw;
-    height: 2.5svh;
+    min-height: 2.5svh;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -319,7 +356,7 @@
     justify-content: center;
     align-items: center;
     width: 98%;
-    height: 6%;
+    min-height: 4vh;
     border-radius: 10px;
     border-style: groove;
   
@@ -336,6 +373,30 @@
     border-radius: 25%;
     position: sticky;
     left: 90%;
+  }
+
+  .editTask{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border-style: none;
+    background-color: rgba(119, 136, 153, 0.377);
+    position: relative;
+    top: -3px;
+    padding-bottom: 2%;
+  }
+
+  .editTask li{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border-style: none;
   }
 
   .addTask{

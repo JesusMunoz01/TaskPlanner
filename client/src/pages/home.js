@@ -8,6 +8,8 @@ export const Home = (data) => {
     const [isUserLogged, ] = useState(data.isLogged)
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
+    const [updtTitle, updateTitle] = useState("");
+    const [updtDesc, updateDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
 
     async function sendTask(e){

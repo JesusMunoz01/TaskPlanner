@@ -1,6 +1,7 @@
 import './App.css';
 import { useState } from "react";
 import { useEffect } from "react";
+import { useCookies } from 'react-cookie'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { Home } from './pages/home';
 import { Navbar } from './components/navbar';
@@ -11,6 +12,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [userLogin, setLogin] = useState(false);
   const [logStatus, setLogStatus] = useState("Not Logged");
+  const [logExpired, ] = useCookies(["access_token"]);
 
   const loginStatus = (stat) => {
     setLogStatus(stat);
@@ -19,6 +21,8 @@ function App() {
   }
 
   useEffect(() => {
+    if(!logExpired.access_token){
+      window.localStorage.removeItem("userId");}
     console.log("...calling effect");
       (async () => {
         if(window.localStorage.getItem("userId") !== null){
@@ -50,7 +54,7 @@ function App() {
           }
       }
     })();
-  }, [logStatus]);
+  }, [logStatus, logExpired]);
 
   return (
     <>
