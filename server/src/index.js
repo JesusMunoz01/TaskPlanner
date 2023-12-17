@@ -33,18 +33,18 @@ app.get("/fetchTasks", async (req, res) =>{
 
 app.get("/fetchTasks/:userID", async (req, res) =>{
     const userCheck = req.params.userID
-    const tasks = await UserModel.findOne({_id: userCheck});
+    const tasks = await UserModel.findOne({_id: { $eq: userCheck }});
     res.json(tasks.tasks);
 })
 
 app.post("/addTask", verifyToken , async (req, res) =>{
     const user = req.body.userID;
-    const userCheck = await UserModel.findOne({_id: user})
+    const userCheck = await UserModel.findOne({_id: { $eq: user }})
     if(userCheck.tasks === null)
     userCheck.tasks = [];
     const newTask = new TaskModel({
-        title: req.body.title,
-        description: req.body.desc,
+        title: { $eq: req.body.title },
+        description:{ $eq: req.body.desc },
         status: req.body.status
     });
     try{
