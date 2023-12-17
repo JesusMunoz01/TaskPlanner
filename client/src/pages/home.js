@@ -8,6 +8,8 @@ export const Home = (data) => {
     const [isUserLogged, ] = useState(data.isLogged)
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
+    const [updtTitle, updateTitle] = useState("");
+    const [updtDesc, updateDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
 
     async function sendTask(e){
@@ -88,7 +90,6 @@ export const Home = (data) => {
     }
 
     async function changeStatus(taskStatus, taskID){
-        console.log(taskStatus)
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
@@ -103,9 +104,11 @@ export const Home = (data) => {
                         taskStatus
                         })
                     });
-                const task = await res.json()
-                setTasks([...tasks, task])
-                setCurrentFilter([...tasks, task])
+                const updatedValues = await res.json()
+                const index = updatedValues.findIndex((task => task._id === taskID))
+                updatedValues[index].status = `${taskStatus}`
+                setTasks(updatedValues)
+                setCurrentFilter(updatedValues)
             }catch(error){
                 console.log(error)
             }
