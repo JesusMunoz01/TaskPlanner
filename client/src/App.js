@@ -33,7 +33,6 @@ function App() {
             console.log("...updating state");
             setLoading(false);
             setTaskData(taskData);
-            console.log(taskData)
             }catch(error){
         
             }
