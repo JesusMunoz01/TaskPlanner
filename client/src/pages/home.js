@@ -123,7 +123,18 @@ export const Home = (data) => {
         }
     }
 
-    async function changeInfo(taskStatus, taskID){
+    async function changeInfo(taskID, oldTitle, oldDesc){
+        let newTitle, newDesc = "";
+
+        if(updtTitle === "")
+            newTitle = oldTitle;
+        else
+            newTitle = updtTitle;
+        if(updtDesc === "")
+            newDesc = oldDesc;
+        else
+            newDesc = updtDesc;
+
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
@@ -135,12 +146,14 @@ export const Home = (data) => {
                     body: JSON.stringify({
                         userID,
                         taskID,
-                        taskStatus
+                        newTitle,
+                        newDesc
                         })
                     });
                 const updatedValues = await res.json()
                 const index = updatedValues.findIndex((task => task._id === taskID))
-                updatedValues[index].status = `${taskStatus}`
+                updatedValues[index].title = `${newTitle}`
+                updatedValues[index].description = `${newDesc}`
                 setTasks(updatedValues)
                 setCurrentFilter(updatedValues)
             }catch(error){
@@ -149,12 +162,17 @@ export const Home = (data) => {
         else{
             const localTask = JSON.parse(window.localStorage.getItem("localTaskData"))
             const index = localTask.findIndex((task => task._id === taskID))
-            localTask[index].status = `${taskStatus}`
+            localTask[index].title = `${updtTitle}`
+            localTask[index].description = `${updtDesc}`
             window.localStorage.setItem("localTaskData", JSON.stringify(localTask))
             const getUpdatedLocal = window.localStorage.getItem("localTaskData");
             setTasks(getUpdatedLocal);
             setCurrentFilter(getUpdatedLocal);
         }
+
+        updateTitle("");
+        updateDesc("");
+
     }
 
     function filterTask(action){
@@ -219,7 +237,7 @@ export const Home = (data) => {
                             <div className="listTasks">
                             <li key={task._id}>
                                 <button onClick={() => delTask(task._id)}>x</button>
-                                <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => {}}/>
+                                <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(task._id)}/>
                                 <label id="settingsIcon" for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                 {task.title}
                                 <div className="statusBox">
@@ -233,13 +251,13 @@ export const Home = (data) => {
                             <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
                                 <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
                                     <label>Edit title:</label>
-                                    <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                                    <input id="taskTitle" value={updtTitle} onChange={(e) => updateTitle(e.target.value)}></input>
                                 </li>
                                 <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
                                     <label>Edit Description:</label>
-                                    <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
+                                    <input id="taskDesc" value={updtDesc} onChange={(e) => updateDesc(e.target.value)}></input>
                                 </li>
-                                <button onClick={(e) => changeInfo(e.target.value, task._id)}>Save Changes</button>
+                                <button onClick={() => changeInfo(task._id, task.title, task.description)}>Save Changes</button>
                             </ul>
                         </div>
                         )) : 
@@ -265,13 +283,13 @@ export const Home = (data) => {
                                 <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
                                     <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
                                         <label>Edit title:</label>
-                                        <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                                        <input id="taskTitle" value={updtTitle} onChange={(e) => updateTitle(e.target.value)}></input>
                                     </li>
                                     <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
                                         <label>Edit Description:</label>
-                                        <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
+                                        <input id="taskDesc" value={updtDesc} onChange={(e) => updateDesc(e.target.value)}></input>
                                     </li>
-                                    <button onClick={(e) => changeInfo(e.target.value, task._id)}>Save Changes</button>  
+                                    <button onClick={(e) => changeInfo(task._id, task.title, task.description)}>Save Changes</button>  
                                 </ul>
                             </div>
                         )) :

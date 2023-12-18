@@ -33,18 +33,18 @@ app.get("/fetchTasks", async (req, res) =>{
 
 app.get("/fetchTasks/:userID", async (req, res) =>{
     const userCheck = req.params.userID
-    const tasks = await UserModel.findOne({_id: { $eq: userCheck }});
+    const tasks = await UserModel.findOne({_id: userCheck });
     res.json(tasks.tasks);
 })
 
 app.post("/addTask", verifyToken , async (req, res) =>{
     const user = req.body.userID;
-    const userCheck = await UserModel.findOne({_id: { $eq: user }})
+    const userCheck = await UserModel.findOne({_id: user })
     if(userCheck.tasks === null)
     userCheck.tasks = [];
     const newTask = new TaskModel({
-        title: { $eq: req.body.title },
-        description:{ $eq: req.body.desc },
+        title: req.body.title ,
+        description: req.body.desc ,
         status: req.body.status
     });
     try{
@@ -67,7 +67,19 @@ app.post("/updateTask", verifyToken , async (req, res) =>{
         const test = await UserModel.findOneAndUpdate({"_id": user, "tasks._id": taskUpdate}, {$set: { "tasks.$.status": `${req.body.taskStatus}`}})
         res.json(test.tasks)
     }catch(error){
-        res.json({error: error, message: "Title and description is required"})
+        res.json({error: error, message: "Couldnt update Status"})
+    }
+})
+
+app.post("/updateTaskInfo", verifyToken , async (req, res) =>{
+    const user = req.body.userID;
+    const taskUpdate = `${req.body.taskID}`
+    try{
+        const test = await UserModel.findOneAndUpdate({"_id": user, "tasks._id": taskUpdate}, 
+        {$set: { "tasks.$.title": `${req.body.newTitle}`, "tasks.$.description": `${req.body.newDesc}`}})
+        res.json(test.tasks)
+    }catch(error){
+        res.json({error: error, message: "Couldnt update information"})
     }
 })
 

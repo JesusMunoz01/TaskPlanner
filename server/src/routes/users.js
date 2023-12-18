@@ -10,7 +10,7 @@ userRouter.post("/addUser", async (req, res) =>{
 
     const newUsername = req.body.newUsername;
     const newPassword = req.body.newPassword;
-    const userCheck = await UserModel.findOne({username: { $eq: newUsername }})
+    const userCheck = await UserModel.findOne({username: newUsername })
 
     if(userCheck === newUsername){
         return res.json({message: "Username is taken"})
@@ -18,8 +18,8 @@ userRouter.post("/addUser", async (req, res) =>{
         const hashedPassword = await bcrypt.hash(newPassword, 10)
 
         const newUser = new UserModel({
-            username: { $eq: newUsername },
-            password: { $eq: hashedPassword },
+            username: newUsername ,
+            password: hashedPassword ,
             tasks: null
         });
 
@@ -36,7 +36,7 @@ userRouter.post("/addUser", async (req, res) =>{
 userRouter.post("/userLogin", async (req, res) =>{
     const username = req.body.username;
     const password = req.body.password;
-    const userCheck = await UserModel.findOne({username: { $eq: username }})
+    const userCheck = await UserModel.findOne({username: username })
 
     if(!userCheck){
         return res.json({message: "User does not exist"})
