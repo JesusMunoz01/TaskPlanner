@@ -123,6 +123,58 @@ export const Home = (data) => {
         }
     }
 
+    async function changeInfo(taskID, oldTitle, oldDesc){
+        let newTitle, newDesc = "";
+
+        if(updtTitle === "")
+            newTitle = oldTitle;
+        else
+            newTitle = updtTitle;
+        if(updtDesc === "")
+            newDesc = oldDesc;
+        else
+            newDesc = updtDesc;
+
+        if(isUserLogged)
+            try{
+                const userID = window.localStorage.getItem("userId");
+                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/updateTaskInfo`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        taskID,
+                        newTitle,
+                        newDesc
+                        })
+                    });
+                const updatedValues = await res.json()
+                const index = updatedValues.findIndex((task => task._id === taskID))
+                updatedValues[index].title = `${newTitle}`
+                updatedValues[index].description = `${newDesc}`
+                setTasks(updatedValues)
+                setCurrentFilter(updatedValues)
+            }catch(error){
+                console.log(error)
+            }
+        else{
+            const localTask = JSON.parse(window.localStorage.getItem("localTaskData"))
+            const index = localTask.findIndex((task => task._id === taskID))
+            localTask[index].title = `${updtTitle}`
+            localTask[index].description = `${updtDesc}`
+            window.localStorage.setItem("localTaskData", JSON.stringify(localTask))
+            const getUpdatedLocal = window.localStorage.getItem("localTaskData");
+            setTasks(getUpdatedLocal);
+            setCurrentFilter(getUpdatedLocal);
+        }
+
+        updateTitle("");
+        updateDesc("");
+
+    }
+
     function filterTask(action){
         const selected = document.getElementById(`${action}`)
         let data = [];
@@ -131,7 +183,7 @@ export const Home = (data) => {
         else
         data = tasks;
         switch(action){
-            case "filter1":
+            case "filter1": // All Tasks Filter
                 selected.style.color = "green"
                 document.getElementById("filter2").style.color = "white"
                 document.getElementById("filter3").style.color = "white"
@@ -139,7 +191,7 @@ export const Home = (data) => {
                 setCurrentFilter(data) : 
                 setCurrentFilter(JSON.stringify(data));
                 break;
-            case "filter2":
+            case "filter2": // Incomplete Tasks Filter
                 selected.style.color = "green"
                 document.getElementById("filter1").style.color = "white"
                 document.getElementById("filter3").style.color = "white"
@@ -147,7 +199,7 @@ export const Home = (data) => {
                 setCurrentFilter(data.filter((task) => task.status === "complete")) :
                 setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "complete")))
                 break;
-            case "filter3":
+            case "filter3": // Completed Tasks Filter
                 selected.style.color = "green"
                 document.getElementById("filter1").style.color = "white"
                 document.getElementById("filter2").style.color = "white"
@@ -161,6 +213,14 @@ export const Home = (data) => {
 
     }
 
+    function displayEdit(id){
+        const currentMode = document.getElementById(`setting${id}`).style.display
+        if(currentMode === "flex")
+            document.getElementById(`setting${id}`).style.display = "none"
+        else
+            document.getElementById(`setting${id}`).style.display = "flex"
+    }
+
     return <div>
         <div className="intro">
         <h1>Checklist</h1>
@@ -172,62 +232,68 @@ export const Home = (data) => {
             <div className="tasks">
                 {isUserLogged ?
                     taskFilter ? 
+                        // Section for: Logged user with tasks -------------------------------------------
                         taskFilter.map((task)=> (
-                            <div>
+                            <div className="listTasks">
                             <li key={task._id}>
-                                <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => {document.getElementById(`setting${task._id}`).style.display = "flex"}}/>
-                                <label for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                {task.title}
                                 <button onClick={() => delTask(task._id)}>x</button>
-                            </li>
-                            <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
-                                <li>
+                                <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(task._id)}/>
+                                <label id="settingsIcon" for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                {task.title}
+                                <div className="statusBox">
                                     <label id="taskState">Status: </label>
                                     <select for="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
                                         <option value={"incomplete"}>Incomplete</option>
                                         <option value={"complete"}>Complete</option>
                                     </select>
-                                </li>
+                                </div>
+                            </li>
+                            <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
                                 <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
                                     <label>Edit title:</label>
-                                    <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                                    <input id="taskTitle" value={updtTitle} onChange={(e) => updateTitle(e.target.value)}></input>
                                 </li>
                                 <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
                                     <label>Edit Description:</label>
-                                    <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
+                                    <input id="taskDesc" value={updtDesc} onChange={(e) => updateDesc(e.target.value)}></input>
                                 </li>
+                                <button onClick={() => changeInfo(task._id, task.title, task.description)}>Save Changes</button>
                             </ul>
                         </div>
                         )) : 
+                        // Section for: Logged user without tasks -------------------------------------------
                         <span>Currently no tasks</span> :
                     taskFilter ?
+                        // Section for: Non-Logged user with tasks -------------------------------------------
                         JSON.parse(taskFilter).map((task)=> (
-                            <div>
+                            <div className="listTasks">
                                 <li key={task._id}>
-                                    <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => {document.getElementById(`setting${task._id}`).style.display = "flex"}}/>
-                                    <label for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                    {task.title}
                                     <button onClick={() => delTask(task._id)}>x</button>
+                                    <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(task._id)}/>
+                                    <label id="settingsIcon" for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    {task.title}
+                                    <div className="statusBox">
+                                    <label id="taskState">Status: </label>
+                                    <select for="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
+                                        <option value={"incomplete"}>Incomplete</option>
+                                        <option value={"complete"}>Complete</option>
+                                    </select>
+                                    </div>
                                 </li>
                                 <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
-                                    <li>
-                                        <label id="taskState">Status: </label>
-                                        <select for="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
-                                            <option value={"incomplete"}>Incomplete</option>
-                                            <option value={"complete"}>Complete</option>
-                                        </select>
-                                    </li>
                                     <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
                                         <label>Edit title:</label>
-                                        <input id="taskTitle" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                                        <input id="taskTitle" value={updtTitle} onChange={(e) => updateTitle(e.target.value)}></input>
                                     </li>
                                     <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
                                         <label>Edit Description:</label>
-                                        <input id="taskDesc" value={desc} onChange={(e) => setDesc(e.target.value)}></input>
+                                        <input id="taskDesc" value={updtDesc} onChange={(e) => updateDesc(e.target.value)}></input>
                                     </li>
+                                    <button onClick={(e) => changeInfo(task._id, task.title, task.description)}>Save Changes</button>  
                                 </ul>
                             </div>
                         )) :
+                        // Section for: Non-Logged user without tasks -------------------------------------------
                         <span>Currently no tasks</span>
                 }
             </div>
