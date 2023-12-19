@@ -214,14 +214,14 @@ export const Home = (data) => {
     }
 
     function displayEdit(id){
-        const currentMode = document.getElementById(`setting${id}`).style.display
-        if(currentMode === "flex")
-            document.getElementById(`setting${id}`).style.display = "none"
+        const currentMode = document.getElementById(`setting${id}`).className
+        if(currentMode === "editTask active")
+            document.getElementById(`setting${id}`).className = "editTask"
         else
-            document.getElementById(`setting${id}`).style.display = "flex"
+            document.getElementById(`setting${id}`).className = "editTask active"
     }
 
-    return <div>
+    return <div className="checklistHome">
         <div className="intro">
         <h1>Checklist</h1>
             <span className="filterClass">
@@ -280,12 +280,12 @@ export const Home = (data) => {
                                     </select>
                                     </div>
                                 </li>
-                                <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
-                                    <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
+                                <ul className="editTask" id={`setting${task._id}`} >
+                                    <li id={`setting${task._id}`} style={{display:"flex"}}>
                                         <label>Edit title:</label>
                                         <input id="taskTitle" value={updtTitle} onChange={(e) => updateTitle(e.target.value)}></input>
                                     </li>
-                                    <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
+                                    <li id={`setting${task._id}`} style={{display:"flex"}}>
                                         <label>Edit Description:</label>
                                         <input id="taskDesc" value={updtDesc} onChange={(e) => updateDesc(e.target.value)}></input>
                                     </li>

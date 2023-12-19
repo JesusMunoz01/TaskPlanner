@@ -65,7 +65,7 @@
   .tasks {
     display: flex;
     flex-direction: column;
-    width: 70vw;
+    width: 60vw;
     height: 50vh;
     border-radius: 10px;
     border-style: solid;
@@ -136,6 +136,7 @@
 
   .editTask{
     display: flex;
+    overflow: hidden;
     align-items: center;
     justify-content: center;
     margin: 0;
@@ -143,16 +144,39 @@
     border-style: none;
     background-color: rgba(119, 136, 153, 0.377);
     position: relative;
+    height: 0;
     top: -3px;
+    transition: all .3s ease-in;
   }
 
-  .editTask li{
+  .editTask.active{
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0;
     padding: 0;
     border-style: none;
+    background-color: rgba(119, 136, 153, 0.377);
+    position: relative;
+    height: 45px;
+    transition: all .3s ease-in;
+  }
+
+  .editTask li{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 5px;
+    border-style: none;
+    font-size: 95%;
+  }
+
+  .editTask li input{
+    display: flex;
+    padding: 5px;
+    margin: 3px;
+    width: 60%;
   }
 
   .editTask button{
@@ -329,26 +353,30 @@
   }
 }
 
+
+
 @media(max-width: 700px) {
   .App {
-    height: 100%;
-    width: 100%;
-    overflow-x: hidden;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    column-gap: 10px;
+    height: fit-content;
   }
 
   .pageFormat {
-    height: 100%;
-    width: 100%;
     display: flex;
+    width: 100%;
+    height: fit-content;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
   }
   
   .navbar {
-    position: fixed;
+    position: sticky;
     width: 100%;
-    height: 4vh;
+    height: 40px;
     display: flex;
     justify-content: flex-start;
     align-items:center;
@@ -365,7 +393,8 @@
   }
   
   .navbar li {
-    margin-left: 10px;
+    margin-left: 5px;
+    margin-right: 10px;
   }
   
   .navbar a:link, a:visited{
@@ -376,19 +405,33 @@
   .navbar a:hover{
     color: green;
   }
+
+  .checklistHome{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
   
   .home{
     display: flex;
+    min-height: 90vh;
     flex-direction: column;
+    justify-content: center;
     align-items:center;
-    padding-top: 2svh;
+    text-align: center;
+    margin-top: 1vh;
   }
   
   .tasks {
     display: flex;
     flex-direction: column;
-    width: 70vw;
-    height: 50vh;
+    width: 85vw;
+    min-height: 50vh;
     border-radius: 10px;
     border-style: solid;
     overflow-y: auto;
@@ -459,6 +502,23 @@
 
   .editTask{
     display: flex;
+    overflow: hidden;
+    height: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border-style: none;
+    background-color: rgba(119, 136, 153, 0.377);
+    position: relative;
+    top: -3px;
+    transition: all .3s ease-in;
+  }
+
+  .editTask.active{
+    display: flex;
+    height: 150px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -469,6 +529,7 @@
     position: relative;
     top: -3px;
     padding-bottom: 2%;
+    transition: all .3s ease-in;
   }
 
   .editTask li{
@@ -498,10 +559,14 @@
     align-items: center;
     flex-direction: column;
     width: 99%;
-    min-height: 25vh;
+    min-height: 30vh;
     border-style: solid;
     overflow-y: auto;
-    margin-bottom: 2%;
+  }
+
+  .addTask h2{
+    margin: 0;
+    padding: 10px;
   }
 
   .addTask form{
@@ -515,14 +580,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-bottom: 5%
+    padding-bottom: 1%
   }
 
   .addTask form input{
     display: flex;
     justify-content: center;
     width: 100%;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
     border: 1.5px solid;
   }
 
@@ -531,7 +596,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 5%;
-    margin-bottom: 10%;
+    margin-bottom: 5%;
     color: white;
     background-color: #282c34;
     min-height: 40px;
@@ -541,11 +606,12 @@
   
   .intro {
     display: flex;
+    flex-direction: column;
+    min-height: 85vh;
+    width: 100%;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
+    text-align: center;
   }
 
   .filterClass{
@@ -558,8 +624,8 @@
   .filterClass button{
     font-size: 70%;
     display:flex;
-    width: 23vw;
-    height: 4vh;
+    width: 28vw;
+    height: 36px;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -571,27 +637,28 @@
   .loginPage{
     display: flex;
     flex-direction: column;
-    height: 95%;
+    height: 85%;
     width: 100%;
     justify-content: center;
     align-items: center;
+    text-align: center;
   }
   
   .loginPage-loginPrompt{
     display: flex;
-    height: 40%;
+    height: 30vh;
     width: 80%;
     justify-content: center;
     border-style: ridge;
     border-radius: 10px;
     border-width: 6px;
+    overflow-y: auto;
   }
   
   .loginPage-loginPrompt form{
     display: flex;
     align-items: center;
     flex-direction: column;
-    height: 50%;
     justify-content: center;
   }
   
@@ -616,18 +683,18 @@
   
   .loginPage-createAccountPrompt{
     display: flex;
-    height: 40%;
+    height: 30vh;
     width: 80%;
     justify-content: center;
     border-style: ridge;
     border-radius: 10px;
     border-width: 6px;
+    overflow-y: auto;
   }
   
   .loginPage-createAccountPrompt form{
     display: flex;
     flex-direction: column;
-    height: 50%;
     justify-content: center;
     align-items: center;
   }
