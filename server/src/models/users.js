@@ -7,10 +7,17 @@ const UserSchema = new Schema({
     username: { type: String, required: true, unique: true},
     password: { type: String, required: true},
     tasks: [{
+            title: { type: String, required: true}, 
+            description: { type: String, required: true},
+            status: { type: String, required: true }
+        }],
+    collections: [{
+            tasks: [{
                 title: { type: String, required: true}, 
                 description: { type: String, required: true},
                 status: { type: String, required: true }
-            }]
+        }]
+    }]
 })
 
 const UserModel = mongoose.model("User", UserSchema);
