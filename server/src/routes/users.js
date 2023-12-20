@@ -8,7 +8,7 @@ const userRouter = express.Router()
 
 userRouter.post("/addUser", async (req, res) =>{
 
-    const newUsername = req.body.newUsername;
+    const newUsername = sanitizeFilter(req.body.newUsername);
     const newPassword = req.body.newPassword;
     const userCheck = await UserModel.findOne({username: newUsername })
 
@@ -34,7 +34,7 @@ userRouter.post("/addUser", async (req, res) =>{
 })
 
 userRouter.post("/userLogin", async (req, res) =>{
-    const username = req.body.username;
+    const username = sanitizeFilter(req.body.username);
     const password = req.body.password;
     const userCheck = await UserModel.findOne({username: username })
 
