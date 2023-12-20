@@ -17,7 +17,6 @@ export const Home = (data) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
-                console.log(userID)
                 const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
