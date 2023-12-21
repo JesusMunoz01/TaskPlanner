@@ -6,6 +6,10 @@
     height: 100vh;
   }
 
+  #collectionLink{
+    font-size: small;
+  }
+
   .pageFormat {
     height: 100%;
     width: 100%;
