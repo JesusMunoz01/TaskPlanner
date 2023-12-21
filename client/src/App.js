@@ -1,4 +1,4 @@
-import './App.css';
+import './css/App.css';
 import { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from 'react-cookie'
@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { Home } from './pages/home';
 import { Navbar } from './components/navbar';
 import { Login } from './pages/login';
+import { Collections } from './pages/collections';
 
 function App() {
   const [taskData, setTaskData] = useState([]);
