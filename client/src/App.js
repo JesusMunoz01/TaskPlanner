@@ -9,6 +9,7 @@ import { Login } from './pages/login';
 
 function App() {
   const [taskData, setTaskData] = useState([]);
+  const [collectionData, setCollectionData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userLogin, setLogin] = useState(false);
   const [logStatus, setLogStatus] = useState("Not Logged");
@@ -34,9 +35,12 @@ function App() {
             const id = window.localStorage.getItem("userId")
             const taskResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/fetchTasks/${id}`);
             const taskData = await taskResponse.json();
+            const collectionResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/fetchCollection/${id}`);
+            const collectionData = await collectionResponse.json();
             console.log("...updating state");
             setLoading(false);
             setTaskData(taskData);
+            setCollectionData(collectionData)
             }catch(error){
         
             }
@@ -71,6 +75,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home data={taskData} isLogged={userLogin}/>} />
             <Route path="/login" element={<Login loginStatus={loginStatus}/>} />
+            <Route path="/collections" element={<Collections data={collectionData} isLogged={userLogin}/>} />
           </Routes>
           </div>
         </div>

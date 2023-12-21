@@ -33,6 +33,7 @@ collectionRouter.post("/addCollection", verifyToken , async (req, res) =>{
     const newCollection = new CollectionsModel({
         collectionTitle: req.body.title ,
         collectionDescription: req.body.desc ,
+        collectionStatus: "incomplete",
         tasks: null
     });
     try{
