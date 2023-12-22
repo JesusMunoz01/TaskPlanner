@@ -2,9 +2,11 @@ import "../css/collections.css"
 import { useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 export const Collections = (data) => {
     const [collections, setCollections] = useState(data.data);
+    console.log(data.data)
     //const [taskFilter, setCurrentFilter] = useState(data.data);
     const [isUserLogged, ] = useState(data.isLogged)
     const [collectionTitle, setCollectionTitle] = useState("");
@@ -202,6 +204,7 @@ export const Collections = (data) => {
     }
 
     return <div className="collectionsHome">
+        {isUserLogged ? 
         <div className="collectionsBox">
         <h1>Collections</h1>
             <div className="collections">
@@ -237,8 +240,8 @@ export const Collections = (data) => {
                     )) : 
                         // Section for: Logged user without tasks -------------------------------------------
                     <span>Currently no Collections</span> 
-
                 }
+                
             </div>
             <div className="addCollection">
                 <h2>Add Collection</h2>
@@ -250,6 +253,11 @@ export const Collections = (data) => {
                     <button onClick={(e) => sendCollection(e)}>Submit</button>
                 </form>
             </div>
+        </div> :
+        <div>
+            <span>You are currently not logged, to access this feature log in</span>
+            <span><Link to={"/login"}><span>Login</span></Link></span>
         </div>
+        }
     </div>
 }

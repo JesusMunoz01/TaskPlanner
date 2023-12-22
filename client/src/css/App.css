@@ -36,6 +36,7 @@
     width: 100%;
     font-size: 100%;
     justify-content: center;
+    justify-items: center;
     align-items: flex-start;
     background-color: #282c34;
   }

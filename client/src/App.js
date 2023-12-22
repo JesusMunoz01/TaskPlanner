@@ -53,6 +53,7 @@ function App() {
           const localTasks = window.localStorage.getItem("localTaskData");
           console.log("Updating data");
           setLoading(false);
+          setCollectionData()
           setTaskData(localTasks);
           } catch(error){
 
