@@ -152,3 +152,27 @@ describe('Testing home page with local storage', () => {
         expect(task.innerHTML).toEqual("Updated Title")
     })
 })
+
+describe('Testing home page with mock API calls', () => {
+
+    test('Test to see if tasks are empty', async () => {
+
+    })
+    
+    test('Test to add a task when there are no tasks ', async () => {
+
+    })
+
+    test('Test to add a task when there are already tasks', async () => {
+
+    })
+
+    test('Test delete a task ', async () => {
+
+    })
+
+    test('Test to update a task ', async () => {
+
+    })
+
+})

@@ -255,8 +255,7 @@ export const Collections = (data) => {
             </div>
         </div> :
         <div>
-            <span>You are currently not logged, to access this feature log in</span>
-            <span><Link to={"/login"}><span>Login</span></Link></span>
+            <span>You are currently not logged, to access this feature log in </span>
         </div>
         }
     </div>
