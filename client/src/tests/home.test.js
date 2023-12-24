@@ -1,7 +1,25 @@
-import { Home } from '../pages/home'
-import { render, screen, cleanup, act } from '@testing-library/react'
-import user from '@testing-library/user-event'
 import React from 'react'
+import { rest } from 'msw'
+import { setupServer } from 'msw/node'
+import { render, screen, cleanup, act } from '@testing-library/react'
+import { Home } from '../pages/home'
+import '@testing-library/jest-dom'
+import user from '@testing-library/user-event'
+import App from '../App'
+
+/*
+const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+          {title: "mock2", description: "fake response 2", _id: 2},
+          {title: "mock3", description: "fake response 3", _id: 3}]
+        },
+                {_id: 2, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+          {title: "mock2", description: "fake response 2", _id: 2},
+          {title: "mock3", description: "fake response 3", _id: 3}]
+        },
+                {_id: 3, tasks: []
+        }]
+*/
+
 
 describe('Testing basic home page', () => {
 
@@ -10,7 +28,7 @@ describe('Testing basic home page', () => {
     test('Testing no data', async () => {
         const renderedHome = render(<Home />)
         
-        expect(await renderedHome.queryByLabelText("delBtn")).not.toBeInTheDocument()
+        expect(await renderedHome.queryByLabelText(/^delBtn/)).not.toBeInTheDocument()
     })
 
     test('Adds a new task', async () => {
@@ -154,25 +172,77 @@ describe('Testing home page with local storage', () => {
 })
 
 describe('Testing home page with mock API calls', () => {
+    beforeEach(() => {    
+        const localStorageMock = (function () {
+            let store = {};
+        
+            return {
+            getItem(key) {
+                return store[key];
+            },
+        
+            setItem(key, value) {
+                store[key] = value;
+            },
+        
+            clear() {
+                store = {};
+            },
+        
+            removeItem(key) {
+                delete store[key];
+            },
+        
+            getAll() {
+                return store;
+            },
+            };
+      })();
+      
+      Object.defineProperty(window, "localStorage", { value: localStorageMock });})
+/*
+    const server = setupServer(
+        rest.get('/fetchTasks/:userID', (req, res, ctx) => {
+            const userCheck = req.params.userID
+            const index = mockDB.findIndex((user => user._id === userCheck))
+            if(index == 0)
+              return res(ctx.status(400))
+            else{
+              return res(
+                ctx.status(200),
+                ctx.json(mockDB[index].tasks))
+            }
+        })
+    )
+
+    beforeAll(() => server.listen())
+    afterEach(() => server.resetHandlers())
+    afterAll(() => server.close())
+
 
     test('Test to see if tasks are empty', async () => {
-
+        window.localStorage.setItem("userId", 3);
+        const renderedApp = render(<App />)
+        expect(await renderedApp.queryByLabelText(/^delBtn/)).not.toBeInTheDocument()
     })
     
     test('Test to add a task when there are no tasks ', async () => {
+        window.localStorage.setItem("userId", 1);
+        const renderedApp = render(<App />)
+        const task1 = screen.findByText("mock1")
+        expect(task1).toBeInTheDocument();
+    })
+
+    test.skip('Test to add a task when there are already tasks', async () => {
 
     })
 
-    test('Test to add a task when there are already tasks', async () => {
+    test.skip('Test delete a task ', async () => {
 
     })
 
-    test('Test delete a task ', async () => {
+    test.skip('Test to update a task ', async () => {
 
     })
-
-    test('Test to update a task ', async () => {
-
-    })
-
+*/
 })
