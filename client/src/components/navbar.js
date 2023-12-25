@@ -12,7 +12,7 @@ export const Navbar = ({loginStatus}) => {
 
     return <div>
         <div className="links">
-            <li>{!cookies.access_token ? (<Link to={"/login"}><span>Login</span></Link>) : <button onClick={logout}>Logout</button>}</li>
+            <li aria-label='loginLink'>{!cookies.access_token ? (<Link to={"/login"}><span>Login</span></Link>) : <button onClick={logout}>Logout</button>}</li>
             <li><Link to={"/"}><span>Home</span></Link></li>
             <li><Link to={"/collections"}><span id='collectionLink'>Collections</span></Link></li>
         </div>
