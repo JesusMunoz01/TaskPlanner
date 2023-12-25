@@ -1,6 +1,4 @@
 import React from 'react'
-import { rest } from 'msw'
-import { setupServer } from 'msw/node'
 import { render, screen, cleanup, act } from '@testing-library/react'
 import { Home } from '../pages/home'
 import '@testing-library/jest-dom'

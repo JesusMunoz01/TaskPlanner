@@ -9,9 +9,10 @@ export const Login = ({loginStatus}) => {
     const [newUsername, setNewUsername] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [, setCookies] = useCookies(["access_token"]);
-    const navigate = useNavigate();
+    
     
     async function createUser(e){
+        
         e.preventDefault();
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
         if(passwordRegex.test(newPassword)){
@@ -40,6 +41,7 @@ export const Login = ({loginStatus}) => {
     }
 
     async function logUser(e){
+        const navigate = useNavigate();
         e.preventDefault();
 
         try{
@@ -72,9 +74,9 @@ export const Login = ({loginStatus}) => {
         <div className="loginPage-loginPrompt">
             <form>
                 <label>Username: </label>
-                <input id="logUser" value={username} onChange={(e) => setUsername(e.target.value)}></input>
+                <input aria-label="loginAccount" id="logUser" value={username} onChange={(e) => setUsername(e.target.value)}></input>
                 <label>Password: </label>
-                <input id="logPassword" type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
+                <input aria-label="loginPassword" id="logPassword" type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
                 <button onClick={(e) => logUser(e)}>Login</button>
             </form>
         </div>
@@ -82,9 +84,9 @@ export const Login = ({loginStatus}) => {
         <div className="loginPage-createAccountPrompt">
             <form>
                 <label htmlFor="createUser">Username: </label>
-                <input id="createUser" type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value)}></input>
+                <input aria-label="createAccount" id="createUser" type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value)}></input>
                 <label htmlFor="createPassword">Password: </label>
-                <input id="createPassword" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}></input>
+                <input aria-label="createPassword" id="createPassword" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}></input>
                 <button onClick={(e) => createUser(e)}>Create Account</button>
             </form>
         </div>
