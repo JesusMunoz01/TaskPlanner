@@ -3,7 +3,7 @@ import { render, screen, cleanup, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
 import App from '../App'
-import { Login } from '../pages/login'
+import { Login } from '../../../client2/taskManagingWebsite/src/pages/login'
 
 /*
 const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
