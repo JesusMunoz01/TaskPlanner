@@ -22,6 +22,10 @@ function App() {
     setLogin(true);
   }
 
+  const updateTask = (data) => {
+    setTaskData(data);
+  }
+
   useEffect(() => {
     if(!logExpired.access_token){
       window.localStorage.removeItem("userId");}
@@ -75,7 +79,7 @@ function App() {
           </div>
           <div className='home'>
           <Routes>
-            <Route path="/" element={<Home data={taskData} isLogged={userLogin}/>} />
+            <Route path="/" element={<Home data={taskData} isLogged={userLogin} updateTask={updateTask}/>} />
             <Route path="/login" element={<Login loginStatus={loginStatus}/>} />
             <Route path="/collections" element={<Collections data={collectionData} isLogged={userLogin}/>} />
           </Routes>

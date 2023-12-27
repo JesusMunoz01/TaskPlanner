@@ -2,9 +2,11 @@ import React from 'react'
 import { render, screen, cleanup, act } from '@testing-library/react'
 import { Home } from '../pages/home'
 import '@testing-library/jest-dom'
-import user from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import App from '../App'
 
+
+const user = userEvent.setup();
 
 const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
           {title: "mock2", description: "fake response 2", _id: 2},
@@ -17,6 +19,9 @@ const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1"
                 {_id: 3, tasks: []
         }]
 
+const updateTask = (data) => {
+    
+ }
 
 
 describe('Testing basic home page', () => {
@@ -30,15 +35,15 @@ describe('Testing basic home page', () => {
     })
 
     test('Adds a new task', async () => {
-        const renderedHome = render(<Home />)
+        const renderedHome = render(<Home updateTask={updateTask}/>)
         const inputTitle = await renderedHome.findByLabelText('addTaskTitle')
         const inputDesc = await renderedHome.findByLabelText('addTaskDesc')
         const confirmAdd = await renderedHome.findByLabelText('confirmAdd')
 
         await act(async () => {
-            user.type(inputTitle, "New Task")
-            user.type(inputDesc, "New Desc")
-            user.click(confirmAdd)
+            await user.type(inputTitle, "New Task")
+            await user.type(inputDesc, "New Desc")
+            await user.click(confirmAdd)
         })
 
         const tasks = await renderedHome.findAllByTestId(/^task/);
@@ -49,15 +54,15 @@ describe('Testing basic home page', () => {
     })
 
     test('Adds a second new task', async () => {
-        const renderedHome = render(<Home />)
+        const renderedHome = render(<Home updateTask={updateTask}/>)
         const inputTitle = await renderedHome.findByLabelText('addTaskTitle')
         const inputDesc = await renderedHome.findByLabelText('addTaskDesc')
         const confirmAdd = await renderedHome.findByLabelText('confirmAdd')
 
         await act(async () => {
-            user.type(inputTitle, "New Task")
-            user.type(inputDesc, "New Desc")
-            user.click(confirmAdd)
+            await user.type(inputTitle, "New Task2")
+            await user.type(inputDesc, "New Desc2")
+            await user.click(confirmAdd)
         })
 
         const tasks = await renderedHome.findAllByTestId(/^task/);
@@ -68,73 +73,48 @@ describe('Testing basic home page', () => {
     })
 
     test('Test task display with fake data', async () => {
-        const renderedHome = render(<Home data={JSON.stringify([{title: "test", description: "test desc", _id: 1}])}/>)
+        const renderedHome = render(<Home data={JSON.stringify([{title: "test", description: "test desc", _id: 1}])} updateTask={updateTask}/>)
 
         const tasks = await renderedHome.findAllByTestId(/^task/);
         
         expect(tasks.length).toEqual(1)
     })
 
-    test.skip('Test task deletion', async () => {
-        const renderedHome = render(<Home data={JSON.stringify([{title: "test", description: "test desc", _id: 1}])}/>)
+    test('Test task deletion', async () => {
+        const renderedHome = render(<Home data={JSON.stringify([{title: "test", description: "test desc", _id: 2}])} updateTask={updateTask}/>)
 
-        const delBtn = await renderedHome.findByLabelText("delBtn1");
+        const delBtn = await renderedHome.findByLabelText("delBtn2");
 
         await act(async () => {
-            user.click(delBtn)
+            await user.click(delBtn)
         })
 
-        const tasks = await renderedHome.queryByLabelText("taskTitle1")
+        const tasks = await renderedHome.queryAllByTestId(/^task/);
         
-        expect(tasks).toEqual(0)
+        expect(tasks.length).toEqual(0)
     })
 
 })
 
-describe('Testing home page with local storage', () => {
-    beforeEach(() => {    
-        const localStorageMock = (function () {
-            let store = {};
-        
-            return {
-            getItem(key) {
-                return store[key];
-            },
-        
-            setItem(key, value) {
-                store[key] = value;
-            },
-        
-            clear() {
-                store = {};
-            },
-        
-            removeItem(key) {
-                delete store[key];
-            },
-        
-            getAll() {
-                return store;
-            },
-            };
-      })();
-      
-      Object.defineProperty(window, "localStorage", { value: localStorageMock });})
+describe('Testing home page with set local storage data', () => {
 
-    afterEach(cleanup)
+    beforeEach(() => {
+        localStorage.clear()
+    })
 
     test('Adds a new task with one task already in local storage', async () => {
         const mockData = [{title: "test", description: "test desc", _id: 1}]
-        window.localStorage.setItem("localTaskData", JSON.stringify(mockData));
-        const renderedHome = render(<Home />)
+        localStorage.setItem("localTaskData", JSON.stringify(mockData));
+        const renderedHome = render(<Home updateTask={updateTask}/>)
         const inputTitle = await renderedHome.findByLabelText('addTaskTitle')
         const inputDesc = await renderedHome.findByLabelText('addTaskDesc')
         const confirmAdd = await renderedHome.findByLabelText('confirmAdd')
 
         await act(async () => {
-            user.type(inputTitle, "New Task")
-            user.type(inputDesc, "New Desc")
-            user.click(confirmAdd)
+            await user.click(inputTitle)
+            await user.keyboard("Test")
+            await user.type(inputDesc, "New Desc")
+            await user.click(confirmAdd)
         })
 
         const tasks = await renderedHome.findAllByTestId(/^task/);
@@ -144,23 +124,20 @@ describe('Testing home page with local storage', () => {
         expect(inputDesc.value).toEqual("")
     })
     
-    test.skip('Test task update', async () => {
+    test('Test task update', async () => {
         const mockData = [{title: "test", description: "test desc", _id: 1}]
+        localStorage.setItem("localTaskData", JSON.stringify(mockData));
 
-        window.localStorage.setItem("localTaskData", JSON.stringify(mockData));
+        const renderedHome = render(<Home data={JSON.stringify(mockData)} updateTask={updateTask}/>)
 
-        const renderedHome = render(<Home data={JSON.stringify(mockData)}/>)
-
-        const dropDownEditBtn = await renderedHome.findByLabelText('editDropdown1')
         const updateTitle = await renderedHome.findByLabelText('editTaskTitle1')
         const updateDesc = await renderedHome.findByLabelText('editTaskDesc1')
         const confirmUpdate = await renderedHome.findByLabelText('confirmEdit1')
 
         await act(async () => {
-            user.click(dropDownEditBtn)
-            user.type(updateTitle, "Updated Title")
-            user.type(updateDesc, "Updated Desc")
-            user.click(confirmUpdate)
+            await user.type(updateTitle, "Updated Title")
+            await user.type(updateDesc, "Updated Desc")
+            await user.click(confirmUpdate)
         })
 
         const task = await renderedHome.findByLabelText("taskTitle1");

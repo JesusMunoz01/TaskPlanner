@@ -11,7 +11,7 @@ export const Home = (data) => {
     const [updtTitle, updateTitle] = useState("");
     const [updtDesc, updateDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
-
+    
     async function sendTask(e){
         e.preventDefault();
         if(isUserLogged)
@@ -33,6 +33,7 @@ export const Home = (data) => {
                 if(tasks == null)
                 setTasks([task])
                 setTasks([...tasks, task])
+                data.updateTask([...tasks, task])
                 setCurrentFilter([...tasks, task])
             }catch(error){
                 console.log(error)
@@ -58,6 +59,7 @@ export const Home = (data) => {
             window.localStorage.setItem("localTaskData", JSON.stringify(localTask))
             const getUpdatedLocal = window.localStorage.getItem("localTaskData");
             setTasks(getUpdatedLocal);
+            data.updateTask(getUpdatedLocal)
             setCurrentFilter(getUpdatedLocal);
         }
 
@@ -71,6 +73,7 @@ export const Home = (data) => {
             method: "DELETE", headers: {auth: cookies.access_token}});
 
         setTasks(tasks.filter((task) => task._id !== taskId))
+        data.updateTask(tasks.filter((task) => task._id !== taskId))
         setCurrentFilter(tasks);
     }
         else{
@@ -83,7 +86,8 @@ export const Home = (data) => {
             }else{
                 const getUpdatedLocal = window.localStorage.getItem("localTaskData");
                 setTasks(getUpdatedLocal);
-                setCurrentFilter(tasks);
+                data.updateTask(getUpdatedLocal);
+                setCurrentFilter(getUpdatedLocal);
             }
         }
     }
@@ -107,6 +111,7 @@ export const Home = (data) => {
                 const index = updatedValues.findIndex((task => task._id === taskID))
                 updatedValues[index].status = `${taskStatus}`
                 setTasks(updatedValues)
+                data.updateTask(updatedValues);
                 setCurrentFilter(updatedValues)
             }catch(error){
                 console.log(error)
@@ -118,11 +123,13 @@ export const Home = (data) => {
             window.localStorage.setItem("localTaskData", JSON.stringify(localTask))
             const getUpdatedLocal = window.localStorage.getItem("localTaskData");
             setTasks(getUpdatedLocal);
+            data.updateTask(getUpdatedLocal);
             setCurrentFilter(getUpdatedLocal);
         }
     }
 
     async function changeInfo(taskID, oldTitle, oldDesc){
+        console.log("-------------------------------")
         let newTitle, newDesc = "";
 
         if(updtTitle === "")
@@ -154,7 +161,8 @@ export const Home = (data) => {
                 updatedValues[index].title = `${newTitle}`
                 updatedValues[index].description = `${newDesc}`
                 setTasks(updatedValues)
-                setCurrentFilter(updatedValues)
+                data.updateTask(updatedValues);
+                setCurrentFilter(updatedValues);
             }catch(error){
                 console.log(error)
             }
@@ -163,9 +171,11 @@ export const Home = (data) => {
             const index = localTask.findIndex((task => task._id === taskID))
             localTask[index].title = `${updtTitle}`
             localTask[index].description = `${updtDesc}`
+            localStorage.setItem("localTaskData", JSON.stringify(localTask))
             window.localStorage.setItem("localTaskData", JSON.stringify(localTask))
             const getUpdatedLocal = window.localStorage.getItem("localTaskData");
             setTasks(getUpdatedLocal);
+            data.updateTask(getUpdatedLocal);
             setCurrentFilter(getUpdatedLocal);
         }
 
@@ -268,8 +278,8 @@ export const Home = (data) => {
                             <div className="listTasks" data-testid="task-item">
                                 <li key={task._id}>
                                     <button aria-label={`delBtn${task._id}`} onClick={() => delTask(task._id)}>x</button>
-                                    <input id={task._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(task._id)}/>
-                                    <label aria-label={`editDropdown${task._id}`} id="settingsIcon" for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    <input aria-label={`editDropdown${task._id}`} id={task._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(task._id)}/>
+                                    <label id="settingsIcon" for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                     <p aria-label={`taskTitle${task._id}`}>{task.title}</p>
                                     <div className="statusBox">
                                     <label id="taskState">Status: </label>
