@@ -3,7 +3,10 @@ import { render, screen, cleanup, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
 import App from '../App'
-import { Login } from '../../../client2/taskManagingWebsite/src/pages/login'
+import { Login } from '../pages/login'
+import Cookies from 'js-cookie'
+import { Navbar } from '../components/navbar'
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 /*
 const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
@@ -44,10 +47,10 @@ describe('Login Page', () => {
         const createPassword = await renderedHome.findByLabelText('createPassword')
 
         await act(async () => {
-            user.type(loginName, "Test User")
-            user.type(loginPassword, "Secret Password")
-            user.type(createName, "New User")
-            user.type(createPassword, "New Password")
+            await user.type(loginName, "Test User")
+            await user.type(loginPassword, "Secret Password")
+            await user.type(createName, "New User")
+            await user.type(createPassword, "New Password")
         })
         
         expect(loginName.value).toEqual("Test User")
@@ -86,42 +89,16 @@ describe('Testing Home page logout option', () => {
       })();
       
       Object.defineProperty(window, "localStorage", { value: localStorageMock });
-      const cookie = (function () {
-        let store = {};
-    
-        return {
-        getItem(key) {
-            return store[key];
-        },
-    
-        setItem(key, value) {
-            store[key] = value;
-        },
-    
-        clear() {
-            store = {};
-        },
-    
-        removeItem(key) {
-            delete store[key];
-        },
-    
-        getAll() {
-            return store;
-        },
-        };
-  })();
-  
-  Object.defineProperty(window, "cookies", { value: cookie });})
 
+ })
 
-
-    test.skip('Test to see if user is logged', async () => {
-        window.localStorage.setItem("userId", 3);
-        window.cookies.setItem("access_token", "secretCookie");
-        const renderedApp = render(<App />)
-        const logoutText = await renderedApp.queryByLabelText("loginLink")
-        expect(logoutText).toEqual("Logout")
+    test('Test to see if user is logged', async () => {
+        Cookies.set("access_token", "secretCookie");
+        localStorage.setItem("userId", 3);
+        
+        const renderedNav = render(<Router><Navbar /></Router>)
+        const logoutText = await renderedNav.findByLabelText("loginLink")
+        expect(logoutText.textContent).toEqual("Logout")
     })
 
 })
