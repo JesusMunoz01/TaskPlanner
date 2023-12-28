@@ -1,23 +1,13 @@
 import React from 'react'
-import { render, screen, cleanup, act } from '@testing-library/react'
+import { render, screen, cleanup, act, renderHook } from '@testing-library/react'
 import { Home } from '../pages/home'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
+import Cookies from 'js-cookie'
 
 
 const user = userEvent.setup();
-
-const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 2, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 3, tasks: []
-        }]
 
 const updateTask = (data) => {
     
@@ -146,66 +136,24 @@ describe('Testing home page with set local storage data', () => {
     })
 })
 
-/*
+
 describe('Testing home page with mock API calls', () => {
-    beforeEach(() => {    
-        const localStorageMock = (function () {
-            let store = {};
-        
-            return {
-            getItem(key) {
-                return store[key];
-            },
-        
-            setItem(key, value) {
-                store[key] = value;
-            },
-        
-            clear() {
-                store = {};
-            },
-        
-            removeItem(key) {
-                delete store[key];
-            },
-        
-            getAll() {
-                return store;
-            },
-            };
-      })();
-      
-      Object.defineProperty(window, "localStorage", { value: localStorageMock });})
-
-    const server = setupServer(
-        rest.get('/fetchTasks/:userID', (req, res, ctx) => {
-            const userCheck = req.params.userID
-            const index = mockDB.findIndex((user => user._id === userCheck))
-            if(index == 0)
-              return res(ctx.status(400))
-            else{
-              return res(
-                ctx.status(200),
-                ctx.json(mockDB[index].tasks))
-            }
-        })
-    )
-
-    beforeAll(() => server.listen())
-    afterEach(() => server.resetHandlers())
-    afterAll(() => server.close())
-
 
     test('Test to see if tasks are empty', async () => {
+        Cookies.set("access_token", "secretCookie");
         window.localStorage.setItem("userId", 3);
-        const renderedApp = render(<App />)
+        const test = await fetch('http://localhost:5000/fetchTasks/1')
+        console.log(await test.headers.get("Data"))
+        const renderedApp = render(<App/>)
         expect(await renderedApp.queryByLabelText(/^delBtn/)).not.toBeInTheDocument()
     })
     
     test('Test to add a task when there are no tasks ', async () => {
+        Cookies.set("access_token", "secretCookie");
         window.localStorage.setItem("userId", 1);
         const renderedApp = render(<App />)
-        const task1 = screen.findByText("mock1")
+
+        const task1 = renderedApp.findByText("mock1")
         expect(task1).toBeInTheDocument();
     })
 
@@ -221,4 +169,3 @@ describe('Testing home page with mock API calls', () => {
 
     })
 })
-*/

@@ -1,10 +1,11 @@
-require('dotenv').config({ path: '../.env' })
+require('dotenv').config({ path: '../.env' });
+const express = require('express');
 const UserModel = require('../models/users');
-const TaskModel = require('../models/tasks.js')
+const TaskModel = require('../models/tasks.js');
 const CollectionsModel = require('../models/collections.js');
 const verifyToken = require('../server.js');
 
-const collectionRouter = express.Router()
+const collectionRouter = express.Router();
 
 // Get Routes --------------------------------------------------
 
@@ -27,7 +28,8 @@ collectionRouter.get("/fetchCollection/tasks/:userID", async (req, res) =>{
 
 // Post Routes --------------------------------------------------
 
-collectionRouter.post("/addCollection", verifyToken , async (req, res) =>{
+collectionRouter.post("/addCollection", async (req, res) =>{
+    verifyToken;
     const user = req.body.userID;
     const userCheck = await UserModel.findOne({_id: user })
     const newCollection = new CollectionsModel({
@@ -46,7 +48,8 @@ collectionRouter.post("/addCollection", verifyToken , async (req, res) =>{
     
 })
 
-collectionRouter.post("/addCollectionTask", verifyToken , async (req, res) =>{
+collectionRouter.post("/addCollectionTask", async (req, res) =>{
+    verifyToken;
     const user = req.body.userID;
     const userCheck = await UserModel.findOne({_id: user })
     if(userCheck.collections.tasks === null)
@@ -66,7 +69,8 @@ collectionRouter.post("/addCollectionTask", verifyToken , async (req, res) =>{
     
 })
 
-collectionRouter.post("/updateCollection", verifyToken , async (req, res) =>{
+collectionRouter.post("/updateCollection", async (req, res) =>{
+    verifyToken;
     const user = req.body.userID;
     const collectionUpdate = `${req.body.collectionID}`
     try{
@@ -78,7 +82,8 @@ collectionRouter.post("/updateCollection", verifyToken , async (req, res) =>{
     }
 })
 
-collectionRouter.post("/updateCollectionTask", verifyToken , async (req, res) =>{
+collectionRouter.post("/updateCollectionTask", async (req, res) =>{
+    verifyToken;
     const user = req.body.userID;
     const collectionUpdate = `${req.body.collectionID}`
     const collectionTaskUpdate = `${req.body.taskID}`
@@ -91,7 +96,8 @@ collectionRouter.post("/updateCollectionTask", verifyToken , async (req, res) =>
     }
 })
 
-collectionRouter.post("/updateCollectionTaskInfo", verifyToken , async (req, res) =>{
+collectionRouter.post("/updateCollectionTaskInfo", async (req, res) =>{
+    verifyToken;
     const user = req.body.userID;
     const collectionUpdate = `${req.body.collectionID}`
     const collectionTaskUpdate = `${req.body.taskID}`
@@ -107,7 +113,8 @@ collectionRouter.post("/updateCollectionTaskInfo", verifyToken , async (req, res
 
 // Delete Routes --------------------------------------------------
 
-collectionRouter.delete('/collections/:collectionID', verifyToken, async (req, res) => {
+collectionRouter.delete('/collections/:collectionID', async (req, res) => {
+    verifyToken;
     const collectionID = req.params.collectionID;
     try{
         const delCollection = await UserModel.findOneAndDelete({"_id": user, "collections._id": collectionID})
@@ -117,7 +124,8 @@ collectionRouter.delete('/collections/:collectionID', verifyToken, async (req, r
     }
 })
 
-collectionRouter.delete('/collections/:collectionID/tasks/:taskID', verifyToken, async (req, res) => {
+collectionRouter.delete('/collections/:collectionID/tasks/:taskID', async (req, res) => {
+    verifyToken;
     const collectionID = req.params.collectionID;
     const taskID = req.params.taskID;
     try{

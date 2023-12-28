@@ -129,7 +129,6 @@ export const Home = (data) => {
     }
 
     async function changeInfo(taskID, oldTitle, oldDesc){
-        console.log("-------------------------------")
         let newTitle, newDesc = "";
 
         if(updtTitle === "")
