@@ -137,35 +137,103 @@ describe('Testing home page with set local storage data', () => {
 })
 
 
-describe('Testing home page with mock API calls', () => {
+describe('Testing mock API calls for home page', () => {
+
+    const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+          {title: "mock2", description: "fake response 2", _id: 2},
+          {title: "mock3", description: "fake response 3", _id: 3}]
+        },
+                {_id: 2, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+          {title: "mock2", description: "fake response 2", _id: 2},
+          {title: "mock3", description: "fake response 3", _id: 3}]
+        },
+                {_id: 3, tasks: []
+        }]
 
     test('Test to see if tasks are empty', async () => {
-        Cookies.set("access_token", "secretCookie");
         window.localStorage.setItem("userId", 3);
-        const test = await fetch('http://localhost:5000/fetchTasks/1')
-        console.log(await test.headers.get("Data"))
-        const renderedApp = render(<App/>)
-        expect(await renderedApp.queryByLabelText(/^delBtn/)).not.toBeInTheDocument()
+        const response = await fetch(`http://localhost:8080/fetchTasks/${localStorage.getItem("userId")}`)
+        expect(await response.json()).toEqual([])
+    })
+
+    test('Test to see if there are tasks', async () => {
+        window.localStorage.setItem("userId", 1);
+        const response = await fetch(`http://localhost:8080/fetchTasks/${localStorage.getItem("userId")}`)
+        expect(await response.json()).toEqual(mockDB[1].tasks)
     })
     
-    test('Test to add a task when there are no tasks ', async () => {
-        Cookies.set("access_token", "secretCookie");
-        window.localStorage.setItem("userId", 1);
-        const renderedApp = render(<App />)
-
-        const task1 = renderedApp.findByText("mock1")
-        expect(task1).toBeInTheDocument();
+    test('Test to add a task on user 1 (has 3 tasks)', async () => {
+        const userID = 1;
+        const title = "new task";
+        const desc = "test desc";
+        const response = await fetch(`http://localhost:8080/addTask`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                title,
+                desc,
+                status: "incomplete"
+                })
+            });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(4)
     })
 
-    test.skip('Test to add a task when there are already tasks', async () => {
-
+    test('Test to add a task on user 3 (has no tasks)', async () => {
+        const userID = 3;
+        const title = "first task";
+        const desc = "test desc";
+        const response = await fetch(`http://localhost:8080/addTask`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                title,
+                desc,
+                status: "incomplete"
+                })
+            });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{title: "first task", description: "test desc", status: "incomplete", _id: 0}])
     })
 
-    test.skip('Test delete a task ', async () => {
-
+    test('Test delete a task ', async () => {
+        const userID = 2;
+        const taskId = 2;
+        const response = await fetch(`http://localhost:8080/tasks/${taskId}`, {
+            method: "DELETE", body: JSON.stringify({userID})
+        });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(2)
+        expect(updatedData).toEqual([{title: "mock1", description: "fake response 1", _id: 1},
+        {title: "mock3", description: "fake response 3", _id: 3}])
     })
 
-    test.skip('Test to update a task ', async () => {
-
+    test('Test to update a task ', async () => {
+        const userID = 1;
+        const taskID = 3
+        const newTitle = "updated mock3"
+        const newDesc = "updated fake response 3"
+        const response = await fetch(`http://localhost:8080/updateTaskInfo`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                taskID,
+                newTitle,
+                newDesc
+                })
+            });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(4)
+        expect(updatedData).toEqual([{title: "mock1", description: "fake response 1", _id: 1},
+        {title: "mock2", description: "fake response 2", _id: 2},
+        {title: "updated mock3", description: "updated fake response 3", _id: 3},
+        {title: "new task", description: "test desc", status: "incomplete", _id: 4}])
     })
 })
