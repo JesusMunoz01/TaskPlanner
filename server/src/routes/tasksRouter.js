@@ -1,4 +1,5 @@
 require('dotenv').config({ path: '../.env' })
+const express = require('express')
 const UserModel = require('../models/users');
 const TaskModel = require('../models/tasks.js')
 const verifyToken = require('../server.js')
@@ -16,7 +17,8 @@ taskRouter.get("/fetchTasks/:userID", async (req, res) =>{
     res.json(tasks.tasks);
 })
 
-taskRouter.post("/addTask", verifyToken , async (req, res) =>{
+taskRouter.post("/addTask", async (req, res) =>{
+    verifyToken;
     const user = req.body.userID;
     const userCheck = await UserModel.findOne({_id: user })
     if(userCheck.tasks === null)
@@ -36,7 +38,8 @@ taskRouter.post("/addTask", verifyToken , async (req, res) =>{
     
 })
 
-taskRouter.post("/updateTask", verifyToken , async (req, res) =>{
+taskRouter.post("/updateTask", async (req, res) =>{
+    verifyToken;
     const user = req.body.userID;
     const taskUpdate = `${req.body.taskID}`
     //const userCheck = await UserModel.findOne({_id: user})
@@ -50,7 +53,8 @@ taskRouter.post("/updateTask", verifyToken , async (req, res) =>{
     }
 })
 
-taskRouter.post("/updateTaskInfo", verifyToken , async (req, res) =>{
+taskRouter.post("/updateTaskInfo", async (req, res) =>{
+    verifyToken;
     const user = req.body.userID;
     const taskUpdate = `${req.body.taskID}`
     try{
@@ -62,7 +66,8 @@ taskRouter.post("/updateTaskInfo", verifyToken , async (req, res) =>{
     }
 })
 
-taskRouter.delete('/tasks/:taskID', verifyToken, async (req, res) => {
+taskRouter.delete('/tasks/:taskID', async (req, res) => {
+    verifyToken;
     const taskID = req.params.taskID;
     const delTask = await TaskModel.findByIdAndDelete(taskID)
     res.json(delTask)
