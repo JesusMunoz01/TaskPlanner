@@ -8,19 +8,6 @@ import Cookies from 'js-cookie'
 import { Navbar } from '../components/navbar'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
-/*
-const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 2, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 3, tasks: []
-        }]
-*/
-
 
 describe('Login Page', () => {
 
@@ -58,39 +45,51 @@ describe('Login Page', () => {
         expect(createName.value).toEqual("New User")
         expect(createPassword.value).toEqual("New Password")
     })
+
+    test("Testing account creation API request with wrong password format", async () => {
+        const newUsername = "Tester User 1";
+        const newPassword = "Test";
+        const response = await fetch(`http://localhost:8080/addUser`, {
+            method: "POST", 
+            body: JSON.stringify({
+                newUsername,
+                newPassword,
+                })
+            });
+        const account = await response.json();
+    })
+
+    test("Testing account creation API request", async () => {
+        const newUsername = "Tester User 1";
+        const newPassword = "Tester Password 1!";
+        const response = await fetch(`http://localhost:8080/addUser`, {
+            method: "POST", 
+            body: JSON.stringify({
+                newUsername,
+                newPassword,
+                })
+            });
+        const account = await response.json();
+        console.log(account)
+    })
+
+    test("Testing login API request with account that was just created", async () => {
+        const username = "Tester User 1";
+        const password = "Tester Password 1!";
+        const response = await fetch(`http://localhost:8080/userLogin`, {
+            method: "POST",
+            body: JSON.stringify({
+                username,
+                password,
+                })
+            });
+        const login = await response.json();
+        console.log(login)
+
+    })
 })
 
 describe('Testing Home page logout option', () => {
-    beforeEach(() => {    
-        const localStorageMock = (function () {
-            let store = {};
-        
-            return {
-            getItem(key) {
-                return store[key];
-            },
-        
-            setItem(key, value) {
-                store[key] = value;
-            },
-        
-            clear() {
-                store = {};
-            },
-        
-            removeItem(key) {
-                delete store[key];
-            },
-        
-            getAll() {
-                return store;
-            },
-            };
-      })();
-      
-      Object.defineProperty(window, "localStorage", { value: localStorageMock });
-
- })
 
     test('Test to see if user is logged', async () => {
         Cookies.set("access_token", "secretCookie");
@@ -99,6 +98,14 @@ describe('Testing Home page logout option', () => {
         const renderedNav = render(<Router><Navbar /></Router>)
         const logoutText = await renderedNav.findByLabelText("loginLink")
         expect(logoutText.textContent).toEqual("Logout")
+    })
+
+    test('Test to see if user is not logged', async () => {
+        Cookies.remove("access_token", "secretCookie");
+        localStorage.setItem("userId", 3);
+        const renderedNav = render(<Router><Navbar /></Router>)
+        const logoutText = await renderedNav.findByLabelText("loginLink")
+        expect(logoutText.textContent).toEqual("Login")
     })
 
 })

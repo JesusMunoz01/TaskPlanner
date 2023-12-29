@@ -1,14 +1,14 @@
 import { rest } from 'msw'
 
-const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+const mockDB = [{_id: 1, username: "TUser1", password: "TPass1", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
           {title: "mock2", description: "fake response 2", _id: 2},
           {title: "mock3", description: "fake response 3", _id: 3}]
         },
-                {_id: 2, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+                {_id: 2, username: "TUser2", password: "TPass2", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
           {title: "mock2", description: "fake response 2", _id: 2},
           {title: "mock3", description: "fake response 3", _id: 3}]
         },
-                {_id: 3, tasks: []
+                {_id: 3, username: "TUser3", password: "TPass3", tasks: []
         }]
 
 export const handlers = [
@@ -72,4 +72,37 @@ export const handlers = [
           return res(ctx.json(userIndex[0].tasks))
         }
       }),
+  // ---------------------- Login Page Handlers -----------------------------------
+      rest.post('http://localhost:8080/addUser', async (req, res, ctx) => {
+        const data = await req.json()
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
+        if(passwordRegex.test(data.newPassword)){
+          let nextId = 1;
+          let lastUser = [];
+          try{
+          const dbUser = mockDB
+          let localCopy = JSON.parse(JSON.stringify(dbUser))
+          if(localCopy)
+            lastUser = localCopy.pop();
+          if(lastUser.length !== 0)
+              nextId = lastUser._id + 1;
+          const newUser = {_id: nextId, username: data.newUsername, password: data.newPassword, tasks: []}
+          mockDB.push(newUser)
+          return res(ctx.json(newUser))
+        } catch (error) {}
+      } else
+          return res(ctx.json("Cant add user"), ctx.status(400))
+    }),
+
+    rest.post('http://localhost:8080/userLogin', async (req, res, ctx) => {
+      const data = await req.json()
+      const username = data.username;
+      const password = data.password
+      const index = mockDB.filter((user) => user.username === username)
+      console.log(index)
+      if(index.password == password){
+        return res(ctx.json(index[0]))
+      } else
+        return res(ctx.json("Incorrect username or password"), ctx.status(400))
+    }),
 ]
