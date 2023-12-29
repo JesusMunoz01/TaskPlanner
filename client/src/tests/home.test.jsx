@@ -1,18 +1,13 @@
 import React from 'react'
-import { render, screen, cleanup, act, renderHook } from '@testing-library/react'
+import { render, cleanup, act} from '@testing-library/react'
 import { Home } from '../pages/home'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
-import App from '../App'
-import Cookies from 'js-cookie'
 
 
 const user = userEvent.setup();
 
-const updateTask = (data) => {
-    
- }
-
+const updateTask = (data) => {}
 
 describe('Testing basic home page', () => {
 
