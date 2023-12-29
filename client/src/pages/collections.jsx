@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 export const Collections = (data) => {
     const [collections, setCollections] = useState(data.data);
     console.log(data.data)
-    //const [taskFilter, setCurrentFilter] = useState(data.data);
     const [isUserLogged, ] = useState(data.isLogged)
     const [collectionTitle, setCollectionTitle] = useState("");
     const [collectionDescription, setCollectionDesc] = useState("");
