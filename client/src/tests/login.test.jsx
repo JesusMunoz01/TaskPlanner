@@ -57,6 +57,7 @@ describe('Login Page', () => {
                 })
             });
         const account = await response.json();
+        expect(account).toEqual("Cant add user")
     })
 
     test("Testing account creation API request", async () => {
@@ -70,7 +71,11 @@ describe('Login Page', () => {
                 })
             });
         const account = await response.json();
-        console.log(account)
+        expect(account).toEqual({_id: 4,
+            username: 'Tester User 1',
+            password: 'Tester Password 1!',
+            tasks: []
+          })
     })
 
     test("Testing login API request with account that was just created", async () => {
@@ -84,7 +89,32 @@ describe('Login Page', () => {
                 })
             });
         const login = await response.json();
-        console.log(login)
+        expect(login).toEqual({_id: 4,
+            username: 'Tester User 1',
+            password: 'Tester Password 1!',
+            tasks: []
+          })
+
+    })
+
+    test("Testing login API request with an old account", async () => {
+        const username = "TUser1";
+        const password = "TPassword1!";
+        const response = await fetch(`http://localhost:8080/userLogin`, {
+            method: "POST",
+            body: JSON.stringify({
+                username,
+                password,
+                })
+            });
+        const login = await response.json();
+        expect(login).toEqual({_id: 1,
+            username: 'TUser1',
+            password: 'TPassword1!',
+            tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+            {title: "mock2", description: "fake response 2", _id: 2},
+            {title: "mock3", description: "fake response 3", _id: 3}]
+          })
 
     })
 })
