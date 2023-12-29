@@ -1,14 +1,14 @@
 import { rest } from 'msw'
 
-const mockDB = [{_id: 1, username: "TUser1", password: "TPass1", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
           {title: "mock2", description: "fake response 2", _id: 2},
           {title: "mock3", description: "fake response 3", _id: 3}]
         },
-                {_id: 2, username: "TUser2", password: "TPass2", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+                {_id: 2, username: "TUser2", password: "TPassword2!", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
           {title: "mock2", description: "fake response 2", _id: 2},
           {title: "mock3", description: "fake response 3", _id: 3}]
         },
-                {_id: 3, username: "TUser3", password: "TPass3", tasks: []
+                {_id: 3, username: "TUser3", password: "TPassword3!", tasks: []
         }]
 
 export const handlers = [
@@ -97,10 +97,10 @@ export const handlers = [
     rest.post('http://localhost:8080/userLogin', async (req, res, ctx) => {
       const data = await req.json()
       const username = data.username;
-      const password = data.password
+      const check = data.pswrd
       const index = mockDB.filter((user) => user.username === username)
       console.log(index)
-      if(index.password == password){
+      if(index.password == check){
         return res(ctx.json(index[0]))
       } else
         return res(ctx.json("Incorrect username or password"), ctx.status(400))
