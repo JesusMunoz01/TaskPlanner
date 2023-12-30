@@ -25,6 +25,9 @@ function App() {
   const updateTask = (data) => {
     setTaskData(data);
   }
+  const updateCollection = (data) => {
+    setTaskData(data);
+  }
 
   useEffect(() => {
     if(!logExpired.access_token){
@@ -55,9 +58,10 @@ function App() {
           setLogin(false)
           console.log("Searching local Storage");
           const localTasks = window.localStorage.getItem("localTaskData");
+          const localCollection = window.localStorage.getItem("localCollectionData");
           console.log("Updating data");
           setLoading(false);
-          setCollectionData()
+          setCollectionData(localCollection)
           setTaskData(localTasks);
           } catch(error){
 
@@ -81,7 +85,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home data={taskData} isLogged={userLogin} updateTask={updateTask}/>} />
             <Route path="/login" element={<Login loginStatus={loginStatus}/>} />
-            <Route path="/collections" element={<Collections data={collectionData} isLogged={userLogin}/>} />
+            <Route path="/collections" element={<Collections data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>} />
           </Routes>
           </div>
         </div>

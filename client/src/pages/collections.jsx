@@ -16,6 +16,7 @@ export const Collections = (data) => {
 
     async function sendCollection(e){
         e.preventDefault();
+        if(isUserLogged){
             try{
                 const userID = window.localStorage.getItem("userId");
                 const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addCollection`, {
@@ -27,6 +28,7 @@ export const Collections = (data) => {
                         userID,
                         collectionTitle,
                         collectionDescription,
+                        tasks: [],
                         status: "incomplete"
                         })
                     });
@@ -37,6 +39,32 @@ export const Collections = (data) => {
             }catch(error){
                 console.log(error)
             }
+        }
+        else{
+            const getLocal = window.localStorage.getItem("localCollectionData");
+            let nextId = 0;
+            let localCollection = [];
+            let lastCollectionID = [];
+            if(getLocal)
+                localCollection = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            let localCopy = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            if(localCopy)
+                lastCollectionID = localCopy.pop();
+            if(lastCollectionID.length !== 0)
+                nextId = lastCollectionID._id + 1;
+
+                const newCollection = {
+                    collectionTitle: collectionTitle, collectionDescription: collectionDescription, 
+                    _id: nextId, tasks: [], status:"incomplete"
+                }
+
+            localCollection.push(newCollection)
+            window.localStorage.setItem("localCollectionData", JSON.stringify(localCollection))
+            const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
+            setCollections(getUpdatedLocal);
+            data.updateCollection(getUpdatedLocal)
+            // setCurrentFilter(getUpdatedLocal);
+        }
 
         setCollectionTitle('');
         setCollectionDesc('');
@@ -203,11 +231,12 @@ export const Collections = (data) => {
     }
 
     return <div className="collectionsHome">
-        {isUserLogged ? 
+        
         <div className="collectionsBox">
         <h1>Collections</h1>
             <div className="collections">
-                {collections ? 
+            {isUserLogged ? 
+                collections ? 
                     // Section for: Logged user with tasks -------------------------------------------
                     collections.map((collection)=> (
                         <div className="collectionsList">
@@ -238,10 +267,43 @@ export const Collections = (data) => {
                     </div>
                     )) : 
                         // Section for: Logged user without tasks -------------------------------------------
-                    <span>Currently no Collections</span> 
+                    <span id="collectionEmptyPrompt">Currently no Collections</span>
+                :
+                    collections ? 
+                    // Section for: Not logged user with tasks -------------------------------------------
+                    JSON.parse(collections).map((collection)=> (
+                        <div className="collectionsList">
+                        <li key={collection._id}>
+                            <p aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
+                            <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
+                            <label id="settingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                            <div className="statusBox">
+                                <label id="taskState">Status: </label>
+                                <select for="taskState" value={collection.status} onChange={(e) => changeStatus(e.target.value, collection._id)}>
+                                    <option value={"incomplete"}>Incomplete</option>
+                                    <option value={"complete"}>Complete</option>
+                                </select>
+                            </div>
+                        </li>
+                        <ul className="editTask" id={`setting${collection._id}`} style={{display:"none", transition: 0.4}}>
+                            <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
+                                <label>Edit title:</label>
+                                <input id="taskTitle" value={updtCollectionTitle} onChange={(e) => updateCollectionTitle(e.target.value)}></input>
+                            </li>
+                            <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
+                                <label>Edit Description:</label>
+                                <input id="taskDesc" value={updtCollectionDescription} onChange={(e) => updateCollectionDesc(e.target.value)}></input>
+                            </li>
+                            <button onClick={() => changeInfo(collection._id, collection.title, collection.description)}>Save Changes</button>
+                        </ul>
+                    </div>
+                    )) : 
+                        // Section for: Not logged user without tasks -------------------------------------------
+                    <span id="collectionEmptyPrompt">Currently no Collections</span>
+                    
                 }
                 
-            </div>
+        </div>
             <div className="addCollection">
                 <h2>Add Collection</h2>
                 <form>
@@ -252,10 +314,6 @@ export const Collections = (data) => {
                     <button onClick={(e) => sendCollection(e)}>Submit</button>
                 </form>
             </div>
-        </div> :
-        <div>
-            <span>You are currently not logged, to access this feature log in </span>
-        </div>
-        }
+        </div> 
     </div>
 }

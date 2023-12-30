@@ -14,7 +14,7 @@ npm i
 After installing dependencies access the client folder and simply run
 
 ```
-npm start
+npm run dev
 ```
 
 The application should work normally but some functions that require the database
@@ -32,6 +32,6 @@ In the server folder:
 In the client folder:
 
 1. Create a .env file following example.env file
-2. Run the `npm start command`
+2. Run the `npm run dev`
 
 The application should be setup after completing both sections and the website should be ready for use
