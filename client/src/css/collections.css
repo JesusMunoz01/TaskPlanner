@@ -1,15 +1,62 @@
 .collectionsHome{
-
+    display: flex;
+    overflow: auto;
+    min-height: 95vh;
+    min-width: 100%;
+    align-items: flex-start;
+    justify-content: center;
 }
 
 .collectionsBox{
-
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .collectionsBox h1{
-    font-size: small;
+    font-size: 32px;
 }
 
 .collections{
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(3, 1fr);
+    border-style: solid;
+    height: 50vh;
+    width: 50vw;
+    text-align: center;
+    overflow-y: auto;
+}
+
+.collections li{
     display: flex;
+    height: 250px;
+    border: darkblue solid;
+    flex-direction: column;
+}
+
+.collections li p{
+    margin-top: 0;
+    font-size: large;
+    display: flex;
+    justify-content: center;
+    min-height: 100px;
+    overflow-y: auto;
+}
+
+.addCollection{
+    display: flex;
+    flex-direction: column;
+    height: 20vh;
+    justify-content: center;
+}
+
+#collectionEmptyPrompt{
+    display: flex;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    justify-content: center;
+    align-self: center;
 }
