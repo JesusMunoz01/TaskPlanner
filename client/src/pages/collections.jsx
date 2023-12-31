@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 export const Collections = (data) => {
     const [collections, setCollections] = useState(data.data);
-    console.log(data.data)
     const [isUserLogged, ] = useState(data.isLogged)
     const [collectionTitle, setCollectionTitle] = useState("");
     const [collectionDescription, setCollectionDesc] = useState("");
@@ -320,10 +319,10 @@ export const Collections = (data) => {
                 <h2>Add Collection</h2>
                 <form>
                     <label>Collection Title: </label>
-                    <input id="collectionTitle" value={collectionTitle} onChange={(e) => setCollectionTitle(e.target.value)}></input>
+                    <input aria-label="addCollectionTitle" id="collectionTitle" value={collectionTitle} onChange={(e) => setCollectionTitle(e.target.value)}></input>
                     <label>Description: </label>
-                    <input id="collectionDesc" value={collectionDescription} onChange={(e) => setCollectionDesc(e.target.value)}></input>
-                    <button onClick={(e) => sendCollection(e)}>Submit</button>
+                    <input aria-label="addCollectionDesc" id="collectionDesc" value={collectionDescription} onChange={(e) => setCollectionDesc(e.target.value)}></input>
+                    <button aria-label="createNewCollection" onClick={(e) => sendCollection(e)}>Submit</button>
                 </form>
             </div>
         </div> 
