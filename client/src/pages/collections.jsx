@@ -288,12 +288,15 @@ export const Collections = (data) => {
                     JSON.parse(collections).map((collection)=> (
                         <div className="collectionsList" data-testid="collection-item">
                             <li key={collection._id}>
-                                <p aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
-                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="settingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                <p id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
+                                <div className="descBox">
+                                    <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
+                                </div>
                                 <div className="statusBox">
                                     <span>Status: {collection.status}</span>
                                 </div>
+                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
+                                <label id="settingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                 <button aria-label="delCollection" onClick={() => delCollection(collection._id)}>X</button>
                             </li>
                             <ul className="editTask" id={`setting${collection._id}`} style={{display:"none", transition: 0.4}}>
