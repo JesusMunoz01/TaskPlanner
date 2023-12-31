@@ -77,11 +77,70 @@
     margin-top: 0px;
 }
 
-#settingsIcon{
+#collectionsSettingsIcon{
     align-self: center;
     right: 0;
-    font-size: 30px;
+    font-size: 24px;
     margin-bottom: 5px;
+}
+
+.editCollection{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border-style: none;
+    background-color: rgba(119, 136, 153, 0.377);
+    position: relative;
+    height: 0;
+    transition: all .3s ease-in;
+}
+
+.editCollection.active{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(119, 136, 153, 0.377);
+    position: relative;
+    height: 200px;
+    width: inherit;
+    transition: all .3s ease-in;
+    flex-direction: column;
+}
+
+.editCollection li{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 5px;
+    border-style: none;
+    font-size: 95%;
+}
+
+.editCollection li input{
+    display: flex;
+    border-color: black;
+    padding: 5px;
+    margin: 3px;
+    width: 100%;
+}
+
+.editCollection button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+    margin-right: 4%;
+    margin-bottom: 2px;
+    background-color: #282c34;
+    color: white;
+    border-radius: 10px;
 }
 
 .addCollection{
