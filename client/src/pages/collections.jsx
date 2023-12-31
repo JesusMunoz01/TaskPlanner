@@ -100,12 +100,27 @@ export const Collections = (data) => {
     }
 */
     async function delCollection(collectionID){
+        if(isUserLogged){
+            await fetch(`${process.env.REACT_APP_BASE_URL}/tasks/${collectionID}`, {
+                method: "DELETE", headers: {auth: cookies.access_token}});
 
-        await fetch(`${process.env.REACT_APP_BASE_URL}/tasks/${collectionID}`, {
-            method: "DELETE", headers: {auth: cookies.access_token}});
-
-        setCollections(collections.filter((collection) => collection._id !== collectionID))
-        //setCurrentFilter(tasks);
+            setCollections(collections.filter((collection) => collection._id !== collectionID))
+            //setCurrentFilter(collections);
+        }
+        else{
+            const delItem = JSON.parse(collections).filter((collection) => collection._id !== collectionID)
+            window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
+            if(JSON.parse(collections).length === 1){
+                window.localStorage.removeItem("localCollectionData");
+                setCollections(null);
+                //setCurrentFilter(null);
+            }else{
+                const getUpdatedLocal = window.localStorage.getItem("localTaskData");
+                setCollections(getUpdatedLocal);
+                data.updateCollection(getUpdatedLocal);
+                //setCurrentFilter(getUpdatedLocal);
+            }
+        }
     }
 
     async function changeStatus(collectionStatus, collectionID){
@@ -239,7 +254,7 @@ export const Collections = (data) => {
                 collections ? 
                     // Section for: Logged user with tasks -------------------------------------------
                     collections.map((collection)=> (
-                        <div className="collectionsList">
+                        <div className="collectionsList" data-testid="collection-item">
                         <li key={collection._id}>
                             <button onClick={() => delCollection(collection._id)}>x</button>
                             <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
@@ -272,31 +287,28 @@ export const Collections = (data) => {
                     collections ? 
                     // Section for: Not logged user with tasks -------------------------------------------
                     JSON.parse(collections).map((collection)=> (
-                        <div className="collectionsList">
-                        <li key={collection._id}>
-                            <p aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
-                            <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                            <label id="settingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                            <div className="statusBox">
-                                <label id="taskState">Status: </label>
-                                <select for="taskState" value={collection.status} onChange={(e) => changeStatus(e.target.value, collection._id)}>
-                                    <option value={"incomplete"}>Incomplete</option>
-                                    <option value={"complete"}>Complete</option>
-                                </select>
-                            </div>
-                        </li>
-                        <ul className="editTask" id={`setting${collection._id}`} style={{display:"none", transition: 0.4}}>
-                            <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
-                                <label>Edit title:</label>
-                                <input id="taskTitle" value={updtCollectionTitle} onChange={(e) => updateCollectionTitle(e.target.value)}></input>
+                        <div className="collectionsList" data-testid="collection-item">
+                            <li key={collection._id}>
+                                <p aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
+                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
+                                <label id="settingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                <div className="statusBox">
+                                    <span>Status: {collection.status}</span>
+                                </div>
+                                <button aria-label="delCollection" onClick={() => delCollection(collection._id)}>X</button>
                             </li>
-                            <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
-                                <label>Edit Description:</label>
-                                <input id="taskDesc" value={updtCollectionDescription} onChange={(e) => updateCollectionDesc(e.target.value)}></input>
-                            </li>
-                            <button onClick={() => changeInfo(collection._id, collection.title, collection.description)}>Save Changes</button>
-                        </ul>
-                    </div>
+                            <ul className="editTask" id={`setting${collection._id}`} style={{display:"none", transition: 0.4}}>
+                                <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
+                                    <label>Edit title:</label>
+                                    <input id="taskTitle" value={updtCollectionTitle} onChange={(e) => updateCollectionTitle(e.target.value)}></input>
+                                </li>
+                                <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
+                                    <label>Edit Description:</label>
+                                    <input id="taskDesc" value={updtCollectionDescription} onChange={(e) => updateCollectionDesc(e.target.value)}></input>
+                                </li>
+                                <button onClick={() => changeInfo(collection._id, collection.title, collection.description)}>Save Changes</button>
+                            </ul>
+                        </div>
                     )) : 
                         // Section for: Not logged user without tasks -------------------------------------------
                     <span id="collectionEmptyPrompt">Currently no Collections</span>

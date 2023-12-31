@@ -21,7 +21,6 @@
 
 .collections{
     display: grid;
-    gap: 5px;
     grid-template-columns: repeat(3, 1fr);
     border-style: solid;
     height: 50vh;
@@ -33,8 +32,9 @@
 .collections li{
     display: flex;
     height: 250px;
-    border: darkblue solid;
+    border: white solid;
     flex-direction: column;
+    margin: 4px;
 }
 
 .collections li p{
