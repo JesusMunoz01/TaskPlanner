@@ -114,7 +114,7 @@ export const Collections = (data) => {
                 setCollections(null);
                 //setCurrentFilter(null);
             }else{
-                const getUpdatedLocal = window.localStorage.getItem("localTaskData");
+                const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
                 setCollections(getUpdatedLocal);
                 data.updateCollection(getUpdatedLocal);
                 //setCurrentFilter(getUpdatedLocal);
@@ -307,7 +307,7 @@ export const Collections = (data) => {
                                 </div>
                                 <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
                                 <label id="collectionsSettingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                <button aria-label="delCollection" onClick={() => delCollection(collection._id)}>X</button>
+                                <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                             </li>
                             <ul className="editCollection" id={`colSetting${collection._id}`} >
                                 <li id={`colSetting${collection._id}`}>
