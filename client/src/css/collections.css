@@ -23,7 +23,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-style: solid;
-    height: 50vh;
+    height: 525px;
     width: 50vw;
     text-align: center;
     overflow-y: auto;
@@ -34,16 +34,113 @@
     height: 250px;
     border: white solid;
     flex-direction: column;
-    margin: 4px;
+    margin: 4px 4px 0px 4px;
 }
 
-.collections li p{
+#collectionDisplayTitle{
     margin-top: 0;
-    font-size: large;
+    margin: 0;
+    word-wrap: break-all;
+    font-size: larger;
     display: flex;
     justify-content: center;
-    min-height: 100px;
+    min-height: 60px;
     overflow-y: auto;
+    word-break: break-all;
+    overflow-x: hidden;
+    margin-bottom: 5px;
+    border-bottom: 1px solid white;
+}
+
+#collectionDisplayDesc{
+    margin-top: 0;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    height: 90px;
+    overflow-y: auto;
+    margin-bottom: 0px;
+}
+
+.collections li button{
+    background-color: red;
+    width: 50%;
+    align-self: center;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    margin-top: 2px;
+}
+
+.statusBox{
+    height: 40px;
+    margin-bottom: 5px;
+    margin-top: 0px;
+}
+
+#collectionsSettingsIcon{
+    align-self: center;
+    right: 0;
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.editCollection{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border-style: none;
+    background-color: rgba(119, 136, 153, 0.377);
+    position: relative;
+    height: 0;
+    transition: all .3s ease-in;
+}
+
+.editCollection.active{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(119, 136, 153, 0.377);
+    position: relative;
+    height: 200px;
+    width: inherit;
+    transition: all .3s ease-in;
+    flex-direction: column;
+}
+
+.editCollection li{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 5px;
+    border-style: none;
+    font-size: 95%;
+}
+
+.editCollection li input{
+    display: flex;
+    border-color: black;
+    padding: 5px;
+    margin: 3px;
+    width: 100%;
+}
+
+.editCollection button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+    margin-right: 4%;
+    margin-bottom: 2px;
+    background-color: #282c34;
+    color: white;
+    border-radius: 10px;
 }
 
 .addCollection{

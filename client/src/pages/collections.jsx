@@ -237,11 +237,20 @@ export const Collections = (data) => {
     }
 */
     function displayEdit(id){
-        const currentMode = document.getElementById(`setting${id}`).className
-        if(currentMode === "editTask active")
-            document.getElementById(`setting${id}`).className = "editTask"
+        updateCollectionTitle("")
+        updateCollectionDesc("")
+
+        const currentMode = document.getElementById(`colSetting${id}`).className
+        var list = document.getElementsByClassName("editCollection active")
+
+        Array.prototype.forEach.call(list, (item) => {
+            item.className = "editCollection"
+        })
+
+        if(currentMode === "editCollection active")
+            document.getElementById(`colSetting${id}`).className = "editCollection"
         else
-            document.getElementById(`setting${id}`).className = "editTask active"
+            document.getElementById(`colSetting${id}`).className = "editCollection active"
     }
 
     return <div className="collectionsHome">
@@ -251,13 +260,13 @@ export const Collections = (data) => {
             <div className="collections">
             {isUserLogged ? 
                 collections ? 
-                    // Section for: Logged user with tasks -------------------------------------------
+                    // Section for: Logged user with collections -------------------------------------------
                     collections.map((collection)=> (
                         <div className="collectionsList" data-testid="collection-item">
                         <li key={collection._id}>
                             <button onClick={() => delCollection(collection._id)}>x</button>
                             <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                            <label id="settingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                            <label id="collectionSettingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                 {collection.title}
                             <div className="statusBox">
                                 <label id="taskState">Status: </label>
@@ -267,12 +276,12 @@ export const Collections = (data) => {
                                 </select>
                             </div>
                         </li>
-                        <ul className="editTask" id={`setting${collection._id}`} style={{display:"none", transition: 0.4}}>
-                            <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
+                        <ul className="editTask" id={`colSetting${collection._id}`} style={{display:"none", transition: 0.4}}>
+                            <li id={`colSetting${collection._id}`} style={{display:"flex", transition: 0.4}}>
                                 <label>Edit title:</label>
                                 <input id="taskTitle" value={updtCollectionTitle} onChange={(e) => updateCollectionTitle(e.target.value)}></input>
                             </li>
-                            <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
+                            <li id={`colSetting${collection._id}`} style={{display:"flex", transition: 0.4}}>
                                 <label>Edit Description:</label>
                                 <input id="taskDesc" value={updtCollectionDescription} onChange={(e) => updateCollectionDesc(e.target.value)}></input>
                             </li>
@@ -280,36 +289,39 @@ export const Collections = (data) => {
                         </ul>
                     </div>
                     )) : 
-                        // Section for: Logged user without tasks -------------------------------------------
+                        // Section for: Logged user without collections -------------------------------------------
                     <span id="collectionEmptyPrompt">Currently no Collections</span>
                 :
                     collections ? 
-                    // Section for: Not logged user with tasks -------------------------------------------
+                    // Section for: Not logged user with collections -------------------------------------------
                     JSON.parse(collections).map((collection)=> (
                         <div className="collectionsList" data-testid="collection-item">
                             <li key={collection._id}>
-                                <p aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
-                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="settingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                <p id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
+                                <div className="descBox">
+                                    <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
+                                </div>
                                 <div className="statusBox">
                                     <span>Status: {collection.status}</span>
                                 </div>
+                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
+                                <label id="collectionsSettingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                 <button aria-label="delCollection" onClick={() => delCollection(collection._id)}>X</button>
                             </li>
-                            <ul className="editTask" id={`setting${collection._id}`} style={{display:"none", transition: 0.4}}>
-                                <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
+                            <ul className="editCollection" id={`colSetting${collection._id}`} >
+                                <li id={`colSetting${collection._id}`}>
                                     <label>Edit title:</label>
-                                    <input id="taskTitle" value={updtCollectionTitle} onChange={(e) => updateCollectionTitle(e.target.value)}></input>
+                                    <input id="collectionTitle" value={updtCollectionTitle} onChange={(e) => updateCollectionTitle(e.target.value)}></input>
                                 </li>
-                                <li id={`setting${collection._id}`} style={{display:"flex", transition: 0.4}}>
+                                <li id={`colSetting${collection._id}`}>
                                     <label>Edit Description:</label>
-                                    <input id="taskDesc" value={updtCollectionDescription} onChange={(e) => updateCollectionDesc(e.target.value)}></input>
+                                    <input id="collectionDesc" value={updtCollectionDescription} onChange={(e) => updateCollectionDesc(e.target.value)}></input>
                                 </li>
-                                <button onClick={() => changeInfo(collection._id, collection.title, collection.description)}>Save Changes</button>
+                                <button id="confirmColEdit" onClick={() => changeInfo(collection._id, collection.title, collection.description)}>Save Changes</button>
                             </ul>
                         </div>
                     )) : 
-                        // Section for: Not logged user without tasks -------------------------------------------
+                        // Section for: Not logged user without collections -------------------------------------------
                     <span id="collectionEmptyPrompt">Currently no Collections</span>
                     
                 }
