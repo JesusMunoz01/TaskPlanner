@@ -93,6 +93,48 @@ describe('Tests for collections Page', () => {
         expect(updateCollectionDesc.value).toEqual("")
     })
 
+    test('Creating a collection and updating it', async () => {
+        window.localStorage.removeItem("localCollectionData")
+        const renderedCollections = render(<Collections isLogged={userLogin} updateCollection={updateCollection}/>)
+        const inputCollectionTitle = await renderedCollections.findByLabelText('addCollectionTitle')
+        const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionDesc')
+        const createCollection = await renderedCollections.findByLabelText('createNewCollection')
+
+        await act(async () => {
+            await user.type(inputCollectionTitle, "Test Collection")
+            await user.type(inputCollectionDesc, "Test Description")
+            await user.click(createCollection)
+        })
+
+        const collectionTitle = await renderedCollections.findByLabelText("collectionTitle0")
+        const collectionDesc = await renderedCollections.findByLabelText("collectionDesc0")
+
+        expect(collectionTitle.innerHTML).toEqual("Test Collection")
+        expect(collectionDesc.innerHTML).toEqual("Test Description")
+
+        const updateCollectionTitle = await renderedCollections.findByLabelText('editCollectionTitle0')
+        const updateCollectionDesc = await renderedCollections.findByLabelText('editCollectionDesc0')
+        const updateCollectionBtn = await renderedCollections.findByLabelText('confirmColEdit0')
+
+        await act(async () => {
+            await user.type(updateCollectionTitle, "Updated Test Collection")
+            await user.type(updateCollectionDesc, "Updated Test Description")
+            await user.click(updateCollectionBtn)
+        })
+
+        const collections = await renderedCollections.findAllByTestId(/^collection/);
+        const updatedCollectionTitle = await renderedCollections.findByLabelText("collectionTitle0")
+        const updatedCollectionDesc = await renderedCollections.findByLabelText("collectionDesc0")
+
+        expect(collections.length).toEqual(1);
+        expect(updatedCollectionTitle.innerHTML).toEqual("Updated Test Collection")
+        expect(updatedCollectionDesc.innerHTML).toEqual("Updated Test Description")
+        expect(inputCollectionTitle.value).toEqual("")
+        expect(inputCollectionDesc.value).toEqual("")
+        expect(updateCollectionTitle.value).toEqual("")
+        expect(updateCollectionDesc.value).toEqual("")
+    })
+
     test.skip('Testing deleting a collection', async () => {
 
     })
