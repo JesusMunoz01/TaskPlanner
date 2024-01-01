@@ -71,8 +71,26 @@ describe('Tests for collections Page', () => {
         expect(inputCollectionDesc.value).toEqual("")
     })
 
-    test.skip('Updating a collection', async () => {
+    test('Updating a collection', async () => {
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData))
+        const renderedCollections = render(<Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>)
+        const updateCollectionTitle = await renderedCollections.findByLabelText('editCollectionTitle1')
+        const updateCollectionDesc = await renderedCollections.findByLabelText('editCollectionDesc1')
+        const cupdateCollection = await renderedCollections.findByLabelText('confirmColEdit1')
 
+        await act(async () => {
+            await user.type(updateCollectionTitle, "Updated Mock Collection")
+            await user.type(updateCollectionDesc, "Updated Mock Description")
+            await user.click(cupdateCollection)
+        })
+
+        const collections = await renderedCollections.findAllByTestId(/^collection/);
+        const prevCollectionTitle = await renderedCollections.findByLabelText("collectionTitle1")
+
+        expect(collections.length).toEqual(1);
+        expect(prevCollectionTitle.innerHTML).toEqual("Updated Mock Collection")
+        expect(updateCollectionTitle.value).toEqual("")
+        expect(updateCollectionDesc.value).toEqual("")
     })
 
     test.skip('Testing deleting a collection', async () => {
@@ -94,7 +112,6 @@ describe('Tests for collections Page', () => {
     test.skip('Updating a collection task', async () => {
 
     })
-
 })
 
 describe('Tests for collections Page API', () => {

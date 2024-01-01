@@ -122,41 +122,41 @@ export const Collections = (data) => {
         }
     }
 
-    async function changeStatus(collectionStatus, collectionID){
-            try{
-                const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/updateTask`, {
-                    method: "POST", headers: {
-                        'Content-Type': 'application/json',
-                        auth: cookies.access_token
-                    },
-                    body: JSON.stringify({
-                        userID,
-                        collectionID,
-                        collectionStatus
-                        })
-                    });
-                const updatedValues = await res.json()
-                const index = updatedValues.findIndex((collection => collection._id === collectionID))
-                updatedValues[index].status = `${collectionStatus}`
-                setCollections(updatedValues)
-                //setCurrentFilter(updatedValues)
-            }catch(error){
-                console.log(error)
-            }
-    }
+    // async function changeStatus(collectionStatus, collectionID){
+    //         try{
+    //             const userID = window.localStorage.getItem("userId");
+    //             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/updateTask`, {
+    //                 method: "POST", headers: {
+    //                     'Content-Type': 'application/json',
+    //                     auth: cookies.access_token
+    //                 },
+    //                 body: JSON.stringify({
+    //                     userID,
+    //                     collectionID,
+    //                     collectionStatus
+    //                     })
+    //                 });
+    //             const updatedValues = await res.json()
+    //             const index = updatedValues.findIndex((collection => collection._id === collectionID))
+    //             updatedValues[index].status = `${collectionStatus}`
+    //             setCollections(updatedValues)
+    //             //setCurrentFilter(updatedValues)
+    //         }catch(error){
+    //             console.log(error)
+    //         }
+    // }
 
-    async function changeInfo(taskID, oldTitle, oldDesc){
-        let newTitle, newDesc = "";
+    async function changeInfo(collectionID, oldColTitle, oldColDesc){
+        let newColTitle = "", newColDesc = "";
 
         if(updtCollectionTitle === "")
-            newTitle = oldTitle;
+            newColTitle = oldColTitle;
         else
-            newTitle = updtCollectionTitle;
+            newColTitle = updtCollectionTitle;
         if(updtCollectionDescription === "")
-            newDesc = oldDesc;
+            newColDesc = oldColDesc;
         else
-            newDesc = updtCollectionDescription;
+            newColDesc = updtCollectionDescription;
 
         if(isUserLogged)
             try{
@@ -169,27 +169,28 @@ export const Collections = (data) => {
                     body: JSON.stringify({
                         userID,
                         taskID,
-                        newTitle,
-                        newDesc
+                        newColTitle,
+                        newColDesc
                         })
                     });
                 const updatedValues = await res.json()
-                const index = updatedValues.findIndex((task => task._id === taskID))
-                updatedValues[index].title = `${newTitle}`
-                updatedValues[index].description = `${newDesc}`
+                const index = updatedValues.findIndex((collection => collection._id === collectionID))
+                updatedValues[index].collectionTitle = `${newColTitle}`
+                updatedValues[index].collectionDescription = `${newColDesc}`
                 setCollections(updatedValues)
                 //setCurrentFilter(updatedValues)
             }catch(error){
                 console.log(error)
             }
         else{
-            const localTask = JSON.parse(window.localStorage.getItem("localTaskData"))
-            const index = localTask.findIndex((task => task._id === taskID))
-            localTask[index].title = `${updtCollectionTitle}`
-            localTask[index].description = `${updtCollectionDescription}`
-            window.localStorage.setItem("localTaskData", JSON.stringify(localTask))
-            const getUpdatedLocal = window.localStorage.getItem("localTaskData");
+            const localCollection = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            const index = localCollection.findIndex((collection => collection._id === collectionID))
+            localCollection[index].collectionTitle = `${newColTitle}`
+            localCollection[index].collectionDescription = `${newColDesc}`
+            window.localStorage.setItem("localCollectionData", JSON.stringify(localCollection))
+            const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
             setCollections(getUpdatedLocal);
+            data.updateCollection(getUpdatedLocal);
             //setCurrentFilter(getUpdatedLocal);
         }
 
@@ -311,13 +312,16 @@ export const Collections = (data) => {
                             <ul className="editCollection" id={`colSetting${collection._id}`} >
                                 <li id={`colSetting${collection._id}`}>
                                     <label>Edit title:</label>
-                                    <input id="collectionTitle" value={updtCollectionTitle} onChange={(e) => updateCollectionTitle(e.target.value)}></input>
+                                    <input id="collectionTitle" aria-label={`editCollectionTitle${collection._id}`} value={updtCollectionTitle} 
+                                        onChange={(e) => updateCollectionTitle(e.target.value)}></input>
                                 </li>
                                 <li id={`colSetting${collection._id}`}>
                                     <label>Edit Description:</label>
-                                    <input id="collectionDesc" value={updtCollectionDescription} onChange={(e) => updateCollectionDesc(e.target.value)}></input>
+                                    <input aria-label={`editCollectionDesc${collection._id}`} id="collectionDesc" value={updtCollectionDescription} 
+                                        onChange={(e) => updateCollectionDesc(e.target.value)}></input>
                                 </li>
-                                <button id="confirmColEdit" onClick={() => changeInfo(collection._id, collection.title, collection.description)}>Save Changes</button>
+                                <button id="confirmColEdit" aria-label={`confirmColEdit${collection._id}`} 
+                                    onClick={() => changeInfo(collection._id, collection.collectionTitle, collection.collectionDescription)}>Save Changes</button>
                             </ul>
                         </div>
                     )) : 
