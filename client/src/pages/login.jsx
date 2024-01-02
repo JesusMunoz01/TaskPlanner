@@ -18,7 +18,7 @@ export const Login = ({loginStatus}) => {
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
         if(passwordRegex.test(newPassword)){
             try{
-                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/addUser`, {
+                const res = await fetch(`${__API__}/addUser`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json'
                     },
@@ -45,7 +45,7 @@ export const Login = ({loginStatus}) => {
         e.preventDefault();
 
         try{
-            const response = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/userLogin`, {
+            const response = await fetch(`${__API__}/userLogin`, {
                 method: "POST", headers: {
                     'Content-Type': 'application/json'
                 },

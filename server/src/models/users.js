@@ -12,6 +12,9 @@ const UserSchema = new Schema({
             status: { type: String, required: true }
         }],
     collections: [{
+        collectionTitle: {type: String, required: true},
+        collectionDescription: {type: String, required: true},
+        collectionStatus:{type: String, required: true},
             tasks: [{
                 title: { type: String, required: true}, 
                 description: { type: String, required: true},

@@ -21,8 +21,7 @@ taskRouter.post("/addTask", async (req, res) =>{
     verifyToken;
     const user = req.body.userID;
     const userCheck = await UserModel.findOne({_id: user })
-    if(userCheck.tasks === null)
-    userCheck.tasks = [];
+
     const newTask = new TaskModel({
         title: req.body.title ,
         description: req.body.desc ,

@@ -17,7 +17,7 @@ export const Home = (data) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/addTask`, {
+                const res = await fetch(`${__API__}/addTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -69,7 +69,7 @@ export const Home = (data) => {
 
     async function delTask(taskId){
         if(isUserLogged){
-        await fetch(`${import.meta.env.VITE_APP_BASE_URL}/tasks/${taskId}`, {
+        await fetch(`${__API__}/tasks/${taskId}`, {
             method: "DELETE", headers: {auth: cookies.access_token}});
 
         setTasks(tasks.filter((task) => task._id !== taskId))
@@ -96,7 +96,7 @@ export const Home = (data) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/updateTask`, {
+                const res = await fetch(`${__API__}/updateTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -143,7 +143,7 @@ export const Home = (data) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/updateTaskInfo`, {
+                const res = await fetch(`${__API__}/updateTaskInfo`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -190,6 +190,7 @@ export const Home = (data) => {
         data = JSON.parse(tasks)
         else
         data = tasks;
+        console.log(data)
         switch(action){
             case "filter1": // All Tasks Filter
                 selected.style.color = "green"
@@ -204,16 +205,16 @@ export const Home = (data) => {
                 document.getElementById("filter1").style.color = "white"
                 document.getElementById("filter3").style.color = "white"
                 isUserLogged ?
-                setCurrentFilter(data.filter((task) => task.status === "complete")) :
-                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "complete")))
+                setCurrentFilter(data.filter((task) => task.status === "Complete")) :
+                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "Complete")))
                 break;
             case "filter3": // Completed Tasks Filter
                 selected.style.color = "green"
                 document.getElementById("filter1").style.color = "white"
                 document.getElementById("filter2").style.color = "white"
                 isUserLogged ?
-                setCurrentFilter(data.filter((task) => task.status === "incomplete")) :
-                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "incomplete")))
+                setCurrentFilter(data.filter((task) => task.status === "Incomplete")) :
+                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "Incomplete")))
                 break;
             default:
                 break;
@@ -243,31 +244,31 @@ export const Home = (data) => {
                         // Section for: Logged user with tasks -------------------------------------------
                         taskFilter.map((task)=> (
                             <div className="listTasks" data-testid="task-item">
-                            <li key={task._id}>
-                                <button aria-label={`delBtn${task._id}`} onClick={() => delTask(task._id)}>x</button>
-                                <input aria-label={`editDropdown${task._id}`} id={task._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(task._id)}/>
-                                <label id="settingsIcon" for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                <p aria-label={`taskTitle${task._id}`}>{task.title}</p>
-                                <div className="statusBox">
+                                <li key={task._id}>
+                                    <button aria-label={`delBtn${task._id}`} onClick={() => delTask(task._id)}>x</button>
+                                    <input aria-label={`editDropdown${task._id}`} id={task._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(task._id)}/>
+                                    <label id="settingsIcon" for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    <p aria-label={`taskTitle${task._id}`}>{task.title}</p>
+                                    <div className="statusBox">
                                     <label id="taskState">Status: </label>
                                     <select aria-label="taskStatus" for="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
-                                        <option aria-label="incompleteStatus" value={"incomplete"}>Incomplete</option>
-                                        <option aria-label="completeStatus" value={"complete"}>Complete</option>
+                                        <option aria-label="incompleteStatus" value={"Incomplete"}>Incomplete</option>
+                                        <option aria-label="completeStatus" value={"Complete"}>Complete</option>
                                     </select>
-                                </div>
-                            </li>
-                            <ul className="editTask" id={`setting${task._id}`} style={{display:"none", transition: 0.4}}>
-                                <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
-                                    <label>Edit title:</label>
-                                    <input aria-label={`editTaskTitle${task._id}`} id="taskTitle" value={updtTitle} onChange={(e) => updateTitle(e.target.value)}></input>
+                                    </div>
                                 </li>
-                                <li id={`setting${task._id}`} style={{display:"flex", transition: 0.4}}>
-                                    <label>Edit Description:</label>
-                                    <input aria-label={`editTaskDesc${task._id}`} id="taskDesc" value={updtDesc} onChange={(e) => updateDesc(e.target.value)}></input>
-                                </li>
-                                <button aria-label={`confirmEdit${task._id}`} onClick={() => changeInfo(task._id, task.title, task.description)}>Save Changes</button>
-                            </ul>
-                        </div>
+                                <ul className="editTask" id={`setting${task._id}`} >
+                                    <li id={`setting${task._id}`} style={{display:"flex"}}>
+                                        <label>Edit title:</label>
+                                        <input aria-label={`editTaskTitle${task._id}`} id="taskTitle" value={updtTitle} onChange={(e) => updateTitle(e.target.value)}></input>
+                                    </li>
+                                    <li id={`setting${task._id}`} style={{display:"flex"}}>
+                                        <label>Edit Description:</label>
+                                        <input aria-label={`editTaskDesc${task._id}`} id="taskDesc" value={updtDesc} onChange={(e) => updateDesc(e.target.value)}></input>
+                                    </li>
+                                    <button aria-label={`confirmEdit${task._id}`} onClick={() => changeInfo(task._id, task.title, task.description)}>Save Changes</button>  
+                                </ul>
+                            </div>
                         )) : 
                         // Section for: Logged user without tasks -------------------------------------------
                         <span>Currently no tasks</span> :
@@ -283,8 +284,8 @@ export const Home = (data) => {
                                     <div className="statusBox">
                                     <label id="taskState">Status: </label>
                                     <select aria-label="taskStatus" for="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
-                                        <option aria-label="incompleteStatus" value={"incomplete"}>Incomplete</option>
-                                        <option aria-label="completeStatus" value={"complete"}>Complete</option>
+                                        <option aria-label="incompleteStatus" value={"Incomplete"}>Incomplete</option>
+                                        <option aria-label="completeStatus" value={"Complete"}>Complete</option>
                                     </select>
                                     </div>
                                 </li>

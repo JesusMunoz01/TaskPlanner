@@ -18,7 +18,7 @@ export const Collections = (data) => {
         if(isUserLogged){
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/addCollection`, {
+                const res = await fetch(`${__API__}/addCollection`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -74,7 +74,7 @@ export const Collections = (data) => {
         e.preventDefault();
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/addCollectionTask`, {
+                const res = await fetch(`${__API__}/addCollectionTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -101,7 +101,7 @@ export const Collections = (data) => {
 */
     async function delCollection(collectionID){
         if(isUserLogged){
-            await fetch(`${import.meta.env.VITE_APP_BASE_URL}/deleteCollection/${collectionID}`, {
+            await fetch(`${__API__}/deleteCollection/${collectionID}`, {
                 method: "DELETE", headers: {auth: cookies.access_token}});
 
             setCollections(collections.filter((collection) => collection._id !== collectionID))
@@ -126,7 +126,7 @@ export const Collections = (data) => {
     // async function changeStatus(collectionStatus, collectionID){
     //         try{
     //             const userID = window.localStorage.getItem("userId");
-    //             const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/updateTask`, {
+    //             const res = await fetch(`${__API__}/updateTask`, {
     //                 method: "POST", headers: {
     //                     'Content-Type': 'application/json',
     //                     auth: cookies.access_token
@@ -162,7 +162,7 @@ export const Collections = (data) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/updateCollection`, {
+                const res = await fetch(`${__API__}/updateCollection`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
