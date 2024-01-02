@@ -17,7 +17,7 @@ export const Home = (data) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addTask`, {
+                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/addTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -26,7 +26,7 @@ export const Home = (data) => {
                         userID,
                         title,
                         desc,
-                        status: "incomplete"
+                        status: "Incomplete"
                         })
                     });
                 const task = await res.json()
@@ -69,7 +69,7 @@ export const Home = (data) => {
 
     async function delTask(taskId){
         if(isUserLogged){
-        await fetch(`${process.env.REACT_APP_BASE_URL}/tasks/${taskId}`, {
+        await fetch(`${import.meta.env.VITE_APP_BASE_URL}/tasks/${taskId}`, {
             method: "DELETE", headers: {auth: cookies.access_token}});
 
         setTasks(tasks.filter((task) => task._id !== taskId))
@@ -96,7 +96,7 @@ export const Home = (data) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/updateTask`, {
+                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/updateTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -143,7 +143,7 @@ export const Home = (data) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/updateTaskInfo`, {
+                const res = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/updateTaskInfo`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -239,7 +239,7 @@ export const Home = (data) => {
             </span>
             <div className="tasks">
                 {isUserLogged ?
-                    taskFilter ? 
+                    taskFilter.length !== 0 ? 
                         // Section for: Logged user with tasks -------------------------------------------
                         taskFilter.map((task)=> (
                             <div className="listTasks" data-testid="task-item">
