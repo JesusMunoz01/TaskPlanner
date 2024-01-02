@@ -18,7 +18,7 @@ export const Collections = (data) => {
         if(isUserLogged){
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addCollection`, {
+                const res = await fetch(`${__API__}/addCollection`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -27,14 +27,15 @@ export const Collections = (data) => {
                         userID,
                         collectionTitle,
                         collectionDescription,
-                        tasks: [],
-                        status: "incomplete"
                         })
                     });
                 const collection = await res.json()
                 if(collection == null)
-                setCollections([collection])
-                setCollections([...collections, collection])
+                    console.log("Failed to create collection")
+                else{
+                    setCollections([...collections, collection])
+                    data.updateCollection(collections)
+                }
             }catch(error){
                 console.log(error)
             }
@@ -54,7 +55,7 @@ export const Collections = (data) => {
 
                 const newCollection = {
                     collectionTitle: collectionTitle, collectionDescription: collectionDescription, 
-                    _id: nextId, tasks: [], status:"incomplete"
+                    _id: nextId, tasks: [], status:"Incomplete"
                 }
 
             localCollection.push(newCollection)
@@ -73,7 +74,7 @@ export const Collections = (data) => {
         e.preventDefault();
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addCollectionTask`, {
+                const res = await fetch(`${__API__}/addCollectionTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -100,7 +101,7 @@ export const Collections = (data) => {
 */
     async function delCollection(collectionID){
         if(isUserLogged){
-            await fetch(`${process.env.REACT_APP_BASE_URL}/tasks/${collectionID}`, {
+            await fetch(`${__API__}/deleteCollection/${collectionID}`, {
                 method: "DELETE", headers: {auth: cookies.access_token}});
 
             setCollections(collections.filter((collection) => collection._id !== collectionID))
@@ -125,7 +126,7 @@ export const Collections = (data) => {
     // async function changeStatus(collectionStatus, collectionID){
     //         try{
     //             const userID = window.localStorage.getItem("userId");
-    //             const res = await fetch(`${process.env.REACT_APP_BASE_URL}/updateTask`, {
+    //             const res = await fetch(`${__API__}/updateTask`, {
     //                 method: "POST", headers: {
     //                     'Content-Type': 'application/json',
     //                     auth: cookies.access_token
@@ -161,7 +162,7 @@ export const Collections = (data) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/updateTaskInfo`, {
+                const res = await fetch(`${__API__}/updateCollection`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -260,35 +261,37 @@ export const Collections = (data) => {
         <h1>Collections</h1>
             <div className="collections">
             {isUserLogged ? 
-                collections ? 
+                collections.length !== 0 ? 
                     // Section for: Logged user with collections -------------------------------------------
                     collections.map((collection)=> (
                         <div className="collectionsList" data-testid="collection-item">
-                        <li key={collection._id}>
-                            <button onClick={() => delCollection(collection._id)}>x</button>
-                            <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                            <label id="collectionSettingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                {collection.title}
-                            <div className="statusBox">
-                                <label id="taskState">Status: </label>
-                                <select for="taskState" value={collection.status} onChange={(e) => changeStatus(e.target.value, collection._id)}>
-                                    <option value={"incomplete"}>Incomplete</option>
-                                    <option value={"complete"}>Complete</option>
-                                </select>
-                            </div>
-                        </li>
-                        <ul className="editTask" id={`colSetting${collection._id}`} style={{display:"none", transition: 0.4}}>
-                            <li id={`colSetting${collection._id}`} style={{display:"flex", transition: 0.4}}>
-                                <label>Edit title:</label>
-                                <input id="taskTitle" value={updtCollectionTitle} onChange={(e) => updateCollectionTitle(e.target.value)}></input>
+                            <li key={collection._id}>
+                                <p id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
+                                <div className="descBox">
+                                    <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
+                                </div>
+                                <div className="statusBox">
+                                    <span>Status: {collection.status}</span>
+                                </div>
+                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
+                                <label id="collectionsSettingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                             </li>
-                            <li id={`colSetting${collection._id}`} style={{display:"flex", transition: 0.4}}>
-                                <label>Edit Description:</label>
-                                <input id="taskDesc" value={updtCollectionDescription} onChange={(e) => updateCollectionDesc(e.target.value)}></input>
-                            </li>
-                            <button onClick={() => changeInfo(collection._id, collection.title, collection.description)}>Save Changes</button>
-                        </ul>
-                    </div>
+                            <ul className="editCollection" id={`colSetting${collection._id}`} >
+                                <li id={`colSetting${collection._id}`}>
+                                    <label>Edit title:</label>
+                                    <input id="collectionTitle" aria-label={`editCollectionTitle${collection._id}`} value={updtCollectionTitle} 
+                                        onChange={(e) => updateCollectionTitle(e.target.value)}></input>
+                                </li>
+                                <li id={`colSetting${collection._id}`}>
+                                    <label>Edit Description:</label>
+                                    <input aria-label={`editCollectionDesc${collection._id}`} id="collectionDesc" value={updtCollectionDescription} 
+                                        onChange={(e) => updateCollectionDesc(e.target.value)}></input>
+                                </li>
+                                <button id="confirmColEdit" aria-label={`confirmColEdit${collection._id}`} 
+                                    onClick={() => changeInfo(collection._id, collection.collectionTitle, collection.collectionDescription)}>Save Changes</button>
+                            </ul>
+                        </div>
                     )) : 
                         // Section for: Logged user without collections -------------------------------------------
                     <span id="collectionEmptyPrompt">Currently no Collections</span>

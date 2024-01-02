@@ -8,7 +8,7 @@ const userRouter = express.Router()
 
 userRouter.post("/addUser", async (req, res) =>{
 
-    const newUsername = sanitizeFilter(req.body.newUsername);
+    const newUsername = req.body.newUsername;
     const newPassword = req.body.newPassword;
     const userCheck = await UserModel.findOne({username: newUsername })
 
@@ -18,9 +18,10 @@ userRouter.post("/addUser", async (req, res) =>{
         const hashedPassword = await bcrypt.hash(newPassword, 10)
 
         const newUser = new UserModel({
-            username: newUsername ,
-            password: hashedPassword ,
-            tasks: null
+            username: newUsername,
+            password: hashedPassword,
+            tasks: [],
+            collections: []
         });
 
         try{
@@ -34,7 +35,7 @@ userRouter.post("/addUser", async (req, res) =>{
 })
 
 userRouter.post("/userLogin", async (req, res) =>{
-    const username = sanitizeFilter(req.body.username);
+    const username = req.body.username;
     const password = req.body.password;
     const userCheck = await UserModel.findOne({username: username })
 

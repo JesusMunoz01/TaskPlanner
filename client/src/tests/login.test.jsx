@@ -8,6 +8,11 @@ import Cookies from 'js-cookie'
 import { Navbar } from '../components/navbar'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
+const mockUsedNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+   ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockUsedNavigate,
+}));
 
 describe('Login Page', () => {
 

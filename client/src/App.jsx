@@ -41,9 +41,9 @@ function App() {
             setLoading(true);
             console.log("...making fetch call");
             const id = window.localStorage.getItem("userId")
-            const taskResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/fetchTasks/${id}`);
+            const taskResponse = await fetch(`${__API__}/fetchTasks/${id}`);
             const taskData = await taskResponse.json();
-            const collectionResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/fetchCollection/${id}`);
+            const collectionResponse = await fetch(`${__API__}/fetchCollection/${id}`);
             const collectionData = await collectionResponse.json();
             console.log("...updating state");
             setLoading(false);

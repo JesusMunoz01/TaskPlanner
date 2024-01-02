@@ -32,11 +32,12 @@ collectionRouter.post("/addCollection", async (req, res) =>{
     verifyToken;
     const user = req.body.userID;
     const userCheck = await UserModel.findOne({_id: user })
+    
     const newCollection = new CollectionsModel({
-        collectionTitle: req.body.title ,
-        collectionDescription: req.body.desc ,
-        collectionStatus: "incomplete",
-        tasks: null
+        collectionTitle: req.body.collectionTitle ,
+        collectionDescription: req.body.collectionDescription ,
+        collectionStatus: "Incomplete",
+        tasks: []
     });
     try{
         userCheck.collections.push(newCollection);
@@ -48,7 +49,7 @@ collectionRouter.post("/addCollection", async (req, res) =>{
     
 })
 
-collectionRouter.post("/addCollectionTask", async (req, res) =>{
+collectionRouter.post("/addCollection/Task", async (req, res) =>{
     verifyToken;
     const user = req.body.userID;
     const userCheck = await UserModel.findOne({_id: user })
@@ -74,15 +75,15 @@ collectionRouter.post("/updateCollection", async (req, res) =>{
     const user = req.body.userID;
     const collectionUpdate = `${req.body.collectionID}`
     try{
-        const test = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionUpdate}, 
-        {$set: { "collections.$.title": `${req.body.newTitle}`, "collections.$.description": `${req.body.newDesc}`}})
-        res.json(test.collections)
+        const update = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionUpdate}, 
+        {$set: { "collections.$.collectionTitle": `${req.body.newTitle}`, "collections.$.collectionDescription": `${req.body.newDesc}`}})
+        res.json(update.collections)
     }catch(error){
         res.json({error: error, message: "Couldnt update information"})
     }
 })
 
-collectionRouter.post("/updateCollectionTask", async (req, res) =>{
+collectionRouter.post("/updateCollection/Task", async (req, res) =>{
     verifyToken;
     const user = req.body.userID;
     const collectionUpdate = `${req.body.collectionID}`
@@ -96,7 +97,7 @@ collectionRouter.post("/updateCollectionTask", async (req, res) =>{
     }
 })
 
-collectionRouter.post("/updateCollectionTaskInfo", async (req, res) =>{
+collectionRouter.post("/updateCollection/Task/Info", async (req, res) =>{
     verifyToken;
     const user = req.body.userID;
     const collectionUpdate = `${req.body.collectionID}`
@@ -113,7 +114,7 @@ collectionRouter.post("/updateCollectionTaskInfo", async (req, res) =>{
 
 // Delete Routes --------------------------------------------------
 
-collectionRouter.delete('/collections/:collectionID', async (req, res) => {
+collectionRouter.delete('/deleteCollection/:collectionID', async (req, res) => {
     verifyToken;
     const collectionID = req.params.collectionID;
     try{
@@ -124,7 +125,7 @@ collectionRouter.delete('/collections/:collectionID', async (req, res) => {
     }
 })
 
-collectionRouter.delete('/collections/:collectionID/tasks/:taskID', async (req, res) => {
+collectionRouter.delete('/deleteCollection/:collectionID/tasks/:taskID', async (req, res) => {
     verifyToken;
     const collectionID = req.params.collectionID;
     const taskID = req.params.taskID;

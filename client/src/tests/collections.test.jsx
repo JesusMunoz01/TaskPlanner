@@ -4,8 +4,6 @@ import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
 import { Collections } from '../pages/collections'
 
-
-
 describe('Tests for collections Page', () => {
 
     const userLogin = false;

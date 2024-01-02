@@ -9,6 +9,7 @@ export const Login = ({loginStatus}) => {
     const [newUsername, setNewUsername] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [, setCookies] = useCookies(["access_token"]);
+    const navigate = useNavigate();
     
     
     async function createUser(e){
@@ -17,7 +18,7 @@ export const Login = ({loginStatus}) => {
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
         if(passwordRegex.test(newPassword)){
             try{
-                const res = await fetch(`${process.env.REACT_APP_BASE_URL}/addUser`, {
+                const res = await fetch(`${__API__}/addUser`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json'
                     },
@@ -41,11 +42,10 @@ export const Login = ({loginStatus}) => {
     }
 
     async function logUser(e){
-        const navigate = useNavigate();
         e.preventDefault();
 
         try{
-            const response = await fetch(`${process.env.REACT_APP_BASE_URL}/userLogin`, {
+            const response = await fetch(`${__API__}/userLogin`, {
                 method: "POST", headers: {
                     'Content-Type': 'application/json'
                 },
