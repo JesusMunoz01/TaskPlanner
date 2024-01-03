@@ -19,7 +19,18 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
                                 collectionDescription: "fake collection response 1",
                                 collectionStatus: "Incomplete", _id: 1, tasks: []}]
                 },
-                {_id: 3, username: "TUser3", password: "TPassword3!", tasks: [], collections: []}]
+                {_id: 3, username: "TUser3", password: "TPassword3!", tasks: [], collections: []},
+                {_id: 4, username: "TUser4", password: "TPassword4!", 
+                tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+                        {title: "mock2", description: "fake response 2", _id: 2},
+                        {title: "mock3", description: "fake response 3", _id: 3}],
+                collections: [{collectionTitle: "mockCollection1 user4",
+                              collectionDescription: "fake collection response 1",
+                              collectionStatus: "Incomplete", _id: 1, tasks: []},
+                              {collectionTitle: "mockCollection2 user4",
+                              collectionDescription: "fake collection response 2",
+                              collectionStatus: "Incomplete", _id: 2, tasks: []}]
+              },]
 
 export const handlers = [
   // ---------------------- Home Page Handlers -----------------------------------
@@ -156,5 +167,17 @@ export const handlers = [
           index[0].collections.push(newCollection)
           return res(ctx.json(index[0].collections))
         }}
+    }),
+    rest.delete('http://localhost:8080/collections/delete/:collectionID', async (req, res, ctx) => {
+      const collectionNumber = parseInt(req.params.collectionID)
+      const data = await req.json()
+      const userCheck = data.userID;
+      const userIndex = mockDB.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const deleteTask = userIndex[0].collections.filter((collection) => collection._id != collectionNumber)
+        return res(ctx.json(deleteTask))
+      }
     }),
 ]

@@ -76,7 +76,7 @@ describe('Login Page', () => {
                 })
             });
         const account = await response.json();
-        expect(account).toEqual({_id: 4,
+        expect(account).toEqual({_id: 5,
             username: 'Tester User 1',
             password: 'Tester Password 1!',
             tasks: [],
@@ -95,7 +95,7 @@ describe('Login Page', () => {
                 })
             });
         const login = await response.json();
-        expect(login).toEqual({_id: 4,
+        expect(login).toEqual({_id: 5,
             username: 'Tester User 1',
             password: 'Tester Password 1!',
             tasks: [],
@@ -123,10 +123,10 @@ describe('Login Page', () => {
                 {title: "mock3", description: "fake response 3", _id: 3}],
             collections: [{collectionTitle: "mockCollection1",
                 collectionDescription: "fake collection response 1",
-                collectionStatus: "Incomplete", tasks: []},
+                collectionStatus: "Incomplete", _id: 1, tasks: []},
                 {collectionTitle: "mockCollection2",
                 collectionDescription: "fake collection response 2",
-                collectionStatus: "Incomplete", tasks: []}]
+                collectionStatus: "Incomplete", _id: 2, tasks: []}]
           })
     })
 })

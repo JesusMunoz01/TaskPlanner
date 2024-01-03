@@ -132,16 +132,13 @@ describe('Testing home page with set local storage data', () => {
 
 describe('Testing mock API calls for home page', () => {
 
-    const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 2, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 3, tasks: []
-        }]
+    const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+        {title: "mock2", description: "fake response 2", _id: 2},{title: "mock3", description: "fake response 3", _id: 3}]},
+    {_id: 2, username: "TUser2", password: "TPassword2!", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+        {title: "mock2", description: "fake response 2", _id: 2}, {title: "mock3", description: "fake response 3", _id: 3}]},
+    {_id: 3, username: "TUser3", password: "TPassword3!", tasks: [], collections: []},
+    {_id: 4, username: "TUser4", password: "TPassword4!",  tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+        {title: "mock2", description: "fake response 2", _id: 2}, {title: "mock3", description: "fake response 3", _id: 3}]}]
 
     test('Test to see if tasks are empty', async () => {
         window.localStorage.setItem("userId", 3);

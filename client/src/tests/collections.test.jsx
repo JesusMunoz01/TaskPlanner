@@ -236,7 +236,11 @@ describe('Tests for collections Page API', () => {
             collectionStatus: "Incomplete", _id: 2, tasks: []}]},
         {collections: [{collectionTitle: "mockCollection1", collectionDescription: "fake collection response 1",
             collectionStatus: "Incomplete", _id: 1, tasks: []}]},
-        {collections: []}]
+        {collections: []},
+        {collections: [{collectionTitle: "mockCollection1 user4", collectionDescription: "fake collection response 1",
+            collectionStatus: "Incomplete", _id: 1, tasks: []},
+        {collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2",
+            collectionStatus: "Incomplete", _id: 2, tasks: []}]},]
 
     afterEach(() => {localStorage.clear()})
 
@@ -296,8 +300,27 @@ describe('Tests for collections Page API', () => {
             collectionStatus: "Incomplete", _id: 0, tasks: []}])
     })
 
-    test.skip('Testing deleting a collection', async () => {
+    test('Testing deleting a collection', async () => {
+        const userID = 4;
+        const collectionID = 1;
+        const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}`, {
+            method: "DELETE", body: JSON.stringify({userID})
+        });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2",
+        collectionStatus: "Incomplete", _id: 2, tasks: []}])
+    })
 
+    test('Testing deleting the last collection', async () => {
+        const userID = 2;
+        const collectionID = 1;
+        const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}`, {
+            method: "DELETE", body: JSON.stringify({userID})
+        });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(0)
+        expect(updatedData).toEqual([])
     })
 
     test.skip('Updating a collection', async () => {
