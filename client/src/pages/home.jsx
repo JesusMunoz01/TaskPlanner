@@ -190,7 +190,6 @@ export const Home = (data) => {
         data = JSON.parse(tasks)
         else
         data = tasks;
-        console.log(data)
         switch(action){
             case "filter1": // All Tasks Filter
                 selected.style.color = "green"

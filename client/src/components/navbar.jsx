@@ -10,11 +10,22 @@ export const Navbar = ({loginStatus}) => {
         loginStatus("Logged out");
     }
 
+    const changeActive = (target) => {
+        const links = document.getElementById("links").children
+        for(const element of links) {
+            if(element.children[0].id === target)
+                element.children[0].className = "navbar active";
+            else
+                element.children[0].className = "";
+        };
+    }
+
     return <div>
-        <div className="links">
-            <li aria-label='loginLink'>{!cookies.access_token ? (<Link to={"/login"}><span>Login</span></Link>) : <button onClick={logout}>Logout</button>}</li>
-            <li><Link to={"/"}><span>Home</span></Link></li>
-            <li><Link to={"/collections"}><span id='collectionLink'>Collections</span></Link></li>
+        <div className="links" id="links">
+            <li aria-label='loginLink'>{!cookies.access_token ? (<Link id="Login" onClick={(e) => changeActive(e.target.innerText)} to={"/login"}>
+                <span>Login</span></Link>) : <button onClick={logout}>Logout</button>}</li>
+            <li ><Link id="Home" className="navbar active" onClick={(e) => changeActive(e.target.innerText)} to={"/"}><span>Home</span></Link></li>
+            <li><Link id="Collections" onClick={(e) => changeActive(e.target.innerText)} to={"/collections"}><span id='collectionLink'>Collections</span></Link></li>
         </div>
     </div>
 }
