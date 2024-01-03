@@ -227,12 +227,29 @@ describe('Tests for collections Page', () => {
 
 describe('Tests for collections Page API', () => {
 
-    test.skip('Testing page with no collection data', async () => {
+    const userLogin = true;
+    const updateCollection = () => {}
 
+    const mockCollectionDB = [{collections: [{collectionTitle: "mockCollection1",
+        collectionDescription: "fake collection response 1", collectionStatus: "Incomplete", tasks: []},
+        {collectionTitle: "mockCollection2", collectionDescription: "fake collection response 2",
+            collectionStatus: "Incomplete", tasks: []}]},
+        {collections: [{collectionTitle: "mockCollection1", collectionDescription: "fake collection response 1",
+            collectionStatus: "Incomplete", tasks: []}]},
+        {collections: []}]
+
+    afterEach(() => {localStorage.clear()})
+
+    test('Testing page with no collection data', async () => {
+        window.localStorage.setItem("userId", 3);
+        const response = await fetch(`http://localhost:8080/collections/${localStorage.getItem("userId")}`)
+        expect(await response.json()).toEqual([])
     })
 
-    test.skip('Testing fetching collections and tasks', async () => {
-
+    test('Testing fetching collections and tasks', async () => {
+        window.localStorage.setItem("userId", 1);
+        const response = await fetch(`http://localhost:8080/collections/${localStorage.getItem("userId")}`)
+        expect(await response.json()).toEqual(mockCollectionDB[0].collections)
     })
 
     test.skip('Testing creating a collection', async () => {

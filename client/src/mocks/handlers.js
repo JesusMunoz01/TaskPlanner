@@ -1,15 +1,25 @@
 import { rest } from 'msw'
 
-const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 2, username: "TUser2", password: "TPassword2!", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 3, username: "TUser3", password: "TPassword3!", tasks: []
-        }]
+const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!", 
+                  tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+                          {title: "mock2", description: "fake response 2", _id: 2},
+                          {title: "mock3", description: "fake response 3", _id: 3}],
+                  collections: [{collectionTitle: "mockCollection1",
+                                collectionDescription: "fake collection response 1",
+                                collectionStatus: "Incomplete", tasks: []},
+                                {collectionTitle: "mockCollection2",
+                                collectionDescription: "fake collection response 2",
+                                collectionStatus: "Incomplete", tasks: []}]
+                },
+                {_id: 2, username: "TUser2", password: "TPassword2!", 
+                  tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+                          {title: "mock2", description: "fake response 2", _id: 2},
+                          {title: "mock3", description: "fake response 3", _id: 3}],
+                  collections: [{collectionTitle: "mockCollection1",
+                                collectionDescription: "fake collection response 1",
+                                collectionStatus: "Incomplete", tasks: []}]
+                },
+                {_id: 3, username: "TUser3", password: "TPassword3!", tasks: [], collections: []}]
 
 export const handlers = [
   // ---------------------- Home Page Handlers -----------------------------------
@@ -86,7 +96,7 @@ export const handlers = [
             lastUser = localCopy.pop();
           if(lastUser.length !== 0)
               nextId = lastUser._id + 1;
-          const newUser = {_id: nextId, username: data.newUsername, password: data.newPassword, tasks: []}
+          const newUser = {_id: nextId, username: data.newUsername, password: data.newPassword, tasks: [], collections: []}
           mockDB.push(newUser)
           return res(ctx.json(newUser))
         } catch (error) {}
@@ -99,10 +109,20 @@ export const handlers = [
       const username = data.username;
       const check = data.pswrd
       const index = mockDB.filter((user) => user.username === username)
-      console.log(index)
       if(index.password == check){
         return res(ctx.json(index[0]))
       } else
         return res(ctx.json("Incorrect username or password"), ctx.status(400))
+    }),
+  // ---------------------- Collection Page Handlers -----------------------------------
+    rest.get('http://localhost:8080/collections/:userID', (req, res, ctx) => {
+      const userCheck = parseInt(req.params.userID)
+
+      const index = mockDB.filter((user) => user._id === userCheck)
+      if(index[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        return res(ctx.json(index[0].collections))
+      }
     }),
 ]

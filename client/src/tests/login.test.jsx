@@ -79,7 +79,8 @@ describe('Login Page', () => {
         expect(account).toEqual({_id: 4,
             username: 'Tester User 1',
             password: 'Tester Password 1!',
-            tasks: []
+            tasks: [],
+            collections: []
           })
     })
 
@@ -97,7 +98,8 @@ describe('Login Page', () => {
         expect(login).toEqual({_id: 4,
             username: 'Tester User 1',
             password: 'Tester Password 1!',
-            tasks: []
+            tasks: [],
+            collections: []
           })
 
     })
@@ -117,10 +119,15 @@ describe('Login Page', () => {
             username: 'TUser1',
             password: 'TPassword1!',
             tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-            {title: "mock2", description: "fake response 2", _id: 2},
-            {title: "mock3", description: "fake response 3", _id: 3}]
+                {title: "mock2", description: "fake response 2", _id: 2},
+                {title: "mock3", description: "fake response 3", _id: 3}],
+            collections: [{collectionTitle: "mockCollection1",
+                collectionDescription: "fake collection response 1",
+                collectionStatus: "Incomplete", tasks: []},
+                {collectionTitle: "mockCollection2",
+                collectionDescription: "fake collection response 2",
+                collectionStatus: "Incomplete", tasks: []}]
           })
-
     })
 })
 

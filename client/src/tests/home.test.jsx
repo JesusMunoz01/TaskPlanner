@@ -10,8 +10,6 @@ const user = userEvent.setup();
 const updateTask = (data) => {}
 
 describe('Testing basic home page', () => {
-
-    afterEach(cleanup)
     
     test('Testing no data', async () => {
         const renderedHome = render(<Home />)
@@ -154,7 +152,7 @@ describe('Testing mock API calls for home page', () => {
     test('Test to see if there are tasks', async () => {
         window.localStorage.setItem("userId", 1);
         const response = await fetch(`http://localhost:8080/fetchTasks/${localStorage.getItem("userId")}`)
-        expect(await response.json()).toEqual(mockDB[1].tasks)
+        expect(await response.json()).toEqual(mockDB[0].tasks)
     })
     
     test('Test to add a task on user 1 (has 3 tasks)', async () => {
