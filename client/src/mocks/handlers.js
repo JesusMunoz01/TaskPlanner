@@ -33,7 +33,7 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
               },]
 
 export const handlers = [
-  // ---------------------- Home Page Handlers -----------------------------------
+  // -------------------------------------- Home Page Handlers --------------------------------------------------------
     rest.get('http://localhost:8080/fetchTasks/:userID', (req, res, ctx) => {
         const userCheck = parseInt(req.params.userID)
 
@@ -97,7 +97,7 @@ export const handlers = [
           return res(ctx.json(userIndex[0].tasks))
         }
       }),
-  // ---------------------- Login Page Handlers -----------------------------------
+  // -------------------------------------- Login Page Handlers --------------------------------------------------------
       rest.post('http://localhost:8080/addUser', async (req, res, ctx) => {
         const data = await req.json()
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
@@ -129,7 +129,7 @@ export const handlers = [
       } else
         return res(ctx.json("Incorrect username or password"), ctx.status(400))
     }),
-  // ---------------------- Collection Page Handlers -----------------------------------
+  // -------------------------------------- Collection Page Handlers ----------------------------------------------------
     rest.get('http://localhost:8080/collections/:userID', (req, res, ctx) => {
       const userCheck = parseInt(req.params.userID)
 
