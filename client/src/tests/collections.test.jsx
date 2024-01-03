@@ -231,11 +231,11 @@ describe('Tests for collections Page API', () => {
     const updateCollection = () => {}
 
     const mockCollectionDB = [{collections: [{collectionTitle: "mockCollection1",
-        collectionDescription: "fake collection response 1", collectionStatus: "Incomplete", tasks: []},
+        collectionDescription: "fake collection response 1", collectionStatus: "Incomplete", _id: 1, tasks: []},
         {collectionTitle: "mockCollection2", collectionDescription: "fake collection response 2",
-            collectionStatus: "Incomplete", tasks: []}]},
+            collectionStatus: "Incomplete", _id: 2, tasks: []}]},
         {collections: [{collectionTitle: "mockCollection1", collectionDescription: "fake collection response 1",
-            collectionStatus: "Incomplete", tasks: []}]},
+            collectionStatus: "Incomplete", _id: 1, tasks: []}]},
         {collections: []}]
 
     afterEach(() => {localStorage.clear()})
@@ -252,8 +252,48 @@ describe('Tests for collections Page API', () => {
         expect(await response.json()).toEqual(mockCollectionDB[0].collections)
     })
 
-    test.skip('Testing creating a collection', async () => {
+    test('Testing creating a collection on a user with previous collections', async () => {
+        const userID = 1;
+        const title = "New collection";
+        const desc = "New description";
+        const response = await fetch(`http://localhost:8080/collections/create`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                title,
+                desc,
+                status: "Incomplete"
+                })
+            });
+        const addedCol = {collectionTitle: title, collectionDescription: desc, collectionStatus: "Incomplete",
+                _id: 3, tasks: []}
+       
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(3)
+        expect(updatedData).toEqual([...mockCollectionDB[0].collections, addedCol])
+    })
 
+    test('Testing creating a collection on a user without previous collections', async () => {
+        const userID = 3;
+        const title = "First collection";
+        const desc = "First description";
+        const response = await fetch(`http://localhost:8080/collections/create`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                title,
+                desc,
+                status: "Incomplete"
+                })
+            });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{collectionTitle: "First collection", collectionDescription: "First description", 
+            collectionStatus: "Incomplete", _id: 0, tasks: []}])
     })
 
     test.skip('Testing deleting a collection', async () => {

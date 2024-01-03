@@ -170,8 +170,10 @@ describe('Testing mock API calls for home page', () => {
                 status: "incomplete"
                 })
             });
+        const addedTask = {title: title, description: desc, status: "incomplete", _id: 4}
         const updatedData = await response.json();
         expect(updatedData.length).toEqual(4)
+        expect(updatedData).toEqual([...mockDB[0].tasks, addedTask])
     })
 
     test('Test to add a task on user 3 (has no tasks)', async () => {

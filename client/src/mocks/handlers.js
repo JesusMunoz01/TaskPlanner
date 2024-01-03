@@ -6,10 +6,10 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
                           {title: "mock3", description: "fake response 3", _id: 3}],
                   collections: [{collectionTitle: "mockCollection1",
                                 collectionDescription: "fake collection response 1",
-                                collectionStatus: "Incomplete", tasks: []},
+                                collectionStatus: "Incomplete", _id: 1, tasks: []},
                                 {collectionTitle: "mockCollection2",
                                 collectionDescription: "fake collection response 2",
-                                collectionStatus: "Incomplete", tasks: []}]
+                                collectionStatus: "Incomplete", _id: 2, tasks: []}]
                 },
                 {_id: 2, username: "TUser2", password: "TPassword2!", 
                   tasks: [{title: "mock1", description: "fake response 1", _id: 1},
@@ -17,7 +17,7 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
                           {title: "mock3", description: "fake response 3", _id: 3}],
                   collections: [{collectionTitle: "mockCollection1",
                                 collectionDescription: "fake collection response 1",
-                                collectionStatus: "Incomplete", tasks: []}]
+                                collectionStatus: "Incomplete", _id: 1, tasks: []}]
                 },
                 {_id: 3, username: "TUser3", password: "TPassword3!", tasks: [], collections: []}]
 
@@ -36,10 +36,14 @@ export const handlers = [
     rest.post('http://localhost:8080/addTask', async (req, res, ctx) => {
         const data = await req.json()
         const userCheck = data.userID;
+        const userIndex = mockDB.filter((user) => user._id === userCheck)
+        if(userIndex[0].user_id == 0)
+         return res(ctx.status(400))
+        else{
         let nextId = 0;
         let lastTask = [];
         try{
-        const dbTask = mockDB[data.userID]
+        const dbTask = userIndex[0]
         let localCopy = JSON.parse(JSON.stringify(dbTask))
         if(localCopy.tasks)
             lastTask = localCopy.tasks.pop();
@@ -53,7 +57,7 @@ export const handlers = [
         else{
           index[0].tasks.push(newTask)
           return res(ctx.json(index[0].tasks))
-        }
+        }}
       }),
       rest.delete('http://localhost:8080/tasks/:taskId', async (req, res, ctx) => {
         const taskNumber = parseInt(req.params.taskId)
@@ -124,5 +128,33 @@ export const handlers = [
       else{
         return res(ctx.json(index[0].collections))
       }
+    }),
+    rest.post('http://localhost:8080/collections/create', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const userIndex = mockDB.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        let nextId = 0;
+        let lastCollection = [];
+        try{
+        const dbCollection = userIndex[0]
+        let localCopy = JSON.parse(JSON.stringify(dbCollection))
+        console.log(localCopy)
+        if(localCopy.collections)
+            lastCollection = localCopy.collections.pop();
+        if(lastCollection.length !== 0)
+            nextId = lastCollection._id + 1;}
+        catch(error){}
+        const newCollection = {collectionTitle: data.title, collectionDescription: data.desc, 
+          collectionStatus: data.status, _id: nextId, tasks: []}
+        const index = mockDB.filter((user) => user._id === userCheck)
+        if(index[0].user_id == 0)
+        return res(ctx.status(400))
+        else{
+          index[0].collections.push(newCollection)
+          return res(ctx.json(index[0].collections))
+        }}
     }),
 ]
