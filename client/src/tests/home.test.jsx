@@ -10,8 +10,6 @@ const user = userEvent.setup();
 const updateTask = (data) => {}
 
 describe('Testing basic home page', () => {
-
-    afterEach(cleanup)
     
     test('Testing no data', async () => {
         const renderedHome = render(<Home />)
@@ -134,16 +132,13 @@ describe('Testing home page with set local storage data', () => {
 
 describe('Testing mock API calls for home page', () => {
 
-    const mockDB = [{_id: 1, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 2, tasks: [{title: "mock1", description: "fake response 1", _id: 1},
-          {title: "mock2", description: "fake response 2", _id: 2},
-          {title: "mock3", description: "fake response 3", _id: 3}]
-        },
-                {_id: 3, tasks: []
-        }]
+    const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+        {title: "mock2", description: "fake response 2", _id: 2},{title: "mock3", description: "fake response 3", _id: 3}]},
+    {_id: 2, username: "TUser2", password: "TPassword2!", tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+        {title: "mock2", description: "fake response 2", _id: 2}, {title: "mock3", description: "fake response 3", _id: 3}]},
+    {_id: 3, username: "TUser3", password: "TPassword3!", tasks: [], collections: []},
+    {_id: 4, username: "TUser4", password: "TPassword4!",  tasks: [{title: "mock1", description: "fake response 1", _id: 1},
+        {title: "mock2", description: "fake response 2", _id: 2}, {title: "mock3", description: "fake response 3", _id: 3}]}]
 
     test('Test to see if tasks are empty', async () => {
         window.localStorage.setItem("userId", 3);
@@ -154,7 +149,7 @@ describe('Testing mock API calls for home page', () => {
     test('Test to see if there are tasks', async () => {
         window.localStorage.setItem("userId", 1);
         const response = await fetch(`http://localhost:8080/fetchTasks/${localStorage.getItem("userId")}`)
-        expect(await response.json()).toEqual(mockDB[1].tasks)
+        expect(await response.json()).toEqual(mockDB[0].tasks)
     })
     
     test('Test to add a task on user 1 (has 3 tasks)', async () => {
@@ -172,8 +167,10 @@ describe('Testing mock API calls for home page', () => {
                 status: "incomplete"
                 })
             });
+        const addedTask = {title: title, description: desc, status: "incomplete", _id: 4}
         const updatedData = await response.json();
         expect(updatedData.length).toEqual(4)
+        expect(updatedData).toEqual([...mockDB[0].tasks, addedTask])
     })
 
     test('Test to add a task on user 3 (has no tasks)', async () => {
