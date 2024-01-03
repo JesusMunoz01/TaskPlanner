@@ -152,7 +152,6 @@ export const handlers = [
         try{
         const dbCollection = userIndex[0]
         let localCopy = JSON.parse(JSON.stringify(dbCollection))
-        console.log(localCopy)
         if(localCopy.collections)
             lastCollection = localCopy.collections.pop();
         if(lastCollection.length !== 0)
@@ -178,6 +177,21 @@ export const handlers = [
       else{
         const deleteTask = userIndex[0].collections.filter((collection) => collection._id != collectionNumber)
         return res(ctx.json(deleteTask))
+      }
+    }),
+    rest.post('http://localhost:8080/collections/update', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const collectionNumber = data.collectionID
+      const userIndex = mockDB.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const collectionIndex = userIndex[0].collections.findIndex((collection) => collection._id == collectionNumber)
+        console.log(userIndex[0].collections[collectionIndex])
+        userIndex[0].collections[collectionIndex].collectionTitle = data.newTitle
+        userIndex[0].collections[collectionIndex].collectionDescription = data.newDesc
+        return res(ctx.json(userIndex[0].collections))
       }
     }),
 ]

@@ -323,8 +323,27 @@ describe('Tests for collections Page API', () => {
         expect(updatedData).toEqual([])
     })
 
-    test.skip('Updating a collection', async () => {
-
+    test('Updating a collection', async () => {
+        const userID = 2;
+        const collectionID = 1;
+        const newTitle = "updated mockCollection1"
+        const newDesc = "updated fake collection response 1"
+        const response = await fetch(`http://localhost:8080/collections/update`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                collectionID,
+                newTitle,
+                newDesc
+                })
+            });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{collectionTitle: "updated mockCollection1",
+        collectionDescription: "updated fake collection response 1",
+        collectionStatus: "Incomplete", _id: 1, tasks: []}])
     })
 
     test.skip('Testing creating a task in a collection', async () => {
