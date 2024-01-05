@@ -30,6 +30,10 @@
     background-color: #282c34;
   }
 
+  .navbar.active{
+    color: green;
+  }
+
   .links {
     display: grid;
     grid-gap: 80%;
@@ -377,6 +381,10 @@
     justify-content: flex-start;
     align-items:center;
   }
+
+  .navbar.active{
+    color: green;
+  }
   
   .links {
     display: flex;
@@ -399,7 +407,7 @@
     text-decoration: none;
   }
   
-  .navbar a:hover{
+  .navbar a:hover a:active{
     color: green;
   }
 

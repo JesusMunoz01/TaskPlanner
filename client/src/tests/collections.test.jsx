@@ -3,6 +3,7 @@ import { render, screen, cleanup, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
 import { Collections } from '../pages/collections'
+import { MemoryRouter } from 'react-router-dom'
 
 describe('Tests for collections Page', () => {
 
@@ -17,7 +18,7 @@ describe('Tests for collections Page', () => {
     })
 
     test('Testing page with collection data', async () => {
-        const renderedCollections = render(<Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>)
+        const renderedCollections = render(<MemoryRouter><Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/></MemoryRouter>)
 
         const collections = await renderedCollections.findAllByTestId(/^collection/);
 
@@ -25,7 +26,7 @@ describe('Tests for collections Page', () => {
     })
 
     test('Testing creating a collection with no previous collections', async () => {
-        const renderedCollections = render(<Collections isLogged={userLogin} updateCollection={updateCollection}/>)
+        const renderedCollections = render(<MemoryRouter><Collections isLogged={userLogin} updateCollection={updateCollection}/></MemoryRouter>)
         const inputCollectionCollectionTitle = await renderedCollections.findByLabelText('addCollectionTitle')
         const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionDesc')
         const createCollection = await renderedCollections.findByLabelText('createNewCollection')
@@ -47,7 +48,7 @@ describe('Tests for collections Page', () => {
 
     test('Testing creating a collection with previous collections', async () => {
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData))
-        const renderedCollections = render(<Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>)
+        const renderedCollections = render(<MemoryRouter><Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/></MemoryRouter>)
         const inputCollectionCollectionTitle = await renderedCollections.findByLabelText('addCollectionTitle')
         const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionDesc')
         const createCollection = await renderedCollections.findByLabelText('createNewCollection')
@@ -71,7 +72,7 @@ describe('Tests for collections Page', () => {
 
     test('Updating a collection', async () => {
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData))
-        const renderedCollections = render(<Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>)
+        const renderedCollections = render(<MemoryRouter><Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/></MemoryRouter>)
         const updateCollectionTitle = await renderedCollections.findByLabelText('editCollectionTitle1')
         const updateCollectionDesc = await renderedCollections.findByLabelText('editCollectionDesc1')
         const cupdateCollection = await renderedCollections.findByLabelText('confirmColEdit1')
@@ -93,7 +94,7 @@ describe('Tests for collections Page', () => {
 
     test('Creating a collection and updating it', async () => {
         window.localStorage.removeItem("localCollectionData")
-        const renderedCollections = render(<Collections isLogged={userLogin} updateCollection={updateCollection}/>)
+        const renderedCollections = render(<MemoryRouter><Collections isLogged={userLogin} updateCollection={updateCollection}/></MemoryRouter>)
         const inputCollectionTitle = await renderedCollections.findByLabelText('addCollectionTitle')
         const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionDesc')
         const createCollection = await renderedCollections.findByLabelText('createNewCollection')
@@ -135,7 +136,7 @@ describe('Tests for collections Page', () => {
 
     test('Testing creating and deleting a collection', async () => {
         window.localStorage.removeItem("localCollectionData")
-        const renderedCollections = render(<Collections isLogged={userLogin} updateCollection={updateCollection}/>)
+        const renderedCollections = render(<MemoryRouter><Collections isLogged={userLogin} updateCollection={updateCollection}/></MemoryRouter>)
         const inputCollectionTitle = await renderedCollections.findByLabelText('addCollectionTitle')
         const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionDesc')
         const createCollection = await renderedCollections.findByLabelText('createNewCollection')
@@ -165,7 +166,7 @@ describe('Tests for collections Page', () => {
 
     test('Testing deleting an old collection', async () => {
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData))
-        const renderedCollections = render(<Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>)
+        const renderedCollections = render(<MemoryRouter><Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/></MemoryRouter>)
 
         const deleteCollectionBtn = await renderedCollections.findByLabelText('delCollection1')
         
@@ -184,7 +185,7 @@ describe('Tests for collections Page', () => {
         {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
 
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
-        const renderedCollections = render(<Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>)
+        const renderedCollections = render(<MemoryRouter><Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/></MemoryRouter>)
 
         const deleteCollectionBtn1 = await renderedCollections.findByLabelText('delCollection1')
         
@@ -202,9 +203,9 @@ describe('Tests for collections Page', () => {
         expect(collections.length).toEqual(2)
         expect(await renderedCollections.queryByLabelText("collectionTitle1")).toEqual(null)
         expect(await renderedCollections.queryByLabelText("collectionDesc1")).toEqual(null)
-        expect(collectionTitle2.innerHTML).toEqual("Mock Collection 2")
+        expect(collectionTitle2.textContent).toEqual("Mock Collection 2")
         expect(collectionDesc2.innerHTML).toEqual("Fake description 2")
-        expect(collectionTitle3.innerHTML).toEqual("Mock Collection 3")
+        expect(collectionTitle3.textContent).toEqual("Mock Collection 3")
         expect(collectionDesc3.innerHTML).toEqual("Fake description 3")
     })
 

@@ -2,15 +2,17 @@ import './css/App.css';
 import { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from 'react-cookie'
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, useParams} from 'react-router-dom';
 import { Home } from './pages/home';
 import { Navbar } from './components/navbar';
 import { Login } from './pages/login';
 import { Collections } from './pages/collections';
+import { CollectionTasks } from './pages/collectionsTasks';
 
 function App() {
   const [taskData, setTaskData] = useState([]);
   const [collectionData, setCollectionData] = useState([]);
+  const [collectionTaskData, setCollectionTaskData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userLogin, setLogin] = useState(false);
   const [logStatus, setLogStatus] = useState("Not Logged");
@@ -26,7 +28,7 @@ function App() {
     setTaskData(data);
   }
   const updateCollection = (data) => {
-    setTaskData(data);
+    setCollectionData(data);
   }
 
   useEffect(() => {
@@ -86,6 +88,7 @@ function App() {
             <Route path="/" element={<Home data={taskData} isLogged={userLogin} updateTask={updateTask}/>} />
             <Route path="/login" element={<Login loginStatus={loginStatus}/>} />
             <Route path="/collections" element={<Collections data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>} />
+            <Route path="/collections/:collectionID" element={<CollectionTasks data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>}/>
           </Routes>
           </div>
         </div>
