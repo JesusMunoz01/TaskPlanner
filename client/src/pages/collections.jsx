@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { CollectionTasks } from "./collectionsTasks";
 
 export const Collections = (data) => {
     const [collections, setCollections] = useState(data.data);
@@ -256,9 +255,6 @@ export const Collections = (data) => {
             document.getElementById(`colSetting${id}`).className = "editCollection active"
     }
 
-    function showTask(){
-        <Link to={"/collections/task"}></Link>
-    }
 
     return <div className="collectionsHome">
         
