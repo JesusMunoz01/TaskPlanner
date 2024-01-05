@@ -12,6 +12,7 @@ import { CollectionTasks } from './pages/collectionsTasks';
 function App() {
   const [taskData, setTaskData] = useState([]);
   const [collectionData, setCollectionData] = useState([]);
+  const [collectionTaskData, setCollectionTaskData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userLogin, setLogin] = useState(false);
   const [logStatus, setLogStatus] = useState("Not Logged");
