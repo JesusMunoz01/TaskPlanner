@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { CollectionTasks } from "./collectionsTasks";
 
 export const Collections = (data) => {
     const [collections, setCollections] = useState(data.data);
@@ -255,6 +256,10 @@ export const Collections = (data) => {
             document.getElementById(`colSetting${id}`).className = "editCollection active"
     }
 
+    function showTask(){
+        <Link to={"/collections/task"}></Link>
+    }
+
     return <div className="collectionsHome">
         
         <div className="collectionsBox">
@@ -301,7 +306,8 @@ export const Collections = (data) => {
                     JSON.parse(collections).map((collection)=> (
                         <div className="collectionsList" data-testid="collection-item">
                             <li key={collection._id}>
-                                <p id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
+                                <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
+                                    to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>
                                 <div className="descBox">
                                     <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>
