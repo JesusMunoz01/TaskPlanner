@@ -1,27 +1,111 @@
 import "../css/collectionsTasks.css"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
+import { BsGearFill } from "react-icons/bs";
 
 export const CollectionTasks = (collections) => {
     const [isUserLogged] = useState(collections.isLogged)
     let { collectionID } = useParams()
     let [intCollectionID] = useState(parseInt(collectionID))
     const [allCollectionTasks] = useState(collections.data);
-    const [currentCollection] = useState(checkLog())
+    const [currentCollection, setCurrentCollection] = useState(fetchCurrentCollection())
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
-
-    function checkLog(){
+    const [collectionTaskTitle, setCollectionTaskTitle] = useState("");
+    const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
+    function fetchCurrentCollection(){
         if(isUserLogged)
-        return allCollectionTasks.filter((col) => col._id === intCollectionID).pop()
+            return allCollectionTasks.filter((col) => col._id === intCollectionID).pop()
         else
-        return JSON.parse(allCollectionTasks).filter((col) => col._id === intCollectionID).pop()
+            return JSON.parse(allCollectionTasks).filter((col) => col._id === intCollectionID).pop()
+    }
+
+    async function addCollectionTask(e){
+        e.preventDefault()
+        if(isUserLogged){
+            try{
+                const userID = window.localStorage.getItem("userId");
+                const res = await fetch(`${__API__}/addCollection`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        collectionTaskTitle,
+                        collectionTaskDesc,
+                        })
+                    });
+                const collectionTask = await res.json()
+                if(collection == null)
+                    console.log("Failed to create collection")
+                else{
+                    setCollections([...collectionTasks, collectionTask])
+                    data.updateCollection(collectionTasks)
+                }
+            }catch(error){
+                console.log(error)
+            }
+        }
+        else{
+            let nextId = 1;
+            let localCollectionTasks = currentCollection.tasks;
+            let lastCollectionTaskID = [];
+            let hasPrevTasks = collectionTasks;
+            // If there is a task, get last one, its id, and add 1
+            console.log(hasPrevTasks.length)
+            if(hasPrevTasks.length !== 0)
+                lastCollectionTaskID = hasPrevTasks.pop();
+            if(lastCollectionTaskID.length !== 0)
+                nextId = lastCollectionTaskID._id + 1;
+
+                const newCollectionTask = {
+                    title: collectionTaskTitle, 
+                    description: collectionTaskDesc,
+                    _id: nextId, 
+                    status:"Incomplete"
+                }
+
+            localCollectionTasks.push(newCollectionTask)
+            let currentCollectionState = JSON.parse(allCollectionTasks)
+            const changeIndex = JSON.parse(allCollectionTasks).findIndex((col) => col._id === intCollectionID)
+            currentCollectionState[changeIndex].tasks = localCollectionTasks;
+            setCurrentCollection(currentCollectionState[changeIndex])
+            window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
+            
+
+            const getUpdatedLocal = fetchCurrentCollection().tasks
+            setCollectionTasks(localCollectionTasks);
+            //collections.updateCollection([...collectionTasks, newCollectionTask])
+            // setCurrentFilter(getUpdatedLocal);
+        }
+
+        setCollectionTaskTitle('');
+        setCollectionTaskDesc('');
+    }
+
+    function delCollectionTask(taskID){
+
+    }
+
+    function displayEdit(){
+
+    }
+
+    function changeStatus(){
+
     }
     
     return <div>
                 <h1>{currentCollection.collectionTitle}</h1>
                 <div className="tasks">
                     {collectionTasks.length !== 0 ?
-                        <span>test</span>
+                        collectionTasks.map((colTask) => (
+                            <div>
+                                <li>
+                                    <span>{colTask.title}</span>
+                                </li>
+                            </div>
+                        ))
                         :
                         <span id="noTasks">Currently no tasks in this collection</span>
                     }
@@ -30,10 +114,10 @@ export const CollectionTasks = (collections) => {
                     <h2>Add Task</h2>
                     <form>
                         <label>Title: </label>
-                        <input aria-label="addTaskTitle" id="taskTitle" value={1} onChange={(e) => setTitle(e.target.value)}></input>
+                        <input aria-label="addTaskTitle" id="taskTitle" value={collectionTaskTitle} onChange={(e) => setCollectionTaskTitle(e.target.value)}></input>
                         <label>Description: </label>
-                        <input aria-label="addTaskDesc" id="taskDesc" value={1} onChange={(e) => setDesc(e.target.value)}></input>
-                        <button aria-label="confirmAdd" onClick={(e) => sendTask(e)}>Submit</button>
+                        <input aria-label="addTaskDesc" id="taskDesc" value={collectionTaskDesc} onChange={(e) => setCollectionTaskDesc(e.target.value)}></input>
+                        <button aria-label="confirmAdd" onClick={(e) => addCollectionTask(e)}>Submit</button>
                     </form>
                 </div>
                 
