@@ -52,7 +52,7 @@ export const Home = (data) => {
                 nextId = lastTask._id + 1;
 
                 const newTask = {
-                    title: title, description: desc, _id: nextId, status:"incomplete"
+                    title: title, description: desc, _id: nextId, status:"Incomplete"
                 }
 
             localTask.push(newTask)
