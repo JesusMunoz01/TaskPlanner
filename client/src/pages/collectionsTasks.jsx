@@ -8,26 +8,15 @@ export const CollectionTasks = (collections) => {
     let { collectionID } = useParams()
     let [intCollectionID] = useState(parseInt(collectionID))
     const [allCollectionTasks] = useState(collections.data);
-    const [currentCollection, setCurrentCollection] = useState(fetchAndModifyCollections())
+    const [currentCollection, setCurrentCollection] = useState(fetchCurrentCollection())
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
     const [collectionTaskTitle, setCollectionTaskTitle] = useState("");
     const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
-
-    function fetchAndModifyCollections(updateLocalInfo, updatedCurrentCollection){
+    function fetchCurrentCollection(){
         if(isUserLogged)
             return allCollectionTasks.filter((col) => col._id === intCollectionID).pop()
-        else{
-            if(updateLocalInfo === undefined)
-                return JSON.parse(allCollectionTasks).filter((col) => col._id === intCollectionID).pop()
-            else{
-                let currentCollectionState = JSON.parse(allCollectionTasks)
-                const changeIndex = JSON.parse(allCollectionTasks).findIndex((col) => col._id === intCollectionID)
-                currentCollectionState[changeIndex] = updatedCurrentCollection;
-                setCurrentCollection(currentCollectionState[changeIndex])
-                console.log(currentCollection)
-                window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
-            }
-        }  
+        else
+            return JSON.parse(allCollectionTasks).filter((col) => col._id === intCollectionID).pop()
     }
 
     async function addCollectionTask(e){
@@ -59,7 +48,7 @@ export const CollectionTasks = (collections) => {
         }
         else{
             let nextId = 1;
-            let localCollection = currentCollection;
+            let localCollectionTasks = currentCollection.tasks;
             let lastCollectionTaskID = [];
             let hasPrevTasks = collectionTasks;
             // If there is a task, get last one, its id, and add 1
@@ -76,9 +65,16 @@ export const CollectionTasks = (collections) => {
                     status:"Incomplete"
                 }
 
-            localCollection.tasks.push(newCollectionTask)
-            fetchAndModifyCollections(true, localCollection.tasks)
-            setCollectionTasks([...localCollection.tasks, newCollectionTask]);
+            localCollectionTasks.push(newCollectionTask)
+            let currentCollectionState = JSON.parse(allCollectionTasks)
+            const changeIndex = JSON.parse(allCollectionTasks).findIndex((col) => col._id === intCollectionID)
+            currentCollectionState[changeIndex].tasks = localCollectionTasks;
+            setCurrentCollection(currentCollectionState[changeIndex])
+            window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
+            
+
+            const getUpdatedLocal = fetchCurrentCollection().tasks
+            setCollectionTasks(localCollectionTasks);
             //collections.updateCollection([...collectionTasks, newCollectionTask])
             // setCurrentFilter(getUpdatedLocal);
         }
