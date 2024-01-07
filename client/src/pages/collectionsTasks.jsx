@@ -10,6 +10,7 @@ export const CollectionTasks = (collections) => {
     const [allCollectionTasks] = useState(collections.data);
     const [currentCollection, setCurrentCollection] = useState(fetchCurrentCollection())
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
+    const [collectionTasksFilter, setCurrentFilter] = useState(currentCollection.tasks);
     const [collectionTaskTitle, setCollectionTaskTitle] = useState("");
     const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
     const [updtColTaskTitle, updateColTaskTitle] = useState("")
@@ -72,8 +73,8 @@ export const CollectionTasks = (collections) => {
             window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
             setCurrentCollection(currentCollectionState[changeIndex])
             setCollectionTasks(currentCollectionState[changeIndex].tasks);
+            setCurrentFilter(currentCollectionState[changeIndex].tasks);
             //collections.updateCollection([...collectionTasks, newCollectionTask])
-            //setCurrentFilter(getUpdatedLocal);
         }
 
         setCollectionTaskTitle('');
@@ -97,8 +98,8 @@ export const CollectionTasks = (collections) => {
             window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
             setCurrentCollection(currentCollectionState[changeIndex])
             setCollectionTasks(currentCollectionState[changeIndex].tasks);
+            setCurrentFilter(currentCollectionState[changeIndex].tasks);
             //data.updateTask(getUpdatedLocal);
-            //setCurrentFilter(getUpdatedLocal);
             }
         }
     
@@ -148,8 +149,8 @@ export const CollectionTasks = (collections) => {
             window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
             setCurrentCollection(currentCollectionState[changeIndex])
             setCollectionTasks(currentCollectionState[changeIndex].tasks);
+            setCurrentFilter(currentCollectionState[changeIndex].tasks);
             //data.updateTask(getUpdatedLocal);
-            //setCurrentFilter(getUpdatedLocal);
         }
 
         updateTitle("");
@@ -189,8 +190,8 @@ export const CollectionTasks = (collections) => {
             window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
             setCurrentCollection(currentCollectionState[changeIndex])
             setCollectionTasks(currentCollectionState[changeIndex].tasks);
+            setCurrentFilter(currentCollectionState[changeIndex].tasks);
             //data.updateTask(getUpdatedLocal);
-            //setCurrentFilter(getUpdatedLocal);
             if(taskStatus == "Complete"){
                 let completedTasks = 1;
                 collectionTasks.map((task) => {
@@ -211,6 +212,35 @@ export const CollectionTasks = (collections) => {
         }
     }
 
+    function filterTask(action){
+        const selected = document.getElementById(`${action}`)
+        let data = [];
+        data = collectionTasks;
+        switch(action){
+            case "filter1": // All Tasks Filter
+                selected.style.color = "green"
+                document.getElementById("filter2").style.color = "white"
+                document.getElementById("filter3").style.color = "white"
+                setCurrentFilter(data)
+                break;
+            case "filter2": // Incomplete Tasks Filter
+                selected.style.color = "green"
+                document.getElementById("filter1").style.color = "white"
+                document.getElementById("filter3").style.color = "white"
+                setCurrentFilter(data.filter((task) => task.status === "Complete"))
+                break;
+            case "filter3": // Completed Tasks Filter
+                selected.style.color = "green"
+                document.getElementById("filter1").style.color = "white"
+                document.getElementById("filter2").style.color = "white"
+                setCurrentFilter(data.filter((task) => task.status === "Incomplete"))
+                break;
+            default:
+                break;
+        }
+
+    }
+
     function displayEdit(id){
         const currentMode = document.getElementById(`colTaskSetting${id}`).className
         if(currentMode === "editColTask active")
@@ -221,9 +251,14 @@ export const CollectionTasks = (collections) => {
     
     return <div>
                 <h1>{currentCollection.collectionTitle}</h1>
+                <span className="filterClass">
+                    <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id)}>All Tasks</button>
+                    <button id="filter2" onClick={(e) => filterTask(e.target.id)}>Completed</button>
+                    <button id="filter3" onClick={(e) => filterTask(e.target.id)}>Incomplete</button>
+                </span>
                 <div className="tasks">
-                    {collectionTasks.length !== 0 ?
-                        collectionTasks.map((colTask) => (
+                    {collectionTasksFilter.length !== 0 ?
+                        collectionTasksFilter.map((colTask) => (
                             <div className="listTasks" data-testid="colTask-item" key={colTask._id}>
                                 <li key={colTask._id}>
                                     <button aria-label={`delColTaskBtn${colTask._id}`} onClick={() => delCollectionTask(colTask._id)}>x</button>
