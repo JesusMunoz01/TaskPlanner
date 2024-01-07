@@ -12,8 +12,8 @@ export const CollectionTasks = (collections) => {
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
     const [collectionTaskTitle, setCollectionTaskTitle] = useState("");
     const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
-    const [updtColTaskTitle, setColTaskTitle] = useState("")
-    const [updtColTaskDesc, setColTaskDesc] = useState("")
+    const [updtColTaskTitle, updateColTaskTitle] = useState("")
+    const [updtColTaskDesc, updateColTaskDesc] = useState("")
 
     function fetchCurrentCollection(){
         if(isUserLogged)
@@ -101,6 +101,61 @@ export const CollectionTasks = (collections) => {
             //setCurrentFilter(getUpdatedLocal);
             }
         }
+    
+    async function changeInfo(taskID, oldTitle, oldDesc){
+        let newTitle, newDesc = "";
+
+        if(updtColTaskTitle === "")
+            newTitle = oldTitle;
+        else
+            newTitle = updtColTaskTitle;
+        if(updtColTaskDesc === "")
+            newDesc = oldDesc;
+        else
+            newDesc = updtColTaskDesc;
+
+        if(isUserLogged)
+            try{
+                // const userID = window.localStorage.getItem("userId");
+                // const res = await fetch(`${__API__}/updateTaskInfo`, {
+                //     method: "POST", headers: {
+                //         'Content-Type': 'application/json',
+                //         auth: cookies.access_token
+                //     },
+                //     body: JSON.stringify({
+                //         userID,
+                //         taskID,
+                //         newTitle,
+                //         newDesc
+                //         })
+                //     });
+                // const updatedValues = await res.json()
+                // const index = updatedValues.findIndex((task => task._id === taskID))
+                // updatedValues[index].title = `${newTitle}`
+                // updatedValues[index].description = `${newDesc}`
+                // setTasks(updatedValues)
+                // data.updateTask(updatedValues);
+                // setCurrentFilter(updatedValues);
+            }catch(error){
+                console.log(error)
+            }
+        else{
+            let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            const changeIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID)
+            const index = currentCollectionState[changeIndex].tasks.findIndex((task => task._id === taskID))
+            currentCollectionState[changeIndex].tasks[index].title = `${newTitle}`
+            currentCollectionState[changeIndex].tasks[index].description = `${newDesc}`
+            window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
+            setCurrentCollection(currentCollectionState[changeIndex])
+            setCollectionTasks(currentCollectionState[changeIndex].tasks);
+            //data.updateTask(getUpdatedLocal);
+            //setCurrentFilter(getUpdatedLocal);
+        }
+
+        updateTitle("");
+        updateDesc("");
+
+    }
 
     async function changeStatus(taskStatus, taskID){
         if(isUserLogged)
@@ -186,11 +241,11 @@ export const CollectionTasks = (collections) => {
                                 <ul className="editColTask" id={`colTaskSetting${colTask._id}`} >
                                     <li id={`setting${colTask._id}`} style={{display:"flex"}}>
                                         <label>Edit title:</label>
-                                        <input aria-label={`editColTaskTitle${colTask._id}`} id="colTaskTitle" value={updtColTaskTitle} onChange={(e) => setColTaskTitle(e.target.value)}></input>
+                                        <input aria-label={`editColTaskTitle${colTask._id}`} id="colTaskTitle" value={updtColTaskTitle} onChange={(e) => updateColTaskTitle(e.target.value)}></input>
                                     </li>
                                     <li id={`colTaskSetting${colTask._id}`} style={{display:"flex"}}>
                                         <label>Edit Description:</label>
-                                        <input aria-label={`editColTaskDesc${colTask._id}`} id="colTaskDesc" value={updtColTaskDesc} onChange={(e) => setColTaskDesc(e.target.value)}></input>
+                                        <input aria-label={`editColTaskDesc${colTask._id}`} id="colTaskDesc" value={updtColTaskDesc} onChange={(e) => updateColTaskDesc(e.target.value)}></input>
                                     </li>
                                     <button aria-label={`confirmColTaskEdit${colTask._id}`} onClick={() => changeInfo(colTask._id, colTask.title, colTask.description)}>Save Changes</button>  
                                 </ul>
