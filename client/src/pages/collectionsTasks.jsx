@@ -122,11 +122,11 @@ export const CollectionTasks = (collections) => {
                                 <ul className="editColTask" id={`colTaskSetting${colTask._id}`} >
                                     <li id={`setting${colTask._id}`} style={{display:"flex"}}>
                                         <label>Edit title:</label>
-                                        <input aria-label={`editColTaskTitle${colTask._id}`} id="colTaskTitle" value={updtColTaskTitle} onChange={(e) => updateTitle(e.target.value)}></input>
+                                        <input aria-label={`editColTaskTitle${colTask._id}`} id="colTaskTitle" value={updtColTaskTitle} onChange={(e) => setColTaskTitle(e.target.value)}></input>
                                     </li>
                                     <li id={`colTaskSetting${colTask._id}`} style={{display:"flex"}}>
                                         <label>Edit Description:</label>
-                                        <input aria-label={`editColTaskDesc${colTask._id}`} id="colTaskDesc" value={updtColTaskDesc} onChange={(e) => updateDesc(e.target.value)}></input>
+                                        <input aria-label={`editColTaskDesc${colTask._id}`} id="colTaskDesc" value={updtColTaskDesc} onChange={(e) => setColTaskDesc(e.target.value)}></input>
                                     </li>
                                     <button aria-label={`confirmColTaskEdit${colTask._id}`} onClick={() => changeInfo(colTask._id, colTask.title, colTask.description)}>Save Changes</button>  
                                 </ul>
