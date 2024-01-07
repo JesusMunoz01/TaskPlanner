@@ -12,6 +12,8 @@ export const CollectionTasks = (collections) => {
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
     const [collectionTaskTitle, setCollectionTaskTitle] = useState("");
     const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
+    const [updtColTaskTitle, setColTaskTitle] = useState("")
+    const [updtColTaskDesc, setColTaskDesc] = useState("")
 
     function fetchCurrentCollection(){
         if(isUserLogged)
@@ -89,16 +91,45 @@ export const CollectionTasks = (collections) => {
     function changeStatus(){
 
     }
+
+    function displayEdit(id){
+        const currentMode = document.getElementById(`colTaskSetting${id}`).className
+        if(currentMode === "editColTask active")
+            document.getElementById(`colTaskSetting${id}`).className = "editColTask"
+        else
+            document.getElementById(`colTaskSetting${id}`).className = "editColTask active"
+    }
     
     return <div>
                 <h1>{currentCollection.collectionTitle}</h1>
                 <div className="tasks">
                     {collectionTasks.length !== 0 ?
                         collectionTasks.map((colTask) => (
-                            <div>
-                                <li>
-                                    <span>{colTask.title}</span>
+                            <div className="listTasks" data-testid="colTask-item">
+                                <li key={colTask._id}>
+                                    <button aria-label={`delColTaskBtn${colTask._id}`} onClick={() => delTask(colTask._id)}>x</button>
+                                    <input aria-label={`editColTaskDropdown${colTask._id}`} id={colTask._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(colTask._id)}/>
+                                    <label id="colTaskSettingsIcon" for={colTask._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    <p aria-label={`colTaskTitle${colTask._id}`}>{colTask.title}</p>
+                                    <div className="colTaskStatusBox">
+                                    <label id="colTaskState">Status: </label>
+                                    <select aria-label="colTaskStatus" for="colTaskState" value={colTask.status} onChange={(e) => changeStatus(e.target.value, colTask._id)}>
+                                        <option aria-label="incompleteColTaskStatus" value={"Incomplete"}>Incomplete</option>
+                                        <option aria-label="completeColTaskStatus" value={"Complete"}>Complete</option>
+                                    </select>
+                                    </div>
                                 </li>
+                                <ul className="editColTask" id={`colTaskSetting${colTask._id}`} >
+                                    <li id={`setting${colTask._id}`} style={{display:"flex"}}>
+                                        <label>Edit title:</label>
+                                        <input aria-label={`editColTaskTitle${colTask._id}`} id="colTaskTitle" value={updtColTaskTitle} onChange={(e) => updateTitle(e.target.value)}></input>
+                                    </li>
+                                    <li id={`colTaskSetting${colTask._id}`} style={{display:"flex"}}>
+                                        <label>Edit Description:</label>
+                                        <input aria-label={`editColTaskDesc${colTask._id}`} id="colTaskDesc" value={updtColTaskDesc} onChange={(e) => updateDesc(e.target.value)}></input>
+                                    </li>
+                                    <button aria-label={`confirmColTaskEdit${colTask._id}`} onClick={() => changeInfo(colTask._id, colTask.title, colTask.description)}>Save Changes</button>  
+                                </ul>
                             </div>
                         ))
                         :
