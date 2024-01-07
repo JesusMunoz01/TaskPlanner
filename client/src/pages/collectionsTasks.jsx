@@ -52,7 +52,8 @@ export const CollectionTasks = (collections) => {
         else{
             let nextId = 1;
             let lastCollectionTaskID = [];
-            let hasPrevTasks = JSON.parse(window.localStorage.getItem("localCollectionData")).filter((col) => col._id === intCollectionID);
+            const changeIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID)
+            let hasPrevTasks = JSON.parse(window.localStorage.getItem("localCollectionData"))[changeIndex].tasks
             // If there is a task, get last one, its id, and add 1
             if(hasPrevTasks.length !== 0)
                 lastCollectionTaskID = hasPrevTasks.pop();
@@ -67,7 +68,6 @@ export const CollectionTasks = (collections) => {
                 }
             
             let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            const changeIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID)
             currentCollectionState[changeIndex].tasks.push(newCollectionTask)
             window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
             setCurrentCollection(currentCollectionState[changeIndex])
@@ -80,13 +80,27 @@ export const CollectionTasks = (collections) => {
         setCollectionTaskDesc('');
     }
 
-    function delCollectionTask(taskID){
-
-    }
-
-    function displayEdit(){
-
-    }
+    async function delCollectionTask(taskID){
+        if(isUserLogged){
+            await fetch(`${__API__}/tasks/${taskId}`, {
+                method: "DELETE", headers: {auth: cookies.access_token}});
+    
+            setTasks(tasks.filter((task) => task._id !== taskId))
+            data.updateTask(tasks.filter((task) => task._id !== taskId))
+            setCurrentFilter(tasks);
+        }
+        else{
+            let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            const changeIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID)
+            const newList = currentCollectionState[changeIndex].tasks.filter((task) => task._id !== taskID)
+            currentCollectionState[changeIndex].tasks = newList;
+            window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
+            setCurrentCollection(currentCollectionState[changeIndex])
+            setCollectionTasks(currentCollectionState[changeIndex].tasks);
+            //data.updateTask(getUpdatedLocal);
+            //setCurrentFilter(getUpdatedLocal);
+            }
+        }
 
     function changeStatus(){
 
@@ -107,7 +121,7 @@ export const CollectionTasks = (collections) => {
                         collectionTasks.map((colTask) => (
                             <div className="listTasks" data-testid="colTask-item" key={colTask._id}>
                                 <li key={colTask._id}>
-                                    <button aria-label={`delColTaskBtn${colTask._id}`} onClick={() => delTask(colTask._id)}>x</button>
+                                    <button aria-label={`delColTaskBtn${colTask._id}`} onClick={() => delCollectionTask(colTask._id)}>x</button>
                                     <input aria-label={`editColTaskDropdown${colTask._id}`} id={colTask._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(colTask._id)}/>
                                     <label id="colTaskSettingsIcon" htmlFor={colTask._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                     <p aria-label={`colTaskTitle${colTask._id}`}>{colTask.title}</p>
