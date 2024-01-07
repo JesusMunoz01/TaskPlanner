@@ -26,25 +26,25 @@ export const CollectionTasks = (collections) => {
         e.preventDefault()
         if(isUserLogged){
             try{
-                const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${__API__}/addCollection`, {
-                    method: "POST", headers: {
-                        'Content-Type': 'application/json',
-                        auth: cookies.access_token
-                    },
-                    body: JSON.stringify({
-                        userID,
-                        collectionTaskTitle,
-                        collectionTaskDesc,
-                        })
-                    });
-                const collectionTask = await res.json()
-                if(collection == null)
-                    console.log("Failed to create collection")
-                else{
-                    setCollections([...collectionTasks, collectionTask])
-                    data.updateCollection(collectionTasks)
-                }
+                // const userID = window.localStorage.getItem("userId");
+                // const res = await fetch(`${__API__}/addCollection`, {
+                //     method: "POST", headers: {
+                //         'Content-Type': 'application/json',
+                //         auth: cookies.access_token
+                //     },
+                //     body: JSON.stringify({
+                //         userID,
+                //         collectionTaskTitle,
+                //         collectionTaskDesc,
+                //         })
+                //     });
+                // const collectionTask = await res.json()
+                // if(collection == null)
+                //     console.log("Failed to create collection")
+                // else{
+                //     setCollections([...collectionTasks, collectionTask])
+                //     data.updateCollection(collectionTasks)
+                // }
             }catch(error){
                 console.log(error)
             }
@@ -60,12 +60,12 @@ export const CollectionTasks = (collections) => {
             if(lastCollectionTaskID.length !== 0)
                 nextId = lastCollectionTaskID._id + 1;
 
-                const newCollectionTask = {
-                    title: collectionTaskTitle, 
-                    description: collectionTaskDesc,
-                    _id: nextId, 
-                    status:"Incomplete"
-                }
+            const newCollectionTask = {
+                title: collectionTaskTitle, 
+                description: collectionTaskDesc,
+                _id: nextId, 
+                status:"Incomplete"
+            }
             
             let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"))
             currentCollectionState[changeIndex].tasks.push(newCollectionTask)
@@ -73,7 +73,7 @@ export const CollectionTasks = (collections) => {
             setCurrentCollection(currentCollectionState[changeIndex])
             setCollectionTasks(currentCollectionState[changeIndex].tasks);
             //collections.updateCollection([...collectionTasks, newCollectionTask])
-            // setCurrentFilter(getUpdatedLocal);
+            //setCurrentFilter(getUpdatedLocal);
         }
 
         setCollectionTaskTitle('');
@@ -82,12 +82,12 @@ export const CollectionTasks = (collections) => {
 
     async function delCollectionTask(taskID){
         if(isUserLogged){
-            await fetch(`${__API__}/tasks/${taskId}`, {
-                method: "DELETE", headers: {auth: cookies.access_token}});
+            // await fetch(`${__API__}/tasks/${taskId}`, {
+            //     method: "DELETE", headers: {auth: cookies.access_token}});
     
-            setTasks(tasks.filter((task) => task._id !== taskId))
-            data.updateTask(tasks.filter((task) => task._id !== taskId))
-            setCurrentFilter(tasks);
+            // setTasks(tasks.filter((task) => task._id !== taskId))
+            // data.updateTask(tasks.filter((task) => task._id !== taskId))
+            // setCurrentFilter(tasks);
         }
         else{
             let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"))
@@ -102,8 +102,58 @@ export const CollectionTasks = (collections) => {
             }
         }
 
-    function changeStatus(){
-
+    async function changeStatus(taskStatus, taskID){
+        if(isUserLogged)
+            try{
+                // const userID = window.localStorage.getItem("userId");
+                // const res = await fetch(`${__API__}/updateTask`, {
+                //     method: "POST", headers: {
+                //         'Content-Type': 'application/json',
+                //         auth: cookies.access_token
+                //     },
+                //     body: JSON.stringify({
+                //         userID,
+                //         taskID,
+                //         taskStatus
+                //         })
+                //     });
+                // const updatedValues = await res.json()
+                // const index = updatedValues.findIndex((task => task._id === taskID))
+                // updatedValues[index].status = `${taskStatus}`
+                // setTasks(updatedValues)
+                // data.updateTask(updatedValues);
+                // setCurrentFilter(updatedValues)
+            }catch(error){
+                console.log(error)
+            }
+        else{
+            let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"));
+            const changeIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID);
+            const index = currentCollection.tasks.findIndex((task => task._id === taskID))
+            currentCollectionState[changeIndex].tasks[index].status = `${taskStatus}`
+            window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
+            setCurrentCollection(currentCollectionState[changeIndex])
+            setCollectionTasks(currentCollectionState[changeIndex].tasks);
+            //data.updateTask(getUpdatedLocal);
+            //setCurrentFilter(getUpdatedLocal);
+            if(taskStatus == "Complete"){
+                let completedTasks = 1;
+                collectionTasks.map((task) => {
+                    if(task.status === "Complete")
+                        completedTasks++;
+                })
+                if(completedTasks === currentCollection.tasks.length){
+                    currentCollectionState[changeIndex].status = "Complete";
+                    window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState));
+                }
+            }
+            else{
+                if(currentCollectionState[changeIndex].status === "Complete"){
+                    currentCollectionState[changeIndex].status = "Incomplete";
+                    window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState));
+                }
+            }
+        }
     }
 
     function displayEdit(id){
