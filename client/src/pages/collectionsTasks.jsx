@@ -105,15 +105,15 @@ export const CollectionTasks = (collections) => {
                 <div className="tasks">
                     {collectionTasks.length !== 0 ?
                         collectionTasks.map((colTask) => (
-                            <div className="listTasks" data-testid="colTask-item">
+                            <div className="listTasks" data-testid="colTask-item" key={colTask._id}>
                                 <li key={colTask._id}>
                                     <button aria-label={`delColTaskBtn${colTask._id}`} onClick={() => delTask(colTask._id)}>x</button>
                                     <input aria-label={`editColTaskDropdown${colTask._id}`} id={colTask._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(colTask._id)}/>
-                                    <label id="colTaskSettingsIcon" for={colTask._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    <label id="colTaskSettingsIcon" htmlFor={colTask._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                     <p aria-label={`colTaskTitle${colTask._id}`}>{colTask.title}</p>
                                     <div className="colTaskStatusBox">
                                     <label id="colTaskState">Status: </label>
-                                    <select aria-label="colTaskStatus" for="colTaskState" value={colTask.status} onChange={(e) => changeStatus(e.target.value, colTask._id)}>
+                                    <select aria-label="colTaskStatus" htmlFor="colTaskState" value={colTask.status} onChange={(e) => changeStatus(e.target.value, colTask._id)}>
                                         <option aria-label="incompleteColTaskStatus" value={"Incomplete"}>Incomplete</option>
                                         <option aria-label="completeColTaskStatus" value={"Complete"}>Complete</option>
                                     </select>
