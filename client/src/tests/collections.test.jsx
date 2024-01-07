@@ -3,7 +3,8 @@ import { render, screen, cleanup, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
 import { Collections } from '../pages/collections'
-import { MemoryRouter } from 'react-router-dom'
+import { Link, MemoryRouter, Route, Routes } from 'react-router-dom'
+import { CollectionTasks } from '../pages/collectionsTasks'
 
 describe('Tests for collections Page', () => {
 
@@ -207,6 +208,28 @@ describe('Tests for collections Page', () => {
         expect(collectionDesc2.innerHTML).toEqual("Fake description 2")
         expect(collectionTitle3.textContent).toEqual("Mock Collection 3")
         expect(collectionDesc3.innerHTML).toEqual("Fake description 3")
+    })
+
+    test('Testing empty tasks in collection', async () => {
+        const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
+        {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: [{title: "test", description: "test", _id: 1, status: "Incomplete"}]},
+        {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
+
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
+        const renderedCollections = render(
+        <MemoryRouter>
+            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+            <Routes>
+                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+            </Routes>
+        </MemoryRouter>)
+
+        const collectionTitle1 = await renderedCollections.findByLabelText("collectionTitle1")
+        await act(async () => {
+            await user.click(collectionTitle1)
+        })
+
+        expect(renderedCollections.queryByLabelText(/^delColTask/)).not.toBeInTheDocument()
     })
 
     test.skip('Testing creating a task in a collection', async () => {

@@ -265,7 +265,7 @@ export const Collections = (data) => {
                 collections.length !== 0 ? 
                     // Section for: Logged user with collections -------------------------------------------
                     collections.map((collection)=> (
-                        <div className="collectionsList" data-testid="collection-item">
+                        <div className="collectionsList" data-testid="collection-item" key={collection._id}>
                             <li key={collection._id}>
                                 <p id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
                                 <div className="descBox">
@@ -275,7 +275,7 @@ export const Collections = (data) => {
                                     <span>Status: {collection.status}</span>
                                 </div>
                                 <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="collectionsSettingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                <label id="collectionsSettingsIcon" htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                 <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                             </li>
                             <ul className="editCollection" id={`colSetting${collection._id}`} >
@@ -300,7 +300,7 @@ export const Collections = (data) => {
                     collections ? 
                     // Section for: Not logged user with collections -------------------------------------------
                     JSON.parse(collections).map((collection)=> (
-                        <div className="collectionsList" data-testid="collection-item">
+                        <div className="collectionsList" data-testid="collection-item" key={collection._id}>
                             <li key={collection._id}>
                                 <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
                                     to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>
@@ -311,7 +311,7 @@ export const Collections = (data) => {
                                     <span>Status: {collection.status}</span>
                                 </div>
                                 <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="collectionsSettingsIcon" for={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                <label id="collectionsSettingsIcon" htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                 <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                             </li>
                             <ul className="editCollection" id={`colSetting${collection._id}`} >

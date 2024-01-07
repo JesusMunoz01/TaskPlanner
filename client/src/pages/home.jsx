@@ -242,15 +242,15 @@ export const Home = (data) => {
                     taskFilter.length !== 0 ? 
                         // Section for: Logged user with tasks -------------------------------------------
                         taskFilter.map((task)=> (
-                            <div className="listTasks" data-testid="task-item">
+                            <div className="listTasks" data-testid="task-item" key={task._id}>
                                 <li key={task._id}>
                                     <button aria-label={`delBtn${task._id}`} onClick={() => delTask(task._id)}>x</button>
                                     <input aria-label={`editDropdown${task._id}`} id={task._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(task._id)}/>
-                                    <label id="settingsIcon" for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    <label id="settingsIcon" htmlFor={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                     <p aria-label={`taskTitle${task._id}`}>{task.title}</p>
                                     <div className="statusBox">
                                     <label id="taskState">Status: </label>
-                                    <select aria-label="taskStatus" for="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
+                                    <select aria-label="taskStatus" htmlFor="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
                                         <option aria-label="incompleteStatus" value={"Incomplete"}>Incomplete</option>
                                         <option aria-label="completeStatus" value={"Complete"}>Complete</option>
                                     </select>
@@ -274,15 +274,15 @@ export const Home = (data) => {
                     taskFilter ?
                         // Section for: Non-Logged user with tasks -------------------------------------------
                         JSON.parse(taskFilter).map((task)=> (
-                            <div className="listTasks" data-testid="task-item">
+                            <div className="listTasks" data-testid="task-item" key={task._id}>
                                 <li key={task._id}>
                                     <button aria-label={`delBtn${task._id}`} onClick={() => delTask(task._id)}>x</button>
                                     <input aria-label={`editDropdown${task._id}`} id={task._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(task._id)}/>
-                                    <label id="settingsIcon" for={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    <label id="settingsIcon" htmlFor={task._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                     <p aria-label={`taskTitle${task._id}`}>{task.title}</p>
                                     <div className="statusBox">
                                     <label id="taskState">Status: </label>
-                                    <select aria-label="taskStatus" for="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
+                                    <select aria-label="taskStatus" htmlFor="taskState" value={task.status} onChange={(e) => changeStatus(e.target.value, task._id)}>
                                         <option aria-label="incompleteStatus" value={"Incomplete"}>Incomplete</option>
                                         <option aria-label="completeStatus" value={"Complete"}>Complete</option>
                                     </select>
