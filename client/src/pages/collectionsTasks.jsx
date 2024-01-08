@@ -11,6 +11,7 @@ export const CollectionTasks = (collections) => {
     const [currentCollection, setCurrentCollection] = useState(fetchCurrentCollection())
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
     const [collectionTasksFilter, setCurrentFilter] = useState(currentCollection.tasks);
+    const [filterType, setFilter] = useState("");
     const [collectionTaskTitle, setCollectionTaskTitle] = useState("");
     const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
     const [updtColTaskTitle, updateColTaskTitle] = useState("")
@@ -73,7 +74,7 @@ export const CollectionTasks = (collections) => {
             window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
             setCurrentCollection(currentCollectionState[changeIndex])
             setCollectionTasks(currentCollectionState[changeIndex].tasks);
-            setCurrentFilter(currentCollectionState[changeIndex].tasks);
+            filterTask(filterType, currentCollectionState[changeIndex].tasks)
             //collections.updateCollection([...collectionTasks, newCollectionTask])
         }
 
@@ -98,7 +99,7 @@ export const CollectionTasks = (collections) => {
             window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
             setCurrentCollection(currentCollectionState[changeIndex])
             setCollectionTasks(currentCollectionState[changeIndex].tasks);
-            setCurrentFilter(currentCollectionState[changeIndex].tasks);
+            filterTask(filterType, currentCollectionState[changeIndex].tasks)
             //data.updateTask(getUpdatedLocal);
             }
         }
@@ -147,9 +148,9 @@ export const CollectionTasks = (collections) => {
             currentCollectionState[changeIndex].tasks[index].title = `${newTitle}`
             currentCollectionState[changeIndex].tasks[index].description = `${newDesc}`
             window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
-            setCurrentCollection(currentCollectionState[changeIndex])
+            setCurrentCollection(currentCollectionState[changeIndex]);
             setCollectionTasks(currentCollectionState[changeIndex].tasks);
-            setCurrentFilter(currentCollectionState[changeIndex].tasks);
+            filterTask(filterType, currentCollectionState[changeIndex].tasks)
             //data.updateTask(getUpdatedLocal);
         }
 
@@ -190,7 +191,7 @@ export const CollectionTasks = (collections) => {
             window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
             setCurrentCollection(currentCollectionState[changeIndex])
             setCollectionTasks(currentCollectionState[changeIndex].tasks);
-            setCurrentFilter(currentCollectionState[changeIndex].tasks);
+            filterTask(filterType, currentCollectionState[changeIndex].tasks)
             //data.updateTask(getUpdatedLocal);
             if(taskStatus == "Complete"){
                 let completedTasks = 1;
@@ -212,10 +213,10 @@ export const CollectionTasks = (collections) => {
         }
     }
 
-    function filterTask(action){
+    function filterTask(action, data){
+        if(action !== filterType)
+            setFilter(action);
         const selected = document.getElementById(`${action}`)
-        let data = [];
-        data = collectionTasks;
         switch(action){
             case "filter1": // All Tasks Filter
                 selected.style.color = "green"
@@ -252,9 +253,9 @@ export const CollectionTasks = (collections) => {
     return <div>
                 <h1>{currentCollection.collectionTitle}</h1>
                 <span className="filterClass">
-                    <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id)}>All Tasks</button>
-                    <button id="filter2" onClick={(e) => filterTask(e.target.id)}>Completed</button>
-                    <button id="filter3" onClick={(e) => filterTask(e.target.id)}>Incomplete</button>
+                    <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id, collectionTasks)}>All Tasks</button>
+                    <button id="filter2" onClick={(e) => filterTask(e.target.id, collectionTasks)}>Completed</button>
+                    <button id="filter3" onClick={(e) => filterTask(e.target.id, collectionTasks)}>Incomplete</button>
                 </span>
                 <div className="tasks">
                     {collectionTasksFilter.length !== 0 ?

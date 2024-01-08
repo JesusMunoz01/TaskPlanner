@@ -5,6 +5,7 @@ import { BsGearFill } from "react-icons/bs";
 export const Home = (data) => {
     const [tasks, setTasks] = useState(data.data);
     const [taskFilter, setCurrentFilter] = useState(data.data);
+    const [filterType, setFilter] = useState("");
     const [isUserLogged, ] = useState(data.isLogged)
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
@@ -60,7 +61,7 @@ export const Home = (data) => {
             const getUpdatedLocal = window.localStorage.getItem("localTaskData");
             setTasks(getUpdatedLocal);
             data.updateTask(getUpdatedLocal)
-            setCurrentFilter(getUpdatedLocal);
+            filterTask(filterType, getUpdatedLocal);
         }
 
         setTitle('');
@@ -87,7 +88,7 @@ export const Home = (data) => {
                 const getUpdatedLocal = window.localStorage.getItem("localTaskData");
                 setTasks(getUpdatedLocal);
                 data.updateTask(getUpdatedLocal);
-                setCurrentFilter(getUpdatedLocal);
+                filterTask(filterType, getUpdatedLocal);
             }
         }
     }
@@ -124,7 +125,7 @@ export const Home = (data) => {
             const getUpdatedLocal = window.localStorage.getItem("localTaskData");
             setTasks(getUpdatedLocal);
             data.updateTask(getUpdatedLocal);
-            setCurrentFilter(getUpdatedLocal);
+            filterTask(filterType, getUpdatedLocal);
         }
     }
 
@@ -175,7 +176,7 @@ export const Home = (data) => {
             const getUpdatedLocal = window.localStorage.getItem("localTaskData");
             setTasks(getUpdatedLocal);
             data.updateTask(getUpdatedLocal);
-            setCurrentFilter(getUpdatedLocal);
+            filterTask(filterType, getUpdatedLocal);
         }
 
         updateTitle("");
@@ -183,13 +184,13 @@ export const Home = (data) => {
 
     }
 
-    function filterTask(action){
+    function filterTask(action, data){
+        if(action !== filterType)
+            setFilter(action);
         const selected = document.getElementById(`${action}`)
-        let data = [];
         if(!isUserLogged)
-        data = JSON.parse(tasks)
-        else
-        data = tasks;
+            data = JSON.parse(data)
+
         switch(action){
             case "filter1": // All Tasks Filter
                 selected.style.color = "green"
@@ -233,9 +234,9 @@ export const Home = (data) => {
         <div className="intro">
         <h1>Checklist</h1>
             <span className="filterClass">
-                <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id)}>All Tasks</button>
-                <button id="filter2" onClick={(e) => filterTask(e.target.id)}>Completed</button>
-                <button id="filter3" onClick={(e) => filterTask(e.target.id)}>Incomplete</button>
+                <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id, tasks)}>All Tasks</button>
+                <button id="filter2" onClick={(e) => filterTask(e.target.id, tasks)}>Completed</button>
+                <button id="filter3" onClick={(e) => filterTask(e.target.id, tasks)}>Incomplete</button>
             </span>
             <div className="tasks">
                 {isUserLogged ?
