@@ -5,7 +5,7 @@ import { BsGearFill } from "react-icons/bs";
 export const Home = (data) => {
     const [tasks, setTasks] = useState(data.data);
     const [taskFilter, setCurrentFilter] = useState(data.data);
-    const [filterType, setFilter] = useState("");
+    const [filterType, setFilter] = useState("filter1");
     const [isUserLogged, ] = useState(data.isLogged)
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
