@@ -4,28 +4,42 @@ import { useParams } from "react-router-dom"
 import { BsGearFill } from "react-icons/bs";
 
 export const CollectionTasks = (collections) => {
-    const [isUserLogged] = useState(collections.isLogged)
     let { collectionID } = useParams()
     let [intCollectionID] = useState(parseInt(collectionID))
+    const [isUserLogged] = useState(collections.isLogged)
     const [allCollectionTasks] = useState(collections.data);
-    const [currentCollection, setCurrentCollection] = useState(fetchCurrentCollection())
+    const [currentCollectionIndex] = useState(getThisCollectionIndex())
+    const [currentCollection, setCurrentCollection] = useState(fetchCollections()[currentCollectionIndex])
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
+    const [filterType, setFilter] = useState("filter1");
     const [collectionTasksFilter, setCurrentFilter] = useState(currentCollection.tasks);
-    const [filterType, setFilter] = useState("");
     const [collectionTaskTitle, setCollectionTaskTitle] = useState("");
     const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
     const [updtColTaskTitle, updateColTaskTitle] = useState("")
     const [updtColTaskDesc, updateColTaskDesc] = useState("")
 
-    function fetchCurrentCollection(){
-        if(isUserLogged)
-            return allCollectionTasks.filter((col) => col._id === intCollectionID).pop()
-        else
-            return JSON.parse(allCollectionTasks).filter((col) => col._id === intCollectionID).pop()
+    function getThisCollectionIndex(){
+        if(isUserLogged){
+            const thisCollectionIndex = allCollectionTasks.findIndex((col) => col._id === intCollectionID)
+            return thisCollectionIndex;
+        }
+        else{
+            const thisCollectionIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID);
+            return thisCollectionIndex;
+        }        
+    }
+
+    function fetchCollections(){
+        if(isUserLogged){
+            return allCollectionTasks;
+        }
+        else{
+            return JSON.parse(window.localStorage.getItem("localCollectionData"))
+        }
     }
 
     async function addCollectionTask(e){
-        e.preventDefault()
+        e.preventDefault()    
         if(isUserLogged){
             try{
                 // const userID = window.localStorage.getItem("userId");
@@ -52,10 +66,10 @@ export const CollectionTasks = (collections) => {
             }
         }
         else{
+            let collectionsData = fetchCollections();
             let nextId = 1;
             let lastCollectionTaskID = [];
-            const changeIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID)
-            let hasPrevTasks = JSON.parse(window.localStorage.getItem("localCollectionData"))[changeIndex].tasks
+            let hasPrevTasks = fetchCollections()[currentCollectionIndex].tasks;
             // If there is a task, get last one, its id, and add 1
             if(hasPrevTasks.length !== 0)
                 lastCollectionTaskID = hasPrevTasks.pop();
@@ -69,12 +83,11 @@ export const CollectionTasks = (collections) => {
                 status:"Incomplete"
             }
             
-            let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            currentCollectionState[changeIndex].tasks.push(newCollectionTask)
-            window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
-            setCurrentCollection(currentCollectionState[changeIndex])
-            setCollectionTasks(currentCollectionState[changeIndex].tasks);
-            filterTask(filterType, currentCollectionState[changeIndex].tasks)
+            collectionsData[currentCollectionIndex].tasks.push(newCollectionTask)
+            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
+            setCurrentCollection(collectionsData[currentCollectionIndex])
+            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
+            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
             //collections.updateCollection([...collectionTasks, newCollectionTask])
         }
 
@@ -92,14 +105,13 @@ export const CollectionTasks = (collections) => {
             // setCurrentFilter(tasks);
         }
         else{
-            let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            const changeIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID)
-            const newList = currentCollectionState[changeIndex].tasks.filter((task) => task._id !== taskID)
-            currentCollectionState[changeIndex].tasks = newList;
-            window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
-            setCurrentCollection(currentCollectionState[changeIndex])
-            setCollectionTasks(currentCollectionState[changeIndex].tasks);
-            filterTask(filterType, currentCollectionState[changeIndex].tasks)
+            let collectionsData = fetchCollections();
+            const newList = collectionsData[currentCollectionIndex].tasks.filter((task) => task._id !== taskID)
+            collectionsData[currentCollectionIndex].tasks = newList;
+            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
+            setCurrentCollection(collectionsData[currentCollectionIndex])
+            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
+            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
             //data.updateTask(getUpdatedLocal);
             }
         }
@@ -142,20 +154,19 @@ export const CollectionTasks = (collections) => {
                 console.log(error)
             }
         else{
-            let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            const changeIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID)
-            const index = currentCollectionState[changeIndex].tasks.findIndex((task => task._id === taskID))
-            currentCollectionState[changeIndex].tasks[index].title = `${newTitle}`
-            currentCollectionState[changeIndex].tasks[index].description = `${newDesc}`
-            window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
-            setCurrentCollection(currentCollectionState[changeIndex]);
-            setCollectionTasks(currentCollectionState[changeIndex].tasks);
-            filterTask(filterType, currentCollectionState[changeIndex].tasks)
+            let collectionsData = fetchCollections();
+            const index = collectionsData[currentCollectionIndex].tasks.findIndex((task => task._id === taskID))
+            collectionsData[currentCollectionIndex].tasks[index].title = `${newTitle}`
+            collectionsData[currentCollectionIndex].tasks[index].description = `${newDesc}`
+            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
+            setCurrentCollection(collectionsData[currentCollectionIndex]);
+            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
+            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
             //data.updateTask(getUpdatedLocal);
         }
 
-        updateTitle("");
-        updateDesc("");
+        updateColTaskTitle("");
+        updateColTaskDesc("");
 
     }
 
@@ -184,14 +195,13 @@ export const CollectionTasks = (collections) => {
                 console.log(error)
             }
         else{
-            let currentCollectionState = JSON.parse(window.localStorage.getItem("localCollectionData"));
-            const changeIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID);
+            let collectionsData = fetchCollections();
             const index = currentCollection.tasks.findIndex((task => task._id === taskID))
-            currentCollectionState[changeIndex].tasks[index].status = `${taskStatus}`
-            window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState))
-            setCurrentCollection(currentCollectionState[changeIndex])
-            setCollectionTasks(currentCollectionState[changeIndex].tasks);
-            filterTask(filterType, currentCollectionState[changeIndex].tasks)
+            collectionsData[currentCollectionIndex].tasks[index].status = `${taskStatus}`
+            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
+            setCurrentCollection(collectionsData[currentCollectionIndex])
+            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
+            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
             //data.updateTask(getUpdatedLocal);
             if(taskStatus == "Complete"){
                 let completedTasks = 1;
@@ -200,14 +210,14 @@ export const CollectionTasks = (collections) => {
                         completedTasks++;
                 })
                 if(completedTasks === currentCollection.tasks.length){
-                    currentCollectionState[changeIndex].status = "Complete";
-                    window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState));
+                    collectionsData[currentCollectionIndex].status = "Complete";
+                    window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData));
                 }
             }
             else{
-                if(currentCollectionState[changeIndex].status === "Complete"){
-                    currentCollectionState[changeIndex].status = "Incomplete";
-                    window.localStorage.setItem("localCollectionData", JSON.stringify(currentCollectionState));
+                if(collectionsData[currentCollectionIndex].status === "Complete"){
+                    collectionsData[currentCollectionIndex].status = "Incomplete";
+                    window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData));
                 }
             }
         }
