@@ -232,6 +232,28 @@ describe('Tests for collections Page', () => {
         expect(renderedCollections.queryByLabelText(/^delColTask/)).not.toBeInTheDocument()
     })
 
+    test('Testing display of tasks in collection', async () => {
+        const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
+        {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: [{title: "test", description: "test", _id: 1, status: "Incomplete"}]},
+        {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
+
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
+        const renderedCollections = render(
+        <MemoryRouter>
+            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+            <Routes>
+                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+            </Routes>
+        </MemoryRouter>)
+
+        const collectionTitle1 = await renderedCollections.findByLabelText("collectionTitle2")
+        await act(async () => {
+            await user.click(collectionTitle1)
+        })
+
+        expect(renderedCollections.queryByLabelText(/^delColTask/)).toBeInTheDocument()
+    })
+
     test.skip('Testing creating a task in a collection', async () => {
 
     })
