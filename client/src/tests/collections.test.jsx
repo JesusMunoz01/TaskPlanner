@@ -400,8 +400,46 @@ describe('Tests for collections Page', () => {
         expect(collectionDesc3.innerHTML).toEqual("Fake description 3")
     })
 
-    test.skip('Updating a collection task', async () => {
+    test('Updating a collection task', async () => {
+        const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
+        {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: [{title: "test", description: "test", _id: 1, status: "Incomplete"}]},
+        {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
 
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
+        const renderedCollections = render(
+        <MemoryRouter>
+            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+            <Routes>
+                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+            </Routes>
+        </MemoryRouter>)
+
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionTitle2")
+        await act(async () => {
+            await user.click(collectionTitle2)
+        })
+
+        const collectionTaskTitle = await renderedCollections.findByLabelText("colTaskTitle1")
+
+        expect(collectionTaskTitle.innerHTML).toEqual("test")
+
+        const updateCollectionTaskTitle = await renderedCollections.findByLabelText('editColTaskTitle1')
+        const updateCollectionTaskDesc = await renderedCollections.findByLabelText('editColTaskDesc1')
+        const updateCollectionTaskBtn = await renderedCollections.findByLabelText('confirmColTaskEdit1')
+
+        await act(async () => {
+            await user.type(updateCollectionTaskTitle, "Updated Test Collection Task")
+            await user.type(updateCollectionTaskDesc, "Updated Collection Task Description")
+            await user.click(updateCollectionTaskBtn)
+        })
+
+        const collectionTasks = await renderedCollections.findAllByTestId(/^colTask/);
+        const newColTaskTitle = await renderedCollections.findByLabelText('colTaskTitle1')
+
+        expect(collectionTasks.length).toEqual(1);
+        expect(newColTaskTitle.innerHTML).toEqual("Updated Test Collection Task")
+        expect(updateCollectionTaskTitle.value).toEqual("")
+        expect(updateCollectionTaskDesc.value).toEqual("")
     })
 })
 
