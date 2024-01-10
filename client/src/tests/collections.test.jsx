@@ -246,16 +246,86 @@ describe('Tests for collections Page', () => {
             </Routes>
         </MemoryRouter>)
 
-        const collectionTitle1 = await renderedCollections.findByLabelText("collectionTitle2")
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionTitle2")
         await act(async () => {
-            await user.click(collectionTitle1)
+            await user.click(collectionTitle2)
         })
 
         expect(renderedCollections.queryByLabelText(/^delColTask/)).toBeInTheDocument()
     })
 
-    test.skip('Testing creating a task in a collection', async () => {
+    test('Testing creating a task in a collection', async () => {
+        const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
+        {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: [{title: "test", description: "test", _id: 1, status: "Incomplete"}]},
+        {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
 
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
+        const renderedCollections = render(
+        <MemoryRouter>
+            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+            <Routes>
+                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+            </Routes>
+        </MemoryRouter>)
+
+        const collectionTitle1 = await renderedCollections.findByLabelText("collectionTitle1")
+        await act(async () => {
+            await user.click(collectionTitle1)
+        })
+
+        const inputCollectionTaskTaskTitle = await renderedCollections.findByLabelText('addColTaskTitle')
+        const inputCollectionTaskDesc = await renderedCollections.findByLabelText('addColTaskDesc')
+        const createCollectionTask = await renderedCollections.findByLabelText('confirmColTaskAdd')
+
+        await act(async () => {
+            await user.type(inputCollectionTaskTaskTitle, "Test Collection Task")
+            await user.type(inputCollectionTaskDesc, "Test Collection Task Description")
+            await user.click(createCollectionTask)
+        })
+
+        const collectionTasks = await renderedCollections.findAllByTestId(/^colTask/);
+        const newColTaskTitle = await renderedCollections.findByLabelText('colTaskTitle1')
+        
+        expect(collectionTasks.length).toEqual(1)
+        expect(newColTaskTitle.innerHTML).toEqual("Test Collection Task");
+    })
+
+    test('Testing creating a task in a collection with tasks', async () => {
+        const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
+        {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: [{title: "test", description: "test", _id: 1, status: "Incomplete"}]},
+        {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
+
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
+        const renderedCollections = render(
+        <MemoryRouter>
+            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+            <Routes>
+                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+            </Routes>
+        </MemoryRouter>)
+
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionTitle2")
+        await act(async () => {
+            await user.click(collectionTitle2)
+        })
+
+        const inputCollectionTaskTaskTitle = await renderedCollections.findByLabelText('addColTaskTitle')
+        const inputCollectionTaskDesc = await renderedCollections.findByLabelText('addColTaskDesc')
+        const createCollectionTask = await renderedCollections.findByLabelText('confirmColTaskAdd')
+
+        await act(async () => {
+            await user.type(inputCollectionTaskTaskTitle, "Test Collection Task")
+            await user.type(inputCollectionTaskDesc, "Test Collection Task Description")
+            await user.click(createCollectionTask)
+        })
+
+        const collectionTasks = await renderedCollections.findAllByTestId(/^colTask/);
+        const oldColTaskTitle = await renderedCollections.findByLabelText('colTaskTitle1')
+        const newColTaskTitle = await renderedCollections.findByLabelText('colTaskTitle2')
+        
+        expect(collectionTasks.length).toEqual(2)
+        expect(oldColTaskTitle.innerHTML).toEqual("test");
+        expect(newColTaskTitle.innerHTML).toEqual("Test Collection Task");
     })
 
     test.skip('Testing deleting a task in a collection', async () => {

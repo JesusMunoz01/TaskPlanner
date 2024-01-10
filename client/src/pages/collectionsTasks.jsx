@@ -305,10 +305,10 @@ export const CollectionTasks = (collections) => {
                     <h2>Add Task</h2>
                     <form>
                         <label>Title: </label>
-                        <input aria-label="addTaskTitle" id="taskTitle" value={collectionTaskTitle} onChange={(e) => setCollectionTaskTitle(e.target.value)}></input>
+                        <input aria-label="addColTaskTitle" id="taskTitle" value={collectionTaskTitle} onChange={(e) => setCollectionTaskTitle(e.target.value)}></input>
                         <label>Description: </label>
-                        <input aria-label="addTaskDesc" id="taskDesc" value={collectionTaskDesc} onChange={(e) => setCollectionTaskDesc(e.target.value)}></input>
-                        <button aria-label="confirmAdd" onClick={(e) => addCollectionTask(e)}>Submit</button>
+                        <input aria-label="addColTaskDesc" id="taskDesc" value={collectionTaskDesc} onChange={(e) => setCollectionTaskDesc(e.target.value)}></input>
+                        <button aria-label="confirmColTaskAdd" onClick={(e) => addCollectionTask(e)}>Submit</button>
                     </form>
                 </div>
                 
