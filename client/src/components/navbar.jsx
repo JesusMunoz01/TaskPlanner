@@ -1,5 +1,6 @@
+import '../css/App.css';
 import { Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie';
 
 export const Navbar = ({loginStatus}) => {
     const [cookies, setCookies] = useCookies(["access_token"]);
@@ -20,12 +21,28 @@ export const Navbar = ({loginStatus}) => {
         };
     }
 
-    return <div>
+    const changeTheme = () => {
+        const currentTheme = document.getElementsByClassName('App')[0];
+        if(currentTheme.className == "App")
+            currentTheme.className = "App white";
+        else
+            currentTheme.className = "App";
+
+        console.log(currentTheme)
+    }
+
+    return <div className="navActions">
         <div className="links" id="links">
             <li aria-label='loginLink'>{!cookies.access_token ? (<Link id="Login" onClick={(e) => changeActive(e.target.innerText)} to={"/login"}>
                 <span>Login</span></Link>) : <button onClick={logout}>Logout</button>}</li>
             <li ><Link id="Home" className="navbar active" onClick={(e) => changeActive(e.target.innerText)} to={"/"}><span>Home</span></Link></li>
             <li><Link id="Collections" onClick={(e) => changeActive(e.target.innerText)} to={"/collections"}><span id='collectionLink'>Collections</span></Link></li>
+        </div>
+        <div className='modeToggle'>
+            <label class="switch">
+                <input type="checkbox" onClick={changeTheme}/>
+                <span class="slider"></span>
+            </label>
         </div>
     </div>
 }

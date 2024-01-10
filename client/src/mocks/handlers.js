@@ -194,4 +194,15 @@ export const handlers = [
         return res(ctx.json(userIndex[0].collections))
       }
     }),
+    // Testing collection tasks
+    rest.get('http://localhost:8080/collections/:collectionID', (req, res, ctx) => {
+      const userCheck = parseInt(req.params.userID)
+
+      const index = mockDB.filter((user) => user._id === userCheck)
+      if(index[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        return res(ctx.json(index[0].collections))
+      }
+    }),
 ]
