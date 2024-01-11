@@ -1,21 +1,3 @@
-  .App {
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-    gap: 10px;
-    height: 100vh;
-  }
-
-  .App.white{
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-    gap: 10px;
-    height: 100vh;
-    color: #1e1f19;
-    background-color: rgb(238, 238, 238);
-  }
-
   #collectionLink{
     font-size: medium;
   }
