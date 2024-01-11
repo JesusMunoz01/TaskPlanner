@@ -11,6 +11,29 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+}
+
+.App {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  gap: 10px;
+  --primary-color: rgba(119, 136, 153, 0.377);
+  --secondary-color: rgba(255, 255, 255, 0.87);
+  --links: green;
+}
+
+.App.white{
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  gap: 10px;
+  color: #1e1f19;
+  background-color: white;
+  --primary-color: white;
+  --secondary-color: #242424;
+  --links: blue;
 }
 
 a {
@@ -30,6 +53,11 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 } 
+
+input {
+  background-color: var(--primary-color);
+  color: var(--secondary-color)
+}
 
 /* button {
   border-radius: 8px;

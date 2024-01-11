@@ -23,8 +23,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-style: solid;
-    height: 525px;
-    width: 50vw;
+    min-height: 525px;
+    min-width: 50vw;
     text-align: center;
     overflow-y: auto;
 }
@@ -32,7 +32,7 @@
 .collections li{
     display: flex;
     height: 250px;
-    border: white solid;
+    border: solid;
     flex-direction: column;
     margin: 4px 4px 0px 4px;
 }
@@ -49,7 +49,12 @@
     word-break: break-all;
     overflow-x: hidden;
     margin-bottom: 5px;
-    border-bottom: 1px solid white;
+    color: var(--secondary-color);
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+#collectionDisplayTitle:hover{
+    color: var(--links);
 }
 
 #collectionDisplayDesc{
@@ -147,9 +152,14 @@
 
 .addCollection{
     display: flex;
-    flex-direction: column;
-    height: 20vh;
+    margin-top: 10px;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 99%;
+    min-height: 25vh;
+    border-style: solid;
+    overflow-y: auto;
 }
 
 #collectionEmptyPrompt{
@@ -158,4 +168,51 @@
     grid-column-end: 4;
     justify-content: center;
     align-self: center;
+}
+
+  .addCollection form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .addCollection form label{
+    display: flex;
+    flex-direction: column;
+    margin-top: 1%;
+    margin-bottom: 1%;
+  }
+
+  .addCollection form input{
+    display: flex;
+    flex-direction: column;
+    border: 1.5px solid;
+    margin-top: 5%;
+    margin-bottom: 5%;
+  }
+
+  .addCollection button{
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 10%;
+    color: white;
+    background-color: #282c34;
+    border-radius: 10px;
+  }
+
+@media(max-width: 880px) {
+    .collections{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 570px) {
+    .collections{
+        grid-template-columns: repeat(1, 1fr);
+        width: 250px;
+        height: 535px;
+        gap: 10px;
+    }
 }
