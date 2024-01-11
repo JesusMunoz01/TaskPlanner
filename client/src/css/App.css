@@ -3,8 +3,8 @@
   }
 
   .pageFormat {
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: left;
     align-items: left;
@@ -25,11 +25,10 @@
   .navbar.active{
     color: green;
   }
-
   
   .navActions{
     display: flex;
-    height: 100%;
+    height: 100vh;
     flex-direction: column;
     width: 100%;
     justify-content: space-between;
@@ -414,10 +413,6 @@
 
 @media(max-width: 900px) {
 
-  .App {
-    height: fit-content;
-  }
-
   .pageFormat {
     display: flex;
     height: fit-content;
@@ -625,7 +620,7 @@
   }
   
   .loginPage{
-    height: 85%;
+    height: 100%;
     width: 100%;
     justify-content: center;
     text-align: center;

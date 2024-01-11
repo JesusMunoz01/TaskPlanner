@@ -1,3 +1,10 @@
+.colTaskPage{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 #noTasks{
     display: flex;
     margin: 0 auto;
@@ -78,4 +85,93 @@
     background-color: #282c34;
     color: white;
     border-radius: 10px;
+}
+
+@media(max-width: 900px){
+    .tasks li {
+        margin: 0.1%;
+        width: 98%;
+        min-height: 4vh;
+        margin-left: 0.5%;
+        margin-right: 0.5%;
+      }
+      
+      .tasks li button{
+        font-size: 100%;
+        height: 100%;
+        width: 8%;
+        border-radius: 25%;
+        right: 90%;
+      }
+    
+      .colTaskStatusBox{
+        flex-direction: column;
+        min-width: fit-content;
+        left: 75%;
+      }
+    
+      .listTasks select{
+        left: 5%;
+      }
+    
+      #colTaskSettingsIcon{
+        right: 82%;
+      }
+    
+      .editColTask{
+        flex-direction: column;
+      }
+    
+      .editColTask.active{
+        height: 150px;
+        flex-direction: column;
+        top: -3px;
+        padding-bottom: 2%;
+      }
+    
+      .editColTask li{
+        flex-direction: column;
+        justify-content: center;
+        padding: 0;
+      }
+    
+      .editColTask button{
+        width: 30%;
+        margin-top: 2%;
+      }
+    
+      .addTask{
+        min-height: 30vh;
+        width: 85vw;
+      }
+    
+      .addTask h2{
+        margin: 0;
+        padding: 10px;
+      }
+    
+      .addTask form{
+        width: 60%;
+      }
+    
+      .addTask form label{
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 1%
+      }
+    
+      .addTask form input{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 1%;
+        border: 1.5px solid;
+      }
+    
+      .addTask button{
+        align-items: center;
+        margin-bottom: 5%;
+        min-height: 40px;
+        width: 50%;
+      }
 }

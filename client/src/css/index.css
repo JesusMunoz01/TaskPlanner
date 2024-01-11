@@ -19,7 +19,6 @@
   text-align: center;
   flex-direction: column;
   gap: 10px;
-  height: 100vh;
   --primary-color: rgba(119, 136, 153, 0.377);
   --secondary-color: rgba(255, 255, 255, 0.87);
   --links: green;
@@ -30,7 +29,6 @@
   text-align: center;
   flex-direction: column;
   gap: 10px;
-  height: 100vh;
   color: #1e1f19;
   background-color: white;
   --primary-color: white;

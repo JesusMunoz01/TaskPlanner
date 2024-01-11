@@ -23,8 +23,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-style: solid;
-    height: 525px;
-    width: 50vw;
+    min-height: 525px;
+    min-width: 50vw;
     text-align: center;
     overflow-y: auto;
 }
@@ -163,4 +163,18 @@
     grid-column-end: 4;
     justify-content: center;
     align-self: center;
+}
+
+@media(max-width: 880px) {
+    .collections{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 570px) {
+    .collections{
+        grid-template-columns: repeat(1, 1fr);
+        width: 250px;
+        gap: 10px;
+    }
 }

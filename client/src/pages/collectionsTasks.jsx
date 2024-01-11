@@ -260,7 +260,7 @@ export const CollectionTasks = (collections) => {
             document.getElementById(`colTaskSetting${id}`).className = "editColTask active"
     }
     
-    return <div>
+    return <div className="colTaskPage">
                 <h1>{currentCollection.collectionTitle}</h1>
                 <span className="filterClass">
                     <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id, collectionTasks)}>All Tasks</button>
