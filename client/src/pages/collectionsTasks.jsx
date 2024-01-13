@@ -61,6 +61,7 @@ export const CollectionTasks = (collections) => {
                 else{
                     setCurrentCollection(collection);
                     setCollectionTasks(collection.tasks)
+                    filterTask(filterType, collection.tasks)
                     //data.updateCollection(collectionTasks)
                 }
             }catch(error){
@@ -99,12 +100,17 @@ export const CollectionTasks = (collections) => {
 
     async function delCollectionTask(taskID){
         if(isUserLogged){
-            // await fetch(`${__API__}/tasks/${taskId}`, {
-            //     method: "DELETE", headers: {auth: cookies.access_token}});
+            const userID = window.localStorage.getItem("userId");
+            await fetch(`${__API__}/deleteCollection/${intCollectionID}/tasks/${taskID}`, {
+                method: "DELETE", headers: {auth: cookies.access_token}, 
+                body: JSON.stringify({userID})
+            });
     
-            // setTasks(tasks.filter((task) => task._id !== taskId))
-            // data.updateTask(tasks.filter((task) => task._id !== taskId))
-            // setCurrentFilter(tasks);
+            setCollectionTasks(collectionTasks.filter((task) => task._id !== taskId))
+            const updtCurrent = currentCollection.tasks = collectionTasks;
+            setCurrentCollection(updtCurrent);
+            filterTask(filterType, collectionTasks)
+            //data.updateTask(tasks.filter((task) => task._id !== taskId))
         }
         else{
             let collectionsData = fetchCollections();

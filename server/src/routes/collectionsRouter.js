@@ -128,6 +128,7 @@ collectionRouter.delete('/deleteCollection/:collectionID', async (req, res) => {
 
 collectionRouter.delete('/deleteCollection/:collectionID/tasks/:taskID', async (req, res) => {
     verifyToken;
+    const user = req.body.userID;
     const collectionID = req.params.collectionID;
     const taskID = req.params.taskID;
     try{
