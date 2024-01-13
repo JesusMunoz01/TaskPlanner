@@ -184,24 +184,27 @@ export const CollectionTasks = (collections) => {
     async function changeStatus(taskStatus, taskID){
         if(isUserLogged)
             try{
-                // const userID = window.localStorage.getItem("userId");
-                // const res = await fetch(`${__API__}/updateTask`, {
-                //     method: "POST", headers: {
-                //         'Content-Type': 'application/json',
-                //         auth: cookies.access_token
-                //     },
-                //     body: JSON.stringify({
-                //         userID,
-                //         taskID,
-                //         taskStatus
-                //         })
-                //     });
-                // const updatedValues = await res.json()
-                // const index = updatedValues.findIndex((task => task._id === taskID))
-                // updatedValues[index].status = `${taskStatus}`
-                // setTasks(updatedValues)
-                // data.updateTask(updatedValues);
-                // setCurrentFilter(updatedValues)
+                const userID = window.localStorage.getItem("userId");
+                const res = await fetch(`${__API__}/updateCollection/task/status`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        intCollectionID,
+                        taskID,
+                        taskStatus
+                        })
+                    });
+                const updatedValues = await res.json()
+                const index = updatedValues.findIndex((task => task._id === taskID))
+                updatedValues[index].status = `${taskStatus}`
+                setCollectionTasks(updatedValues)
+                const updtCollection = currentCollection.tasks = updatedValues;
+                setCurrentCollection(updtCollection);
+                filterTask(filterType, collectionTasks)
+                //data.updateTask(updatedValues);
             }catch(error){
                 console.log(error)
             }
