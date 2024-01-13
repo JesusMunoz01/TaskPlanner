@@ -84,7 +84,7 @@ collectionRouter.post("/updateCollection", async (req, res) =>{
     }
 })
 
-collectionRouter.post("/updateCollection/task", async (req, res) =>{
+collectionRouter.post("/updateCollection/task/status", async (req, res) =>{
     verifyToken;
     const user = req.body.userID;
     const collectionUpdate = `${req.body.collectionID}`
@@ -98,16 +98,16 @@ collectionRouter.post("/updateCollection/task", async (req, res) =>{
     }
 })
 
-collectionRouter.post("/updateCollection/Task/Info", async (req, res) =>{
+collectionRouter.post("/updateCollection/task/data", async (req, res) =>{
     verifyToken;
     const user = req.body.userID;
-    const collectionUpdate = `${req.body.collectionID}`
+    const collectionID = req.body.intCollectionID;
     const collectionTaskUpdate = `${req.body.taskID}`
     try{
-        const test = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionUpdate, 
+        const updateData = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, 
             "collections.tasks._id" : collectionTaskUpdate}, {$set: { "collections.tasks.$.title": `${req.body.newTitle}`, 
             "collections.tasks.$.description": `${req.body.newDesc}`}})
-        res.json(test.collections.tasks)
+        res.json(updateData.collections.tasks)
     }catch(error){
         res.json({error: error, message: "Couldnt update Status"})
     }

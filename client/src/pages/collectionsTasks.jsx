@@ -109,7 +109,7 @@ export const CollectionTasks = (collections) => {
             setCollectionTasks(collectionTasks.filter((task) => task._id !== taskId))
             const updtCurrent = currentCollection.tasks = collectionTasks;
             setCurrentCollection(updtCurrent);
-            filterTask(filterType, collectionTasks)
+            filterTask(filterType, collectionTasks);
             //data.updateTask(tasks.filter((task) => task._id !== taskId))
         }
         else{
@@ -138,26 +138,29 @@ export const CollectionTasks = (collections) => {
 
         if(isUserLogged)
             try{
-                // const userID = window.localStorage.getItem("userId");
-                // const res = await fetch(`${__API__}/updateTaskInfo`, {
-                //     method: "POST", headers: {
-                //         'Content-Type': 'application/json',
-                //         auth: cookies.access_token
-                //     },
-                //     body: JSON.stringify({
-                //         userID,
-                //         taskID,
-                //         newTitle,
-                //         newDesc
-                //         })
-                //     });
-                // const updatedValues = await res.json()
-                // const index = updatedValues.findIndex((task => task._id === taskID))
-                // updatedValues[index].title = `${newTitle}`
-                // updatedValues[index].description = `${newDesc}`
-                // setTasks(updatedValues)
-                // data.updateTask(updatedValues);
-                // setCurrentFilter(updatedValues);
+                const userID = window.localStorage.getItem("userId");
+                const res = await fetch(`${__API__}/updateCollection/task/data`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        intCollectionID,
+                        taskID,
+                        newTitle,
+                        newDesc
+                        })
+                    });
+                const updatedValues = await res.json()
+                const index = updatedValues.findIndex((task => task._id === taskID))
+                updatedValues[index].title = `${newTitle}`
+                updatedValues[index].description = `${newDesc}`
+                setCollectionTasks(updatedValues)
+                const updtCollection = currentCollection.tasks = updatedValues;
+                setCurrentCollection(updtCollection);
+                filterTask(filterType, collectionTasks)
+                //data.updateTask(updatedValues);
             }catch(error){
                 console.log(error)
             }
