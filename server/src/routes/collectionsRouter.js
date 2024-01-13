@@ -49,21 +49,22 @@ collectionRouter.post("/addCollection", async (req, res) =>{
     
 })
 
-collectionRouter.post("/addCollection/Task", async (req, res) =>{
+collectionRouter.post("/addCollection/newTask", async (req, res) =>{
     verifyToken;
     const user = req.body.userID;
+    const collectionID = req.body.intCollectionID;
     const userCheck = await UserModel.findOne({_id: user })
-    if(userCheck.collections.tasks === null)
-    userCheck.collections.tasks = [];
+    if(userCheck.collections[collectionID].tasks === null)
+    userCheck.collections[collectionID].tasks = [];
     const newCollectionTask = new TaskModel({
         title: req.body.title ,
         description: req.body.desc ,
         status: req.body.status
     });
     try{
-        userCheck.collections.tasks.push(newCollectionTask);
+        userCheck.collections[collectionID].tasks.push(newCollectionTask);
         await userCheck.save();
-        res.json(newCollectionTask)
+        res.json(userCheck.collections[collectionID])
     }catch(error){
         res.json({error: error, message: "Title and description is required"})
     }
@@ -83,7 +84,7 @@ collectionRouter.post("/updateCollection", async (req, res) =>{
     }
 })
 
-collectionRouter.post("/updateCollection/Task", async (req, res) =>{
+collectionRouter.post("/updateCollection/task", async (req, res) =>{
     verifyToken;
     const user = req.body.userID;
     const collectionUpdate = `${req.body.collectionID}`

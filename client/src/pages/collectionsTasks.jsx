@@ -42,25 +42,27 @@ export const CollectionTasks = (collections) => {
         e.preventDefault()    
         if(isUserLogged){
             try{
-                // const userID = window.localStorage.getItem("userId");
-                // const res = await fetch(`${__API__}/addCollection`, {
-                //     method: "POST", headers: {
-                //         'Content-Type': 'application/json',
-                //         auth: cookies.access_token
-                //     },
-                //     body: JSON.stringify({
-                //         userID,
-                //         collectionTaskTitle,
-                //         collectionTaskDesc,
-                //         })
-                //     });
-                // const collectionTask = await res.json()
-                // if(collection == null)
-                //     console.log("Failed to create collection")
-                // else{
-                //     setCollections([...collectionTasks, collectionTask])
-                //     data.updateCollection(collectionTasks)
-                // }
+                const userID = window.localStorage.getItem("userId");
+                const res = await fetch(`${__API__}/addCollection/newTask`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        intCollectionID,
+                        collectionTaskTitle,
+                        collectionTaskDesc,
+                        })
+                    });
+                const collection = await res.json()
+                if(collection == null)
+                    console.log("Failed to create collection")
+                else{
+                    setCurrentCollection(collection);
+                    setCollectionTasks(collection.tasks)
+                    //data.updateCollection(collectionTasks)
+                }
             }catch(error){
                 console.log(error)
             }
