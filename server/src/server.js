@@ -5,19 +5,6 @@ const mongoose = require('mongoose')
 const userRouter = require('./routes/usersRouter.js')
 const taskRouter = require('./routes/tasksRouter.js')
 const collectionRouter = require('./routes/collectionsRouter.js')
-var jwt = require('jsonwebtoken');
-
-const verifyToken = (req, res, next) => {
-    const token = req.headers.auth;
-    if(token){
-        jwt.verify(token, process.env.SECRET, (error) => {
-            if(error) return res.sendStatus(403)
-            next();
-        })
-    } else {
-        res.sendStatus(401);
-    }
-}; module.exports = verifyToken;
 
 const app = express()
 const db = mongoose.connect(process.env.MONGO_DB)

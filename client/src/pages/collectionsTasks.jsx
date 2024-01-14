@@ -42,25 +42,28 @@ export const CollectionTasks = (collections) => {
         e.preventDefault()    
         if(isUserLogged){
             try{
-                // const userID = window.localStorage.getItem("userId");
-                // const res = await fetch(`${__API__}/addCollection`, {
-                //     method: "POST", headers: {
-                //         'Content-Type': 'application/json',
-                //         auth: cookies.access_token
-                //     },
-                //     body: JSON.stringify({
-                //         userID,
-                //         collectionTaskTitle,
-                //         collectionTaskDesc,
-                //         })
-                //     });
-                // const collectionTask = await res.json()
-                // if(collection == null)
-                //     console.log("Failed to create collection")
-                // else{
-                //     setCollections([...collectionTasks, collectionTask])
-                //     data.updateCollection(collectionTasks)
-                // }
+                const userID = window.localStorage.getItem("userId");
+                const res = await fetch(`${__API__}/addCollection/newTask`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        intCollectionID,
+                        collectionTaskTitle,
+                        collectionTaskDesc,
+                        })
+                    });
+                const collection = await res.json()
+                if(collection == null)
+                    console.log("Failed to create collection")
+                else{
+                    setCurrentCollection(collection);
+                    setCollectionTasks(collection.tasks)
+                    filterTask(filterType, collection.tasks)
+                    //data.updateCollection(collectionTasks)
+                }
             }catch(error){
                 console.log(error)
             }
@@ -97,12 +100,17 @@ export const CollectionTasks = (collections) => {
 
     async function delCollectionTask(taskID){
         if(isUserLogged){
-            // await fetch(`${__API__}/tasks/${taskId}`, {
-            //     method: "DELETE", headers: {auth: cookies.access_token}});
+            const userID = window.localStorage.getItem("userId");
+            await fetch(`${__API__}/deleteCollection/${intCollectionID}/tasks/${taskID}`, {
+                method: "DELETE", headers: {auth: cookies.access_token}, 
+                body: JSON.stringify({userID})
+            });
     
-            // setTasks(tasks.filter((task) => task._id !== taskId))
-            // data.updateTask(tasks.filter((task) => task._id !== taskId))
-            // setCurrentFilter(tasks);
+            setCollectionTasks(collectionTasks.filter((task) => task._id !== taskId))
+            const updtCurrent = currentCollection.tasks = collectionTasks;
+            setCurrentCollection(updtCurrent);
+            filterTask(filterType, collectionTasks);
+            //data.updateTask(tasks.filter((task) => task._id !== taskId))
         }
         else{
             let collectionsData = fetchCollections();
@@ -130,26 +138,29 @@ export const CollectionTasks = (collections) => {
 
         if(isUserLogged)
             try{
-                // const userID = window.localStorage.getItem("userId");
-                // const res = await fetch(`${__API__}/updateTaskInfo`, {
-                //     method: "POST", headers: {
-                //         'Content-Type': 'application/json',
-                //         auth: cookies.access_token
-                //     },
-                //     body: JSON.stringify({
-                //         userID,
-                //         taskID,
-                //         newTitle,
-                //         newDesc
-                //         })
-                //     });
-                // const updatedValues = await res.json()
-                // const index = updatedValues.findIndex((task => task._id === taskID))
-                // updatedValues[index].title = `${newTitle}`
-                // updatedValues[index].description = `${newDesc}`
-                // setTasks(updatedValues)
-                // data.updateTask(updatedValues);
-                // setCurrentFilter(updatedValues);
+                const userID = window.localStorage.getItem("userId");
+                const res = await fetch(`${__API__}/updateCollection/task/data`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        intCollectionID,
+                        taskID,
+                        newTitle,
+                        newDesc
+                        })
+                    });
+                const updatedValues = await res.json()
+                const index = updatedValues.findIndex((task => task._id === taskID))
+                updatedValues[index].title = `${newTitle}`
+                updatedValues[index].description = `${newDesc}`
+                setCollectionTasks(updatedValues)
+                const updtCollection = currentCollection.tasks = updatedValues;
+                setCurrentCollection(updtCollection);
+                filterTask(filterType, collectionTasks)
+                //data.updateTask(updatedValues);
             }catch(error){
                 console.log(error)
             }
@@ -173,24 +184,27 @@ export const CollectionTasks = (collections) => {
     async function changeStatus(taskStatus, taskID){
         if(isUserLogged)
             try{
-                // const userID = window.localStorage.getItem("userId");
-                // const res = await fetch(`${__API__}/updateTask`, {
-                //     method: "POST", headers: {
-                //         'Content-Type': 'application/json',
-                //         auth: cookies.access_token
-                //     },
-                //     body: JSON.stringify({
-                //         userID,
-                //         taskID,
-                //         taskStatus
-                //         })
-                //     });
-                // const updatedValues = await res.json()
-                // const index = updatedValues.findIndex((task => task._id === taskID))
-                // updatedValues[index].status = `${taskStatus}`
-                // setTasks(updatedValues)
-                // data.updateTask(updatedValues);
-                // setCurrentFilter(updatedValues)
+                const userID = window.localStorage.getItem("userId");
+                const res = await fetch(`${__API__}/updateCollection/task/status`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        intCollectionID,
+                        taskID,
+                        taskStatus
+                        })
+                    });
+                const updatedValues = await res.json()
+                const index = updatedValues.findIndex((task => task._id === taskID))
+                updatedValues[index].status = `${taskStatus}`
+                setCollectionTasks(updatedValues)
+                const updtCollection = currentCollection.tasks = updatedValues;
+                setCurrentCollection(updtCollection);
+                filterTask(filterType, collectionTasks)
+                //data.updateTask(updatedValues);
             }catch(error){
                 console.log(error)
             }

@@ -101,8 +101,10 @@ export const Collections = (data) => {
 */
     async function delCollection(collectionID){
         if(isUserLogged){
-            await fetch(`${__API__}/deleteCollection/${collectionID}`, {
-                method: "DELETE", headers: {auth: cookies.access_token}});
+            const userID = window.localStorage.getItem("userId");
+            await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}`, {
+                method: "DELETE", headers: {auth: cookies.access_token}, 
+            });
 
             setCollections(collections.filter((collection) => collection._id !== collectionID))
             //setCurrentFilter(collections);
@@ -267,7 +269,8 @@ export const Collections = (data) => {
                     collections.map((collection)=> (
                         <div className="collectionsList" data-testid="collection-item" key={collection._id}>
                             <li key={collection._id}>
-                                <p id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`}>{collection.collectionTitle}</p>
+                                <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
+                                    to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>
                                 <div className="descBox">
                                     <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>
