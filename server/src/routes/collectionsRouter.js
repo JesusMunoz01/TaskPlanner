@@ -92,27 +92,30 @@ collectionRouter.post("/updateCollection/task/status", verification, async (req,
     const collectionTaskUpdate = req.body.taskID;
     const index = req.body.intCollectionID;
     try{
+        const userData = await UserModel.findOne({_id: user });
         const updtTaskStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, "collections.tasks._id": collectionTaskUpdate}, 
-        {$set: {"status": `${req.body.taskStatus}`}})
-        //let updtStatus = updtTaskStatus;
-        // if(req.body.taskStatus == "Complete"){
-        //     let completedTasks = 1;
-        //     updtTaskStatus.collections.tasks.map((task) => {
-        //         if(task.status === "Complete")
-        //             completedTasks++;
-        //     })
-        //     if(completedTasks === updtTaskStatus.collections.tasks.length){
-        //         updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
-        //         {$set: { "collections.$.status": `${req.body.taskStatus}`}})
-        //     }
-        // }
-        // else{
-        //     if(updtTaskStatus.status === "Complete"){
-        //         updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
-        //         {$set: { "collections.$.status": `${req.body.taskStatus}`}})
-        //     }
-        // }
-        res.json(updtTaskStatus.collections[index].tasks)
+        {$set: {"collections.$[colID].tasks.$[taskID].status": `${req.body.taskStatus}`}}, 
+        {"arrayFilters": [{"colID._id": collectionID}, {"taskID._id": collectionTaskUpdate}]})
+        if(req.body.taskStatus === "Complete"){
+            let completedTasks = 1;
+            userData.collections[index].tasks.map((task) => {
+                if(task.status === "Complete")
+                    completedTasks++;
+            })
+            if(completedTasks === userData.collections[index].tasks.length){
+                const updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
+                {$set: { "collections.$[colID].collectionStatus": `${req.body.taskStatus}`}}, {"arrayFilters": [{"colID._id": collectionID}]})
+                return res.json(updtStatus.collections[index])
+            }
+        }
+        else{
+            if(userData.collections[index].collectionStatus === "Complete"){
+                const updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
+                {$set: { "collections.$[colID].collectionStatus": `${req.body.taskStatus}`}}, {"arrayFilters": [{"colID._id": collectionID}]})
+                return res.json(updtStatus.collections[index])
+            }
+        }
+        res.json(updtTaskStatus.collections[index])
         
     }catch(error){
         res.json({error: error, message: "Couldnt update Status"})

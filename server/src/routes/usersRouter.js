@@ -48,7 +48,7 @@ userRouter.post("/userLogin", async (req, res) =>{
         if(validatePassword === false){
             return res.json({message: "Incorrect Username or Password"})
         }else{
-            const token = jwt.sign({id: userCheck._id}, process.env.SECRET, { expiresIn: '1800s' })
+            const token = jwt.sign({id: userCheck._id}, process.env.SECRET, { expiresIn: '3600s' })
             res.json({token, userId: userCheck._id})
         }
     }
