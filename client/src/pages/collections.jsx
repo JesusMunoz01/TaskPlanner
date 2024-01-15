@@ -171,7 +171,7 @@ export const Collections = (data) => {
                     },
                     body: JSON.stringify({
                         userID,
-                        taskID,
+                        collectionID,
                         newColTitle,
                         newColDesc
                         })
@@ -266,16 +266,16 @@ export const Collections = (data) => {
             {isUserLogged ? 
                 collections.length !== 0 ? 
                     // Section for: Logged user with collections -------------------------------------------
-                    collections.map((collection)=> (
+                    collections.map((collection, index)=> (
                         <div className="collectionsList" data-testid="collection-item" key={collection._id}>
                             <li key={collection._id}>
                                 <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
-                                    to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>
+                                    to={`/collections/${index}`}>{collection.collectionTitle}</Link>
                                 <div className="descBox">
                                     <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>
                                 <div className="statusBox">
-                                    <span>Status: {collection.status}</span>
+                                    <span>Status: {collection.collectionStatus}</span>
                                 </div>
                                 <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
                                 <label id="collectionsSettingsIcon" htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>

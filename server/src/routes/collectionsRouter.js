@@ -55,13 +55,11 @@ collectionRouter.post("/addCollection", verification, async (req, res) =>{
 
 collectionRouter.post("/addCollection/newTask", verification, async (req, res) =>{
     const user = req.body.userID;
-    const collectionID = req.body.intCollectionID;
+    const collectionID = req.body.currentCollectionIndex;
     const userCheck = await UserModel.findOne({_id: user })
-    if(userCheck.collections[collectionID].tasks === null)
-    userCheck.collections[collectionID].tasks = [];
     const newCollectionTask = new TaskModel({
-        title: req.body.title ,
-        description: req.body.desc ,
+        title: req.body.collectionTaskTitle ,
+        description: req.body.collectionTaskDesc ,
         status: req.body.status
     });
     try{
@@ -76,10 +74,12 @@ collectionRouter.post("/addCollection/newTask", verification, async (req, res) =
 
 collectionRouter.post("/updateCollection", verification, async (req, res) =>{
     const user = req.body.userID;
-    const collectionUpdate = `${req.body.collectionID}`
+    const collectionUpdate = req.body.collectionID;
+    console.log(user)
+    console.log(collectionUpdate)
     try{
         const update = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionUpdate}, 
-        {$set: { "collections.$.collectionTitle": `${req.body.newTitle}`, "collections.$.collectionDescription": `${req.body.newDesc}`}})
+        {$set: { "collections.$.collectionTitle": `${req.body.newColTitle}`, "collections.$.collectionDescription": `${req.body.newColDesc}`}})
         res.json(update.collections)
     }catch(error){
         res.json({error: error, message: "Couldnt update information"})
@@ -88,30 +88,31 @@ collectionRouter.post("/updateCollection", verification, async (req, res) =>{
 
 collectionRouter.post("/updateCollection/task/status", verification, async (req, res) =>{
     const user = req.body.userID;
-    const collectionID = req.body.collectionID
-    const collectionTaskUpdate = `${req.body.taskID}`
+    const collectionID = req.body.collectionID;
+    const collectionTaskUpdate = req.body.taskID;
+    const index = req.body.intCollectionID;
     try{
-        const updtTaskStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, 
-        "collections.tasks._id" : collectionTaskUpdate}, {$set: { "collections.tasks.$.status": `${req.body.taskStatus}`}})
-        let updtStatus = updtTaskStatus;
-        if(req.body.taskStatus == "Complete"){
-            let completedTasks = 1;
-            updtTaskStatus.collections.tasks.map((task) => {
-                if(task.status === "Complete")
-                    completedTasks++;
-            })
-            if(completedTasks === updtTaskStatus.collections.tasks.length){
-                updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
-                {$set: { "collections.$.status": `${req.body.taskStatus}`}})
-            }
-        }
-        else{
-            if(updtTaskStatus.status === "Complete"){
-                updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
-                {$set: { "collections.$.status": `${req.body.taskStatus}`}})
-            }
-        }
-        res.json(updtStatus.collections.tasks)
+        const updtTaskStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, "collections.tasks._id": collectionTaskUpdate}, 
+        {$set: {"status": `${req.body.taskStatus}`}})
+        //let updtStatus = updtTaskStatus;
+        // if(req.body.taskStatus == "Complete"){
+        //     let completedTasks = 1;
+        //     updtTaskStatus.collections.tasks.map((task) => {
+        //         if(task.status === "Complete")
+        //             completedTasks++;
+        //     })
+        //     if(completedTasks === updtTaskStatus.collections.tasks.length){
+        //         updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
+        //         {$set: { "collections.$.status": `${req.body.taskStatus}`}})
+        //     }
+        // }
+        // else{
+        //     if(updtTaskStatus.status === "Complete"){
+        //         updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
+        //         {$set: { "collections.$.status": `${req.body.taskStatus}`}})
+        //     }
+        // }
+        res.json(updtTaskStatus.collections[index].tasks)
         
     }catch(error){
         res.json({error: error, message: "Couldnt update Status"})
@@ -146,16 +147,16 @@ collectionRouter.delete('/deleteCollection/:userID/:collectionID', verification,
     }
 })
 
-collectionRouter.delete('/deleteCollection/:collectionID/tasks/:taskID', verification, async (req, res) => {
-    const user = req.body.userID;
+collectionRouter.delete('/deleteCollection/:userID/:collectionID/tasks/:taskID', verification, async (req, res) => {
+    const user = req.params.userID;
     const collectionID = req.params.collectionID;
     const taskID = req.params.taskID;
     try{
-        const deltask = await UserModel.findOneAndDelete({"_id": user, "collections._id": collectionID,
-            "collections.tasks._id" : taskID})
-        res.json(deltask)
+        const delCollection = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID}, 
+        {$pull: {"collections.$.tasks": {_id: taskID}}})
+        res.json(delCollection)
     }catch(error){
-        res.json({error: error, message: "Couldnt delete collection task"})
+        res.json({error: error, message: "Couldnt delete collection"})
     }
 })
 

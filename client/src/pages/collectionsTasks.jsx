@@ -2,6 +2,7 @@ import "../css/collectionsTasks.css"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { BsGearFill } from "react-icons/bs";
+import { useCookies } from 'react-cookie';
 
 export const CollectionTasks = (collections) => {
     let { collectionID } = useParams()
@@ -17,11 +18,11 @@ export const CollectionTasks = (collections) => {
     const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
     const [updtColTaskTitle, updateColTaskTitle] = useState("")
     const [updtColTaskDesc, updateColTaskDesc] = useState("")
+    const [check] = useCookies(["access_token"]);
 
     function getThisCollectionIndex(){
         if(isUserLogged){
-            const thisCollectionIndex = allCollectionTasks.findIndex((col) => col._id === intCollectionID)
-            return thisCollectionIndex;
+            return intCollectionID;
         }
         else{
             const thisCollectionIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID);
@@ -46,19 +47,21 @@ export const CollectionTasks = (collections) => {
                 const res = await fetch(`${__API__}/addCollection/newTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
-                        auth: cookies.access_token
+                        auth: check.access_token
                     },
                     body: JSON.stringify({
                         userID,
-                        intCollectionID,
+                        currentCollectionIndex,
                         collectionTaskTitle,
                         collectionTaskDesc,
+                        status: "Incomplete"
                         })
                     });
                 const collection = await res.json()
                 if(collection == null)
                     console.log("Failed to create collection")
                 else{
+                    console.log(collection)
                     setCurrentCollection(collection);
                     setCollectionTasks(collection.tasks)
                     filterTask(filterType, collection.tasks)
@@ -101,12 +104,12 @@ export const CollectionTasks = (collections) => {
     async function delCollectionTask(taskID){
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
-            await fetch(`${__API__}/deleteCollection/${intCollectionID}/tasks/${taskID}`, {
-                method: "DELETE", headers: {auth: cookies.access_token}, 
-                body: JSON.stringify({userID})
+            const collectionID = currentCollection._id;
+            await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}/tasks/${taskID}`, {
+                method: "DELETE", headers: {auth: check.access_token}, 
             });
     
-            setCollectionTasks(collectionTasks.filter((task) => task._id !== taskId))
+            setCollectionTasks(collectionTasks.filter((task) => task._id !== taskID))
             const updtCurrent = currentCollection.tasks = collectionTasks;
             setCurrentCollection(updtCurrent);
             filterTask(filterType, collectionTasks);
@@ -185,19 +188,22 @@ export const CollectionTasks = (collections) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
+                const collectionID = currentCollection._id;
                 const res = await fetch(`${__API__}/updateCollection/task/status`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
-                        auth: cookies.access_token
+                        auth: check.access_token
                     },
                     body: JSON.stringify({
                         userID,
+                        collectionID,
                         intCollectionID,
                         taskID,
                         taskStatus
                         })
                     });
                 const updatedValues = await res.json()
+                console.log(updatedValues)
                 const index = updatedValues.findIndex((task => task._id === taskID))
                 updatedValues[index].status = `${taskStatus}`
                 setCollectionTasks(updatedValues)
