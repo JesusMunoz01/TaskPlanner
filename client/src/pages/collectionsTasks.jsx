@@ -17,11 +17,11 @@ export const CollectionTasks = (collections) => {
     const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
     const [updtColTaskTitle, updateColTaskTitle] = useState("")
     const [updtColTaskDesc, updateColTaskDesc] = useState("")
+    console.log(currentCollection)
 
     function getThisCollectionIndex(){
         if(isUserLogged){
-            const thisCollectionIndex = allCollectionTasks.findIndex((col) => col._id === intCollectionID)
-            return thisCollectionIndex;
+            return intCollectionID;
         }
         else{
             const thisCollectionIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID);
@@ -43,6 +43,7 @@ export const CollectionTasks = (collections) => {
         if(isUserLogged){
             try{
                 const userID = window.localStorage.getItem("userId");
+                const collectionID = currentCollection._id;
                 const res = await fetch(`${__API__}/addCollection/newTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
@@ -50,7 +51,7 @@ export const CollectionTasks = (collections) => {
                     },
                     body: JSON.stringify({
                         userID,
-                        intCollectionID,
+                        collectionID,
                         collectionTaskTitle,
                         collectionTaskDesc,
                         })
