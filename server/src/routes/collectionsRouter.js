@@ -55,13 +55,12 @@ collectionRouter.post("/addCollection", verification, async (req, res) =>{
 
 collectionRouter.post("/addCollection/newTask", verification, async (req, res) =>{
     const user = req.body.userID;
-    const collectionID = req.body.intCollectionID;
+    const collectionID = req.body.currentCollectionIndex;
     const userCheck = await UserModel.findOne({_id: user })
-    if(userCheck.collections[collectionID].tasks === null)
-    userCheck.collections[collectionID].tasks = [];
+    console.log(userCheck.collections[collectionID].tasks)
     const newCollectionTask = new TaskModel({
-        title: req.body.title ,
-        description: req.body.desc ,
+        title: req.body.collectionTaskTitle ,
+        description: req.body.collectionTaskDesc ,
         status: req.body.status
     });
     try{

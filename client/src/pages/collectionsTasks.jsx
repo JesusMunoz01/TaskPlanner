@@ -2,6 +2,7 @@ import "../css/collectionsTasks.css"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { BsGearFill } from "react-icons/bs";
+import { useCookies } from 'react-cookie';
 
 export const CollectionTasks = (collections) => {
     let { collectionID } = useParams()
@@ -17,7 +18,7 @@ export const CollectionTasks = (collections) => {
     const [collectionTaskDesc, setCollectionTaskDesc] = useState("");
     const [updtColTaskTitle, updateColTaskTitle] = useState("")
     const [updtColTaskDesc, updateColTaskDesc] = useState("")
-    console.log(currentCollection)
+    const [check] = useCookies(["access_token"]);
 
     function getThisCollectionIndex(){
         if(isUserLogged){
@@ -43,23 +44,24 @@ export const CollectionTasks = (collections) => {
         if(isUserLogged){
             try{
                 const userID = window.localStorage.getItem("userId");
-                const collectionID = currentCollection._id;
                 const res = await fetch(`${__API__}/addCollection/newTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
-                        auth: cookies.access_token
+                        auth: check.access_token
                     },
                     body: JSON.stringify({
                         userID,
-                        collectionID,
+                        currentCollectionIndex,
                         collectionTaskTitle,
                         collectionTaskDesc,
+                        status: "Incomplete"
                         })
                     });
                 const collection = await res.json()
                 if(collection == null)
                     console.log("Failed to create collection")
                 else{
+                    console.log(collection)
                     setCurrentCollection(collection);
                     setCollectionTasks(collection.tasks)
                     filterTask(filterType, collection.tasks)
