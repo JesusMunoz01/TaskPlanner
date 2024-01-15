@@ -19,6 +19,7 @@ export const CollectionTasks = (collections) => {
     const [updtColTaskTitle, updateColTaskTitle] = useState("")
     const [updtColTaskDesc, updateColTaskDesc] = useState("")
     const [check] = useCookies(["access_token"]);
+    console.log(currentCollection)
 
     function getThisCollectionIndex(){
         if(isUserLogged){

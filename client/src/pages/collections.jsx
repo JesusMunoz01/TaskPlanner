@@ -34,7 +34,7 @@ export const Collections = (data) => {
                     console.log("Failed to create collection")
                 else{
                     setCollections([...collections, collection])
-                    data.updateCollection(collections)
+                    data.updateCollection([...collections, collection])
                 }
             }catch(error){
                 console.log(error)
