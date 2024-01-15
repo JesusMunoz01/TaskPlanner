@@ -104,12 +104,12 @@ export const CollectionTasks = (collections) => {
     async function delCollectionTask(taskID){
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
-            await fetch(`${__API__}/deleteCollection/${intCollectionID}/tasks/${taskID}`, {
-                method: "DELETE", headers: {auth: cookies.access_token}, 
-                body: JSON.stringify({userID})
+            const collectionID = currentCollection._id;
+            await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}/tasks/${taskID}`, {
+                method: "DELETE", headers: {auth: check.access_token}, 
             });
     
-            setCollectionTasks(collectionTasks.filter((task) => task._id !== taskId))
+            setCollectionTasks(collectionTasks.filter((task) => task._id !== taskID))
             const updtCurrent = currentCollection.tasks = collectionTasks;
             setCurrentCollection(updtCurrent);
             filterTask(filterType, collectionTasks);

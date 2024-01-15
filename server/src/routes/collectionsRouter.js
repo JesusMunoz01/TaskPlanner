@@ -57,7 +57,6 @@ collectionRouter.post("/addCollection/newTask", verification, async (req, res) =
     const user = req.body.userID;
     const collectionID = req.body.currentCollectionIndex;
     const userCheck = await UserModel.findOne({_id: user })
-    console.log(userCheck.collections[collectionID].tasks)
     const newCollectionTask = new TaskModel({
         title: req.body.collectionTaskTitle ,
         description: req.body.collectionTaskDesc ,
@@ -148,12 +147,12 @@ collectionRouter.delete('/deleteCollection/:userID/:collectionID', verification,
 })
 
 collectionRouter.delete('/deleteCollection/:userID/:collectionID/tasks/:taskID', verification, async (req, res) => {
-    const user = req.body.userID;
+    const user = req.params.userID;
     const collectionID = req.params.collectionID;
     const taskID = req.params.taskID;
     try{
-        const delCollection = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, "tasks._id": taskID}, 
-        {$pull: {collections: {$elemMatch: {_id: collectionID, tasks: {_id: taskID}}}}})
+        const delCollection = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID}, 
+        {$pull: {"collections.$.tasks": {_id: taskID}}})
         res.json(delCollection)
     }catch(error){
         res.json({error: error, message: "Couldnt delete collection"})
