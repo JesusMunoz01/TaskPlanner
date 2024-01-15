@@ -271,7 +271,7 @@ export const Home = (data) => {
                             </div>
                         )) : 
                         // Section for: Logged user without tasks -------------------------------------------
-                        <span>Currently no tasks</span> :
+                        <span id="noTasks">Currently no tasks</span> :
                     taskFilter ?
                         // Section for: Non-Logged user with tasks -------------------------------------------
                         JSON.parse(taskFilter).map((task)=> (
@@ -303,7 +303,7 @@ export const Home = (data) => {
                             </div>
                         )) :
                         // Section for: Non-Logged user without tasks -------------------------------------------
-                        <span>Currently no tasks</span>
+                        <span id="noTasks">Currently no tasks</span>
                 }
             </div>
             <div className="addTask">

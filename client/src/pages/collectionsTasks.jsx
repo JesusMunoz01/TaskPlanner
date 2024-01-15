@@ -188,19 +188,22 @@ export const CollectionTasks = (collections) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
+                const collectionID = currentCollection._id;
                 const res = await fetch(`${__API__}/updateCollection/task/status`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
-                        auth: cookies.access_token
+                        auth: check.access_token
                     },
                     body: JSON.stringify({
                         userID,
+                        collectionID,
                         intCollectionID,
                         taskID,
                         taskStatus
                         })
                     });
                 const updatedValues = await res.json()
+                console.log(updatedValues)
                 const index = updatedValues.findIndex((task => task._id === taskID))
                 updatedValues[index].status = `${taskStatus}`
                 setCollectionTasks(updatedValues)
