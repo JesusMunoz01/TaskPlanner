@@ -23,7 +23,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-style: solid;
-    min-height: 525px;
+    max-height: 525px;
     min-width: 50vw;
     text-align: center;
     overflow-y: auto;
@@ -31,7 +31,7 @@
 
 .collections li{
     display: flex;
-    height: 250px;
+    max-height: 250px;
     border: solid;
     flex-direction: column;
     margin: 4px 4px 0px 4px;
