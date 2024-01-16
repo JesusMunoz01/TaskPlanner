@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
 export const Navbar = ({loginStatus}) => {
-    const [cookies, setCookies] = useCookies(["access_token"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["access_token"]);
 
     const logout = () => {
-        setCookies('access_token', "")
+        removeCookie("access_token")
         window.localStorage.removeItem("userId");
         loginStatus("Logged out");
     }
@@ -27,8 +27,6 @@ export const Navbar = ({loginStatus}) => {
             currentTheme.className = "App white";
         else
             currentTheme.className = "App";
-
-        console.log(currentTheme)
     }
 
     return <div className="navActions">
@@ -39,9 +37,9 @@ export const Navbar = ({loginStatus}) => {
             <li><Link id="Collections" onClick={(e) => changeActive(e.target.innerText)} to={"/collections"}><span id='collectionLink'>Collections</span></Link></li>
         </div>
         <div className='modeToggle'>
-            <label class="switch">
+            <label className="switch">
                 <input type="checkbox" onClick={changeTheme}/>
-                <span class="slider"></span>
+                <span className="slider"></span>
             </label>
         </div>
     </div>

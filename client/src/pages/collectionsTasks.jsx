@@ -61,11 +61,12 @@ export const CollectionTasks = (collections) => {
                 if(collection == null)
                     console.log("Failed to create collection")
                 else{
-                    console.log(collection)
+                    let collectionsData = fetchCollections();
+                    collectionsData[currentCollectionIndex] = collection;
                     setCurrentCollection(collection);
                     setCollectionTasks(collection.tasks)
                     filterTask(filterType, collection.tasks)
-                    //data.updateCollection(collectionTasks)
+                    collections.updateCollection(collectionsData)
                 }
             }catch(error){
                 console.log(error)
@@ -94,7 +95,7 @@ export const CollectionTasks = (collections) => {
             setCurrentCollection(collectionsData[currentCollectionIndex])
             setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
             filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            //collections.updateCollection([...collectionTasks, newCollectionTask])
+            collections.updateCollection(collectionsData)
         }
 
         setCollectionTaskTitle('');
@@ -108,12 +109,14 @@ export const CollectionTasks = (collections) => {
             await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}/tasks/${taskID}`, {
                 method: "DELETE", headers: {auth: check.access_token}, 
             });
-    
-            setCollectionTasks(collectionTasks.filter((task) => task._id !== taskID))
-            const updtCurrent = currentCollection.tasks = collectionTasks;
-            setCurrentCollection(updtCurrent);
-            filterTask(filterType, collectionTasks);
-            //data.updateTask(tasks.filter((task) => task._id !== taskId))
+            const deletedItem = collectionTasks.filter((task) => task._id !== taskID);
+            let collectionsData = fetchCollections();
+            collectionsData[currentCollectionIndex].tasks = deletedItem;
+            setCollectionTasks(deletedItem)
+            currentCollection.tasks = deletedItem;
+            setCurrentCollection(currentCollection);
+            filterTask(filterType, deletedItem);
+            collections.updateCollection(collectionsData)
         }
         else{
             let collectionsData = fetchCollections();
@@ -123,7 +126,7 @@ export const CollectionTasks = (collections) => {
             setCurrentCollection(collectionsData[currentCollectionIndex])
             setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
             filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            //data.updateTask(getUpdatedLocal);
+            collections.updateCollection(collectionsData)
             }
         }
     
@@ -142,28 +145,31 @@ export const CollectionTasks = (collections) => {
         if(isUserLogged)
             try{
                 const userID = window.localStorage.getItem("userId");
+                const collectionID = currentCollection._id;
                 const res = await fetch(`${__API__}/updateCollection/task/data`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
-                        auth: cookies.access_token
+                        auth: check.access_token
                     },
                     body: JSON.stringify({
                         userID,
                         intCollectionID,
+                        collectionID,
                         taskID,
                         newTitle,
                         newDesc
                         })
                     });
                 const updatedValues = await res.json()
-                const index = updatedValues.findIndex((task => task._id === taskID))
-                updatedValues[index].title = `${newTitle}`
-                updatedValues[index].description = `${newDesc}`
-                setCollectionTasks(updatedValues)
-                const updtCollection = currentCollection.tasks = updatedValues;
-                setCurrentCollection(updtCollection);
-                filterTask(filterType, collectionTasks)
-                //data.updateTask(updatedValues);
+                let collectionsData = fetchCollections();
+                const index = updatedValues.tasks.findIndex((task => task._id === taskID))
+                updatedValues.tasks[index].title = `${newTitle}`
+                updatedValues.tasks[index].description = `${newDesc}`
+                collectionsData[currentCollectionIndex] = updatedValues;
+                setCollectionTasks(updatedValues.tasks)
+                setCurrentCollection(updatedValues);
+                filterTask(filterType, updatedValues.tasks)
+                collections.updateCollection(collectionsData);
             }catch(error){
                 console.log(error)
             }
@@ -203,14 +209,14 @@ export const CollectionTasks = (collections) => {
                         })
                     });
                 const updatedValues = await res.json()
-                console.log(updatedValues)
-                const index = updatedValues.findIndex((task => task._id === taskID))
-                updatedValues[index].status = `${taskStatus}`
-                setCollectionTasks(updatedValues)
-                const updtCollection = currentCollection.tasks = updatedValues;
-                setCurrentCollection(updtCollection);
-                filterTask(filterType, collectionTasks)
-                //data.updateTask(updatedValues);
+                let collectionsData = fetchCollections();
+                const index = updatedValues.tasks.findIndex((task => task._id === taskID))
+                updatedValues.tasks[index].status = `${taskStatus}`
+                collectionsData[currentCollectionIndex] = updatedValues;
+                setCollectionTasks(updatedValues.tasks)
+                setCurrentCollection(updatedValues);
+                filterTask(filterType, updatedValues.tasks)
+                collections.updateCollection(collectionsData);
             }catch(error){
                 console.log(error)
             }
