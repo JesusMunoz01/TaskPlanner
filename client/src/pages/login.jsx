@@ -13,7 +13,7 @@ export const Login = ({loginStatus}) => {
     
     
     async function createUser(e){
-        
+
         e.preventDefault();
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
         if(passwordRegex.test(newPassword)){

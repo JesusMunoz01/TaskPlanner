@@ -124,15 +124,17 @@ collectionRouter.post("/updateCollection/task/status", verification, async (req,
 
 collectionRouter.post("/updateCollection/task/data", verification, async (req, res) =>{
     const user = req.body.userID;
-    const collectionID = req.body.intCollectionID;
-    const collectionTaskUpdate = `${req.body.taskID}`
+    const collectionID = req.body.collectionID;
+    const collectionIndex = req.body.intCollectionID;
+    const collectionTaskUpdate = req.body.taskID;
     try{
-        const updateData = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, 
-            "collections.tasks._id" : collectionTaskUpdate}, {$set: { "collections.tasks.$.title": `${req.body.newTitle}`, 
-            "collections.tasks.$.description": `${req.body.newDesc}`}})
-        res.json(updateData.collections.tasks)
+        const updtTaskData = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, "collections.tasks._id": collectionTaskUpdate}, 
+        {$set: {"collections.$[colID].tasks.$[taskID].title": `${req.body.newTitle}`, 
+                "collections.$[colID].tasks.$[taskID].description": `${req.body.newDesc}`}}, 
+        {"arrayFilters": [{"colID._id": collectionID}, {"taskID._id": collectionTaskUpdate}]})
+        res.json(updtTaskData.collections[collectionIndex])
     }catch(error){
-        res.json({error: error, message: "Couldnt update Status"})
+        res.json({error: error, message: "Couldnt update information"})
     }
 })
 
