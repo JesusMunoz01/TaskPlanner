@@ -1,0 +1,74 @@
+.landingPage{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    overflow: auto;
+}
+
+.landingPage-Link{
+    display: flex;
+    justify-content: center;
+}
+
+
+.landingPage-Card::before{
+    display: none;
+    content: "";
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: white;
+    opacity: 0.1;
+}
+
+.landingPage-Card:hover::before{
+    display: block;
+ }
+
+.landingPage-Card{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 500px;
+    min-width: 40vw;
+    border: 1px solid;
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.landingPage-Card h1{
+    height: 10%;
+    width: 100%;
+    font-size: 36px;
+    margin: 0;
+    border-bottom: 1px solid;
+}
+
+.landingPage-Card img{
+    height: 389px;
+    width: 500px;
+}
+
+@media(max-width: 800px){
+    .landingPage{
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .landingPage-Card{
+        min-height: 400px;
+        min-width: 40vw;
+        border: 1px solid;
+        border-color: var(--secondary-color);
+        color: var(--secondary-color);
+        overflow: auto;
+    }
+    .landingPage-Card img{
+        height: 250px;
+        width: 300px;
+        overflow: auto;
+    }
+}
