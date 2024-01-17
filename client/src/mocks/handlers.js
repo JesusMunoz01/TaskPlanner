@@ -78,7 +78,6 @@ export const handlers = [
         if(userIndex[0].user_id == 0)
          return res(ctx.status(400))
         else{
-          console.log(userIndex[0].tasks)
           const deleteTask = userIndex[0].tasks.filter((task) => task._id != taskNumber)
           return res(ctx.json(deleteTask))
         }
