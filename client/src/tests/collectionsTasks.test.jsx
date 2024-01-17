@@ -360,16 +360,29 @@ describe('Tests for collections Page API', () => {
         expect(updatedData).toEqual([{title: 'Updated New Task 2', description: 'Updated New description 2', status: 'Incomplete', _id: 2}])
     })
 
-    test.skip('Deleting a collection with tasks', async () => {
-        const userID = 4;
+    test('Deleting a collection with tasks', async () => {
+        // Check mock user has 2 collections and collection 1 has tasks
+        window.localStorage.setItem("userId", 1);
+        const getResponse = await fetch(`http://localhost:8080/collections/${localStorage.getItem("userId")}`)
+        expect(await getResponse.json()).toEqual([
+            {collectionTitle: "mockCollection1",
+                collectionDescription: "fake collection response 1", collectionStatus: "Incomplete", _id: 1, 
+                tasks: [{title: 'New Task', description: 'New description', status: 'Incomplete', _id: 1}, 
+                {title: 'Updated New Task 2', description: 'Updated New description 2', status: 'Incomplete', _id: 2}]},
+            {collectionTitle: "mockCollection2", collectionDescription: "fake collection response 2",
+                collectionStatus: "Incomplete", _id: 2, tasks: []}])
+        
+        // Delete collection one with tasks, expect only collection 2
+        const userID = 1;
         const collectionID = 1;
         const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}`, {
             method: "DELETE", body: JSON.stringify({userID})
         });
         const updatedData = await response.json();
         expect(updatedData.length).toEqual(1)
-        expect(updatedData).toEqual([{collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2",
-        collectionStatus: "Incomplete", _id: 2, tasks: []}])
+        expect(updatedData).toEqual([{collectionTitle: "mockCollection2",
+            collectionDescription: "fake collection response 2",
+            collectionStatus: "Incomplete", _id: 2, tasks: []}])
     })
 
 })
