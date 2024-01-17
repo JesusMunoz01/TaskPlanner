@@ -324,6 +324,30 @@ describe('Tests for collections Page API', () => {
         _id: 1 }, addedTask]) 
     })
 
+    test('Updating a collection task', async () => {
+        const userID = 1;
+        const collectionID = 1;
+        const taskID = 2;
+        const newTitle = "Updated New Task 2"
+        const newDesc = "Updated New description 2"
+        const response = await fetch(`http://localhost:8080/collections/tasks/update`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                collectionID,
+                taskID,
+                newTitle,
+                newDesc
+                })
+            });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(2)
+        expect(updatedData).toEqual([{title: 'New Task', description: 'New description', status: 'Incomplete', _id: 1}, 
+        {title: 'Updated New Task 2', description: 'Updated New description 2', status: 'Incomplete', _id: 2}])
+    })
+
     test('Testing deleting a task in a collection', async () => {
         const userID = 1;
         const collectionID = 1;
@@ -333,12 +357,7 @@ describe('Tests for collections Page API', () => {
         });
         const updatedData = await response.json();
         expect(updatedData.length).toEqual(1)
-        expect(updatedData).toEqual([{title: 'New Task 2', description: 'New description', status: 'Incomplete', _id: 2}])
-    })
-
-
-    test.skip('Updating a collection task', async () => {
-
+        expect(updatedData).toEqual([{title: 'Updated New Task 2', description: 'Updated New description 2', status: 'Incomplete', _id: 2}])
     })
 
     test.skip('Deleting a collection with tasks', async () => {

@@ -188,7 +188,6 @@ export const handlers = [
        return res(ctx.status(400))
       else{
         const collectionIndex = userIndex[0].collections.findIndex((collection) => collection._id == collectionNumber)
-        console.log(userIndex[0].collections[collectionIndex])
         userIndex[0].collections[collectionIndex].collectionTitle = data.newTitle
         userIndex[0].collections[collectionIndex].collectionDescription = data.newDesc
         return res(ctx.json(userIndex[0].collections))
@@ -243,6 +242,22 @@ export const handlers = [
         const colIndex = userIndex[0].collections.findIndex((collection) => collection._id === collectionNumber)
         const deleteTask = userIndex[0].collections[colIndex].tasks.filter((task) => task._id != taskNumber)
         return res(ctx.json(deleteTask))
+      }
+    }),
+    rest.post('http://localhost:8080/collections/tasks/update', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const collectionNumber = data.collectionID
+      const taskNumber = data.taskID
+      const userIndex = mockDB.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const collectionIndex = userIndex[0].collections.findIndex((collection) => collection._id == collectionNumber)
+        const taskIndex = userIndex[0].collections[collectionIndex].tasks.findIndex((task) => task._id == taskNumber)
+        userIndex[0].collections[collectionIndex].tasks[taskIndex].title = data.newTitle
+        userIndex[0].collections[collectionIndex].tasks[taskIndex].description = data.newDesc
+        return res(ctx.json(userIndex[0].collections[collectionIndex].tasks))
       }
     }),
 ]
