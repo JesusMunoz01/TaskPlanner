@@ -271,8 +271,57 @@ describe('Tests for collections Page API', () => {
         expect(await response.json()).toEqual(mockCollectionDB[0].collections)
     })
 
-    test.skip('Testing creating a task in a collection', async () => {
+    test('Testing creating a task in a collection', async () => {
+        const userID = 1;
+        const collectionID = 1;
+        const title = "New Task";
+        const desc = "New description";
+        const response = await fetch(`http://localhost:8080/collections/tasks/create`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                collectionID,
+                title,
+                desc,
+                status: "Incomplete"
+                })
+            });
+        const addedTask = {title: title, description: desc, status: "Incomplete",
+                _id: 1 }
+       
+        const updatedData = await response.json();
 
+        expect(updatedData.tasks.length).toEqual(1)
+        expect(updatedData.tasks).toEqual([...mockCollectionDB[0].collections[0].tasks, addedTask]) 
+    })
+
+    test('Testing creating a task in a collection with tasks', async () => {
+        const userID = 1;
+        const collectionID = 1;
+        const title = "New Task 2";
+        const desc = "New description";
+        const response = await fetch(`http://localhost:8080/collections/tasks/create`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                collectionID,
+                title,
+                desc,
+                status: "Incomplete"
+                })
+            });
+        const addedTask = {title: title, description: desc, status: "Incomplete",
+                _id: 2 }
+       
+        const updatedData = await response.json();
+
+        expect(updatedData.tasks.length).toEqual(2)
+        expect(updatedData.tasks).toEqual([{title: "New Task", description: "New description", status: "Incomplete",
+        _id: 1 }, addedTask]) 
     })
 
     test.skip('Testing deleting a task in a collection', async () => {
@@ -280,7 +329,15 @@ describe('Tests for collections Page API', () => {
     })
 
     test.skip('Deleting a collection with tasks', async () => {
-
+        const userID = 4;
+        const collectionID = 1;
+        const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}`, {
+            method: "DELETE", body: JSON.stringify({userID})
+        });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2",
+        collectionStatus: "Incomplete", _id: 2, tasks: []}])
     })
 
     test.skip('Updating a collection task', async () => {

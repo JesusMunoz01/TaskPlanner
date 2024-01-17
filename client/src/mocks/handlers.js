@@ -194,7 +194,7 @@ export const handlers = [
         return res(ctx.json(userIndex[0].collections))
       }
     }),
-    // Testing collection tasks
+    // -------------------------------------- Collection Tasks Page Handlers ----------------------------------------------------
     rest.get('http://localhost:8080/collections/:collectionID', (req, res, ctx) => {
       const userCheck = parseInt(req.params.userID)
 
@@ -204,5 +204,31 @@ export const handlers = [
       else{
         return res(ctx.json(index[0].collections))
       }
+    }),
+    rest.post('http://localhost:8080/collections/tasks/create', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const collectionCheck = data.collectionID;
+      const userIndex = mockDB.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const colIndex = userIndex[0].collections.findIndex((collection) => collection._id === collectionCheck)
+        let nextId = 1;
+        let lastTask = [];
+        try{
+        const dbCollection = userIndex[0].collections[colIndex]
+        let localCopy = JSON.parse(JSON.stringify(dbCollection))
+        if(localCopy.tasks)
+            lastTask = localCopy.tasks.pop();
+        if(lastTask.length !== 0)
+            nextId = lastTask._id + 1;}
+        catch(error){}
+        const newTask = {title: data.title, description: data.desc, 
+          status: data.status, _id: nextId}
+
+          userIndex[0].collections[colIndex].tasks.push(newTask)
+          return res(ctx.json(userIndex[0].collections[colIndex]))
+        }
     }),
 ]
