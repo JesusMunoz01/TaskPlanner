@@ -22,6 +22,7 @@ describe('Tests for collections Page', () => {
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
+                <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
         </MemoryRouter>)
@@ -44,6 +45,7 @@ describe('Tests for collections Page', () => {
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
+                <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
         </MemoryRouter>)
@@ -66,6 +68,7 @@ describe('Tests for collections Page', () => {
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
+                <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
         </MemoryRouter>)
@@ -102,6 +105,7 @@ describe('Tests for collections Page', () => {
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
+                <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
         </MemoryRouter>)
@@ -141,6 +145,7 @@ describe('Tests for collections Page', () => {
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
+                <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
         </MemoryRouter>)
@@ -176,6 +181,7 @@ describe('Tests for collections Page', () => {
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
+                <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
         </MemoryRouter>)
@@ -212,6 +218,7 @@ describe('Tests for collections Page', () => {
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
+                <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
         </MemoryRouter>)
@@ -271,20 +278,118 @@ describe('Tests for collections Page API', () => {
         expect(await response.json()).toEqual(mockCollectionDB[0].collections)
     })
 
-    test.skip('Testing creating a task in a collection', async () => {
+    test('Testing creating a task in a collection', async () => {
+        const userID = 1;
+        const collectionID = 1;
+        const title = "New Task";
+        const desc = "New description";
+        const response = await fetch(`http://localhost:8080/collections/tasks/create`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                collectionID,
+                title,
+                desc,
+                status: "Incomplete"
+                })
+            });
+        const addedTask = {title: title, description: desc, status: "Incomplete",
+                _id: 1 }
+       
+        const updatedData = await response.json();
 
+        expect(updatedData.tasks.length).toEqual(1)
+        expect(updatedData.tasks).toEqual([...mockCollectionDB[0].collections[0].tasks, addedTask]) 
     })
 
-    test.skip('Testing deleting a task in a collection', async () => {
+    test('Testing creating a task in a collection with tasks', async () => {
+        const userID = 1;
+        const collectionID = 1;
+        const title = "New Task 2";
+        const desc = "New description";
+        const response = await fetch(`http://localhost:8080/collections/tasks/create`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                collectionID,
+                title,
+                desc,
+                status: "Incomplete"
+                })
+            });
+        const addedTask = {title: title, description: desc, status: "Incomplete",
+                _id: 2 }
+       
+        const updatedData = await response.json();
 
+        expect(updatedData.tasks.length).toEqual(2)
+        expect(updatedData.tasks).toEqual([{title: "New Task", description: "New description", status: "Incomplete",
+        _id: 1 }, addedTask]) 
     })
 
-    test.skip('Deleting a collection with tasks', async () => {
-
+    test('Updating a collection task', async () => {
+        const userID = 1;
+        const collectionID = 1;
+        const taskID = 2;
+        const newTitle = "Updated New Task 2"
+        const newDesc = "Updated New description 2"
+        const response = await fetch(`http://localhost:8080/collections/tasks/update`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                collectionID,
+                taskID,
+                newTitle,
+                newDesc
+                })
+            });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(2)
+        expect(updatedData).toEqual([{title: 'New Task', description: 'New description', status: 'Incomplete', _id: 1}, 
+        {title: 'Updated New Task 2', description: 'Updated New description 2', status: 'Incomplete', _id: 2}])
     })
 
-    test.skip('Updating a collection task', async () => {
+    test('Testing deleting a task in a collection', async () => {
+        const userID = 1;
+        const collectionID = 1;
+        const taskID = 1;
+        const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}/${taskID}`, {
+            method: "DELETE", body: JSON.stringify({userID})
+        });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{title: 'Updated New Task 2', description: 'Updated New description 2', status: 'Incomplete', _id: 2}])
+    })
 
+    test('Deleting a collection with tasks', async () => {
+        // Check mock user has 2 collections and collection 1 has tasks
+        window.localStorage.setItem("userId", 1);
+        const getResponse = await fetch(`http://localhost:8080/collections/${localStorage.getItem("userId")}`)
+        expect(await getResponse.json()).toEqual([
+            {collectionTitle: "mockCollection1",
+                collectionDescription: "fake collection response 1", collectionStatus: "Incomplete", _id: 1, 
+                tasks: [{title: 'New Task', description: 'New description', status: 'Incomplete', _id: 1}, 
+                {title: 'Updated New Task 2', description: 'Updated New description 2', status: 'Incomplete', _id: 2}]},
+            {collectionTitle: "mockCollection2", collectionDescription: "fake collection response 2",
+                collectionStatus: "Incomplete", _id: 2, tasks: []}])
+        
+        // Delete collection one with tasks, expect only collection 2
+        const userID = 1;
+        const collectionID = 1;
+        const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}`, {
+            method: "DELETE", body: JSON.stringify({userID})
+        });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{collectionTitle: "mockCollection2",
+            collectionDescription: "fake collection response 2",
+            collectionStatus: "Incomplete", _id: 2, tasks: []}])
     })
 
 })

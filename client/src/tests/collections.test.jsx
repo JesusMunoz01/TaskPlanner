@@ -220,6 +220,7 @@ describe('Tests for collections Page', () => {
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
+                <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
         </MemoryRouter>)

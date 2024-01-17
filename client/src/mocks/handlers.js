@@ -78,7 +78,6 @@ export const handlers = [
         if(userIndex[0].user_id == 0)
          return res(ctx.status(400))
         else{
-          console.log(userIndex[0].tasks)
           const deleteTask = userIndex[0].tasks.filter((task) => task._id != taskNumber)
           return res(ctx.json(deleteTask))
         }
@@ -188,13 +187,12 @@ export const handlers = [
        return res(ctx.status(400))
       else{
         const collectionIndex = userIndex[0].collections.findIndex((collection) => collection._id == collectionNumber)
-        console.log(userIndex[0].collections[collectionIndex])
         userIndex[0].collections[collectionIndex].collectionTitle = data.newTitle
         userIndex[0].collections[collectionIndex].collectionDescription = data.newDesc
         return res(ctx.json(userIndex[0].collections))
       }
     }),
-    // Testing collection tasks
+    // -------------------------------------- Collection Tasks Page Handlers ----------------------------------------------------
     rest.get('http://localhost:8080/collections/:collectionID', (req, res, ctx) => {
       const userCheck = parseInt(req.params.userID)
 
@@ -203,6 +201,62 @@ export const handlers = [
        return res(ctx.status(400))
       else{
         return res(ctx.json(index[0].collections))
+      }
+    }),
+    rest.post('http://localhost:8080/collections/tasks/create', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const collectionCheck = data.collectionID;
+      const userIndex = mockDB.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const colIndex = userIndex[0].collections.findIndex((collection) => collection._id === collectionCheck)
+        let nextId = 1;
+        let lastTask = [];
+        try{
+        const dbCollection = userIndex[0].collections[colIndex]
+        let localCopy = JSON.parse(JSON.stringify(dbCollection))
+        if(localCopy.tasks)
+            lastTask = localCopy.tasks.pop();
+        if(lastTask.length !== 0)
+            nextId = lastTask._id + 1;}
+        catch(error){}
+        const newTask = {title: data.title, description: data.desc, 
+          status: data.status, _id: nextId}
+
+          userIndex[0].collections[colIndex].tasks.push(newTask)
+          return res(ctx.json(userIndex[0].collections[colIndex]))
+        }
+    }),
+    rest.delete('http://localhost:8080/collections/delete/:collectionID/:taskID', async (req, res, ctx) => {
+      const collectionNumber = parseInt(req.params.collectionID)
+      const taskNumber = parseInt(req.params.taskID)
+      const data = await req.json()
+      const userCheck = data.userID;
+      const userIndex = mockDB.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const colIndex = userIndex[0].collections.findIndex((collection) => collection._id === collectionNumber)
+        const deleteTask = userIndex[0].collections[colIndex].tasks.filter((task) => task._id != taskNumber)
+        return res(ctx.json(deleteTask))
+      }
+    }),
+    rest.post('http://localhost:8080/collections/tasks/update', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const collectionNumber = data.collectionID
+      const taskNumber = data.taskID
+      const userIndex = mockDB.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const collectionIndex = userIndex[0].collections.findIndex((collection) => collection._id == collectionNumber)
+        const taskIndex = userIndex[0].collections[collectionIndex].tasks.findIndex((task) => task._id == taskNumber)
+        userIndex[0].collections[collectionIndex].tasks[taskIndex].title = data.newTitle
+        userIndex[0].collections[collectionIndex].tasks[taskIndex].description = data.newDesc
+        return res(ctx.json(userIndex[0].collections[collectionIndex].tasks))
       }
     }),
 ]
