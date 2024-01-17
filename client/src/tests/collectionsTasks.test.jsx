@@ -324,7 +324,20 @@ describe('Tests for collections Page API', () => {
         _id: 1 }, addedTask]) 
     })
 
-    test.skip('Testing deleting a task in a collection', async () => {
+    test('Testing deleting a task in a collection', async () => {
+        const userID = 1;
+        const collectionID = 1;
+        const taskID = 1;
+        const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}/${taskID}`, {
+            method: "DELETE", body: JSON.stringify({userID})
+        });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{title: 'New Task 2', description: 'New description', status: 'Incomplete', _id: 2}])
+    })
+
+
+    test.skip('Updating a collection task', async () => {
 
     })
 
@@ -338,10 +351,6 @@ describe('Tests for collections Page API', () => {
         expect(updatedData.length).toEqual(1)
         expect(updatedData).toEqual([{collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2",
         collectionStatus: "Incomplete", _id: 2, tasks: []}])
-    })
-
-    test.skip('Updating a collection task', async () => {
-
     })
 
 })

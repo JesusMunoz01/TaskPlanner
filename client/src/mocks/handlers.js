@@ -231,4 +231,18 @@ export const handlers = [
           return res(ctx.json(userIndex[0].collections[colIndex]))
         }
     }),
+    rest.delete('http://localhost:8080/collections/delete/:collectionID/:taskID', async (req, res, ctx) => {
+      const collectionNumber = parseInt(req.params.collectionID)
+      const taskNumber = parseInt(req.params.taskID)
+      const data = await req.json()
+      const userCheck = data.userID;
+      const userIndex = mockDB.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const colIndex = userIndex[0].collections.findIndex((collection) => collection._id === collectionNumber)
+        const deleteTask = userIndex[0].collections[colIndex].tasks.filter((task) => task._id != taskNumber)
+        return res(ctx.json(deleteTask))
+      }
+    }),
 ]
