@@ -23,7 +23,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-style: solid;
-    max-height: 525px;
+    height: 525px;
     min-width: 50vw;
     text-align: center;
     overflow-y: auto;

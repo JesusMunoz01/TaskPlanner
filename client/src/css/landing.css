@@ -3,8 +3,9 @@
     width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 75px 510px;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     justify-items: center;
     gap: 10px;
     overflow: auto;
@@ -40,6 +41,7 @@
     border: 1px solid;
     border-color: var(--secondary-color);
     color: var(--secondary-color);
+    background-color: rgb(103, 104, 100);
 }
 
 .landingPage-Card h1{
@@ -65,13 +67,20 @@
     width: 400px;
 }
 
+#landingPage-Title{
+    grid-column: span 2;
+    margin: 0;
+}
+
 @media(max-width: 1150px){
     .landingPage{
-        grid-template-columns: repeat(1, 1fr);
+        min-height: 100vh;
+        grid-template-columns: repeat(2, 1fr);
     }
     .landingPage-Card{
-        min-height: 600px;
-        min-width: 80vw;
+        min-height: 500px;
+        min-width: 400px;
+        max-width: 400px;
         border: 1px solid;
         border-color: var(--secondary-color);
         color: var(--secondary-color);
@@ -79,9 +88,13 @@
     }
     .landingPage-Card img{
         margin-top: 10px;
-        height: 389px;
-        width: 500px;
+        height: 360px;
+        width: 390px;
         overflow: auto;
+    }
+
+    #img1{
+        width: 390px;
     }
 
     .landingPageContent{
@@ -90,14 +103,20 @@
         width: 100%;
         align-items: center;
         justify-content: space-around;
-        flex-direction: row;
+        flex-direction: column;
     }
 }
 
 @media(max-width: 800px){
     .landingPage{
         grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: 50px;
     }
+
+    .landingPage h1{
+        font-size: 32px;
+    }
+
     .landingPage-Card{
         min-height: 600px;
         min-width: 40vw;
@@ -126,16 +145,26 @@
     #img1{
         width: 175px;
     }
+
+    #landingPage-Title{
+        grid-column: span 1;
+    }
 }
 
 @media(max-width: 485px){
     .landingPage{
         grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: 50px auto;
     }
+
+    .landingPage h1{
+        font-size: 24px;
+    }
+
     .landingPage-Card{
         min-height: 600px;
         min-width: 40vw;
-        width: 99vw;
+        width: 90vw;
         border: 1px solid;
         border-color: var(--secondary-color);
         color: var(--secondary-color);
@@ -153,6 +182,7 @@
     }
 
     #img1{
-        width: 220px;
+        width: 200px;
+        height: 450px;
     }
 }

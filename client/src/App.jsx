@@ -9,6 +9,7 @@ import { Login } from './pages/login';
 import { Collections } from './pages/collections';
 import { CollectionTasks } from './pages/collectionsTasks';
 import { Landing } from './pages/landing';
+import { Groups } from './pages/groups';
 
 function App() {
   const [taskData, setTaskData] = useState([]);
@@ -90,6 +91,7 @@ function App() {
             <Route path="/login" element={<Login loginStatus={loginStatus}/>} />
             <Route path="/collections" element={<Collections data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>} />
             <Route path="/collections/:collectionID" element={<CollectionTasks data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+            <Route path="/groups" element={<Groups />}/>
           </Routes>
           </div>
         </div>

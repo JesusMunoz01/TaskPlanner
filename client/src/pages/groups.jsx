@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
-export const Collections = (data) => {
+export const Groups = (data) => {
     const [isUserLogged, ] = useState(data.isLogged)
 
     return <div className="groupsHome">

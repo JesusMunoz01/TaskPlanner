@@ -1,4 +1,5 @@
 import '../css/App.css';
+import { BsList } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
@@ -30,11 +31,15 @@ export const Navbar = ({loginStatus}) => {
     }
 
     return <div className="navActions">
+
+        <label for="" className='expandLinks'><BsList /></label>
+
         <div className="links" id="links">
             <li aria-label='loginLink'>{!cookies.access_token ? (<Link id="Login" onClick={(e) => changeActive(e.target.innerText)} to={"/login"}>
                 <span>Login</span></Link>) : <button onClick={logout}>Logout</button>}</li>
             <li ><Link id="Home" className="navbar active" onClick={(e) => changeActive(e.target.innerText)} to={"/"}><span>Home</span></Link></li>
             <li><Link id="Collections" onClick={(e) => changeActive(e.target.innerText)} to={"/collections"}><span id='collectionLink'>Collections</span></Link></li>
+            <li><Link id="Groups" onClick={(e) => changeActive(e.target.innerText)} to={"/groups"}><span id='groupLink'>Groups</span></Link></li>
         </div>
         <div className='modeToggle'>
             <label className="switch">
