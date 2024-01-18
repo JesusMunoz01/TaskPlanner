@@ -19,6 +19,7 @@
     justify-content: center;
     align-items: flex-start;
     background-color: #282c34;
+    z-index: 10;
   }
 
   .navbar.active{
@@ -34,6 +35,14 @@
   }
 
   .expandLinks{
+    display: none;
+  }
+
+  #menu{
+    display: none;
+  }
+
+  #closeMenu{
     display: none;
   }
 
@@ -445,7 +454,7 @@
     display: flex;
     width: 48px;
     height: 20px;
-    margin-right: 4px;
+    margin-right: 16px;
   }
 
   .slider {
@@ -678,20 +687,78 @@
   }
 
   @media(max-width: 390px) {
+
+    .navbar.active{
+      background-color: transparent;
+      color: white;
+    }
+
+    .navContent{
+      display: flex;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 0;
+      justify-content: center;
+      align-items: start;
+      background-color: rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(30px);
+      transition: .3s ease-in;
+      overflow: hidden;
+    }
+
     .links{
-      display: none;
+      position: absolute;
+      font-size: large;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 4rem;
+      display: flex;
+      flex-direction: column;
+      background-color: transparent;
+    }
+
+    .links li:hover{
+      color: green;
     }
 
     .expandLinks{
-      position: absolute;
+      position: fixed;
       display: block;
       font-size: 1.6rem;
       color: white;
       cursor: pointer;
+      top: 0;
+      right: 0;
+      margin-top: 2px;
+      margin-right: 10px;
     }
 
     .modeToggle{
-      position: absolute;
+      position: fixed;
+      top: 0;
+      left: 0;
+      margin-left: 10px;
+      margin-top: 10px;
+    }
+
+    #menu:checked~.expandLinks #openMenu{
+      display: none;
+    }
+
+    #menu:checked~.expandLinks #closeMenu{
+      display: block;
+      margin-top: 1px;
+      font-size: 32px;
+    }
+
+    #menu:checked~.navContent{
+      display: block;
+      margin-top: 1px;
+      font-size: 32px;
+      height: 15rem;
     }
   }
 
