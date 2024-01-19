@@ -23,10 +23,11 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-style: solid;
-    max-height: 525px;
+    height: 525px;
     min-width: 50vw;
     text-align: center;
     overflow-y: auto;
+    background-color: var(--card-color);
 }
 
 .collections li{
@@ -160,6 +161,7 @@
     min-height: 25vh;
     border-style: solid;
     overflow-y: auto;
+    background-color: var(--card-color);
 }
 
 #collectionEmptyPrompt{

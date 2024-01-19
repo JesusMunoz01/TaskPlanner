@@ -1,10 +1,10 @@
-import "../css/collections.css"
+import "../css/groups.css"
 import { useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
-export const Collections = (data) => {
+export const Groups = (data) => {
     const [isUserLogged, ] = useState(data.isLogged)
 
     return <div className="groupsHome">
@@ -17,7 +17,7 @@ export const Collections = (data) => {
                     <span>Your groups</span>
                     : 
                     // Section for: Logged user without tasks -------------------------------------------
-                    <span>Currently no groups</span> 
+                    <span id="groups-NoGroup">Currently no groups</span> 
                 }
                 
             </div>
@@ -32,9 +32,7 @@ export const Collections = (data) => {
                 </form> */}
             </div>
         </div> :
-        <div>
-            <span>You are currently not logged, to access this feature log in </span>
-        </div>
+            <span id="groups-NotLogged">You are currently not logged, to access this feature log in </span>
         }
     </div>
 }

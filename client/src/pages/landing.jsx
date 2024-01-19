@@ -12,6 +12,7 @@ export const Landing = () => {
     size.addEventListener("change", (e) => {setSize(e.matches)})
     
     return <div className="landingPage">
+        <h1 id="landingPage-Title">Task Planner</h1>
         {pages.map((page, index) => (
             <Link to={page.route} className="landingPage-Link">
                 <div className="landingPage-Card">
