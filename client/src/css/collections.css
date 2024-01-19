@@ -27,6 +27,7 @@
     min-width: 50vw;
     text-align: center;
     overflow-y: auto;
+    background-color: var(--card-color);
 }
 
 .collections li{
@@ -160,6 +161,7 @@
     min-height: 25vh;
     border-style: solid;
     overflow-y: auto;
+    background-color: var(--card-color);
 }
 
 #collectionEmptyPrompt{

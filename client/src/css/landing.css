@@ -41,7 +41,7 @@
     border: 1px solid;
     border-color: var(--secondary-color);
     color: var(--secondary-color);
-    background-color: rgb(103, 104, 100);
+    background-color: var(--card-color);
 }
 
 .landingPage-Card h1{

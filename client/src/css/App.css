@@ -142,7 +142,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     margin-bottom: 2%;
-    
+    background-color: var(--card-color);
   }
 
   .tasks li {
@@ -269,6 +269,7 @@
     min-height: 25vh;
     border-style: solid;
     overflow-y: auto;
+    background-color: var(--card-color);
   }
 
   .addTask form{
@@ -348,6 +349,7 @@
     border-style: ridge;
     border-radius: 10px;
     border-width: 6px;
+    background-color: var(--card-color);
   }
 
   .loginPage-loginPrompt form{
@@ -390,6 +392,7 @@
     border-style: ridge;
     border-radius: 10px;
     border-width: 6px;
+    background-color: var(--card-color);
   }
 
   .loginPage-createAccountPrompt form{
@@ -690,7 +693,7 @@
 
     .navbar.active{
       background-color: transparent;
-      color: white;
+      color: green;
     }
 
     .navContent{

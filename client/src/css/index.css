@@ -21,6 +21,7 @@
   gap: 10px;
   --primary-color: rgba(119, 136, 153, 0.377);
   --secondary-color: rgba(255, 255, 255, 0.87);
+  --card-color: #2c2c2e;
   --links: green;
 }
 
@@ -33,6 +34,7 @@
   background-color: white;
   --primary-color: white;
   --secondary-color: #242424;
+  --card-color: #37393d;
   --links: blue;
 }
 
