@@ -1,4 +1,5 @@
 import "../css/groups.css"
+import { BsFillEnvelopeFill } from "react-icons/bs";
 import { useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
@@ -16,7 +17,14 @@ export const Groups = ({userData, isLogged}) => {
     return <div className="groupsHome">
         {isUserLogged ? 
         <div className="groupsBox">
-        <h1>Groups</h1>
+            <div className="groupsBox-header">
+                <h1>Groups</h1>
+                <div className="groupsBox-headerActions">
+                    <button id="createGroup">Create New</button>
+                    <input type="checkbox" id="groupInvites" style={{display: 'none'}}></input>
+                    <label for="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill />{groups.invites.length}</label>
+                </div>
+            </div>
             <div className="groups">
                 {groups.joined.length !== 0 ? 
                     // Section for: Logged user with tasks -------------------------------------------
