@@ -20,11 +20,11 @@ const UserSchema = new Schema({
                 description: { type: String, required: true},
                 status: { type: String, required: true }
         }],
+    }],
     groups:{
         joined: [{type: String}],
         invites: [{type: String}]
     }
-    }]
 })
 
 const UserModel = mongoose.model("User", UserSchema);

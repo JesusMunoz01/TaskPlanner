@@ -8,8 +8,12 @@ import { useEffect, useState } from 'react';
 export const Navbar = ({loginStatus}) => {
     const [cookies, setCookie, removeCookie] = useCookies(["access_token"]);
     const [activeTab, setActive] = useState(window.sessionStorage.getItem("selectedRoute"));
+    console.log(activeTab)
     
-    useEffect(() => {document.getElementById(activeTab).className = "navbar active";}, [])
+    useEffect(() => {
+        if(document.getElementById(activeTab).className !== "navbar active") 
+            document.getElementById(activeTab).className = "navbar active";
+        }, [])
 
     const logout = () => {
         removeCookie("access_token")

@@ -59,6 +59,7 @@ export const Login = ({loginStatus}) => {
                 setCookies("access_token", data.token, {maxAge: 3600});
                 window.localStorage.setItem("userId", data.userId);
                 loginStatus("Now logged");
+                window.sessionStorage.setItem("selectedRoute", "Home")
                 navigate('/');
             }
         }   catch(error){

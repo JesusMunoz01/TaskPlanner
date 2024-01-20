@@ -14,6 +14,7 @@ import { Groups } from './pages/groups';
 function App() {
   const [taskData, setTaskData] = useState([]);
   const [collectionData, setCollectionData] = useState([]);
+  const [groupData, setgroupData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userLogin, setLogin] = useState(false);
   const [logStatus, setLogStatus] = useState("Not Logged");
@@ -39,19 +40,30 @@ function App() {
       (async () => {
         if(window.localStorage.getItem("userId") !== null){
           try{
+            const taskAbortController = new AbortController();
+            const collectionAbortController = new AbortController();
+            const groupAbortController = new AbortController();
             console.log("user data now")
             setLogin(true)
             setLoading(true);
             console.log("...making fetch call");
             const id = window.localStorage.getItem("userId")
-            const taskResponse = await fetch(`${__API__}/fetchTasks/${id}`);
+            const taskResponse = await fetch(`${__API__}/fetchTasks/${id}`, {signal: taskAbortController.signal});
             const taskData = await taskResponse.json();
-            const collectionResponse = await fetch(`${__API__}/fetchCollection/${id}`);
+            const collectionResponse = await fetch(`${__API__}/fetchCollection/${id}`, {signal: collectionAbortController.signal});
             const collectionData = await collectionResponse.json();
+            const groupResponse = await fetch(`${__API__}/groups/fetchGroups/${id}`, { 
+              signal: groupAbortController.signal, 
+              headers: {
+                'Content-Type': 'application/json', 
+                auth: logExpired.access_token
+              }});
+            const groupData = await groupResponse.json();
             console.log("...updating state");
             setLoading(false);
             setTaskData(taskData);
-            setCollectionData(collectionData)
+            setCollectionData(collectionData);
+            setgroupData(groupData);
             }catch(error){
         
             }
@@ -69,6 +81,13 @@ function App() {
           } catch(error){
 
           }
+
+          return () => {
+            taskAbortController.abort();
+            groupAbortController.abort();
+            collectionAbortController.abort();
+          };
+
       }
     })();
   }, [logStatus, logExpired]);
@@ -91,7 +110,10 @@ function App() {
             <Route path="/login" element={<Login loginStatus={loginStatus}/>} />
             <Route path="/collections" element={<Collections data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>} />
             <Route path="/collections/:collectionID" element={<CollectionTasks data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+            {userLogin ?
+            <Route path="/groups" element={<Groups userData={groupData} isLogged={userLogin}/>}/>:
             <Route path="/groups" element={<Groups />}/>
+            }
           </Routes>
           </div>
         </div>

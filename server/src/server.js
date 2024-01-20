@@ -5,12 +5,13 @@ const mongoose = require('mongoose')
 const userRouter = require('./routes/usersRouter.js')
 const taskRouter = require('./routes/tasksRouter.js')
 const collectionRouter = require('./routes/collectionsRouter.js')
+const groupRouter = require('./routes/groupRouter.js')
 
 const app = express()
 const db = mongoose.connect(process.env.MONGO_DB)
 
 app.use(express.json());
 app.use(cors());
-app.use(userRouter, taskRouter, collectionRouter);
+app.use(userRouter, taskRouter, collectionRouter, groupRouter);
 
 app.listen(process.env.APP_PORT, () => console.log(`Server listening on port ${process.env.APP_PORT}`));
