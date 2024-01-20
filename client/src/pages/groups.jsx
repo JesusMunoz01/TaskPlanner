@@ -1,6 +1,6 @@
 import "../css/groups.css"
 import { BsFillEnvelopeFill } from "react-icons/bs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -9,6 +9,17 @@ export const Groups = ({userData, isLogged}) => {
     const [isUserLogged, ] = useState(isLogged)
     const [groups, setGroups] = useState(userData)
     const [newGroup, setNewGroup] = useState({title: "", desc: ""})
+
+    useEffect(() => {
+            let inviteNum = groups.invites.length;
+            let inviteIcon = document.getElementById("groupInvitesIcon");
+            if(inviteNum){
+                inviteIcon.style.backgroundColor = "rgb(197, 14, 14)";
+            }
+            else{
+                inviteIcon.style.backgroundColor = "transparent";
+            }
+    }, [groups.invites.length])
 
     function sendGroup(){
         e.preventDefault();
@@ -22,7 +33,7 @@ export const Groups = ({userData, isLogged}) => {
                 <div className="groupsBox-headerActions">
                     <button id="createGroup">Create New</button>
                     <input type="checkbox" id="groupInvites" style={{display: 'none'}}></input>
-                    <label for="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill />{groups.invites.length}</label>
+                    <label for="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{groups.invites.length}</span></label>
                 </div>
             </div>
             <div className="groups">

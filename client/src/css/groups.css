@@ -38,6 +38,7 @@
 .groupsBox-headerActions{
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .groupsBox-header h1{
@@ -50,13 +51,24 @@
     border-color: var(--primary-color);
     border-style: none;
     border-radius: 10px;
+    height: 60%;
 }
 
 #groupInvitesIcon{
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    right: 0;
     margin: 0px 10px 0px 10px;
     font-size: 32px;
+    background-color: rgb(197, 14, 14);
+    padding: 0px 1px 0px 3px;
+    height: 60%;
+    border-radius: 10px;
+    height: fit-content;
+}
+
+#groupInvitesNumber{
+    display: flex;
+    justify-content: flex-end;
+    font-size: 24px;
 }
