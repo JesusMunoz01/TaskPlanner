@@ -21,7 +21,8 @@ userRouter.post("/addUser", async (req, res) =>{
             username: newUsername,
             password: hashedPassword,
             tasks: [],
-            collections: []
+            collections: [],
+            groups: []
         });
 
         try{
