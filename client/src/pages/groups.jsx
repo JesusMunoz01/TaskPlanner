@@ -38,10 +38,10 @@ export const Groups = ({userData, isLogged}) => {
             </div>
             <div className="groups">
                 {groups.joined.length !== 0 ? 
-                    // Section for: Logged user with tasks -------------------------------------------
+                    // Section for: Logged user with groups -------------------------------------------
                     <span>Your groups</span>
                     : 
-                    // Section for: Logged user without tasks -------------------------------------------
+                    // Section for: Logged user without groups -------------------------------------------
                     <span id="groups-NoGroup">Currently no groups</span> 
                 }
                 

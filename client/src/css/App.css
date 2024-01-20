@@ -435,13 +435,14 @@
     align-items: center;
     flex-direction: column;
   }
-  
+
   .navbar {
     position: sticky;
     width: 100%;
     height: 40px;
     justify-content: flex-start;
     align-items:center;
+    margin: 0;
   }
 
   .navbar.active{
@@ -520,7 +521,6 @@
     min-height: 90vh;
     justify-content: center;
     text-align: center;
-    margin-top: 1vh;
   }
   
   .tasks {
@@ -728,7 +728,7 @@
     }
 
     .expandLinks{
-      position: fixed;
+      position: absolute;
       display: block;
       font-size: 1.6rem;
       color: white;
@@ -740,7 +740,7 @@
     }
 
     .modeToggle{
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       margin-left: 10px;
