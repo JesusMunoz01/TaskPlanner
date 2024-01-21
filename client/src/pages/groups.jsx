@@ -7,22 +7,33 @@ import { Link } from "react-router-dom";
 
 export const Groups = ({userData, isLogged}) => {
     const [isUserLogged, ] = useState(isLogged)
-    const [groups, setGroups] = useState(userData)
+    const [groups, setGroups] = useState(userData || {})
     const [newGroup, setNewGroup] = useState({title: "", desc: ""})
+    const [invites, setInvites] = useState(groups.invites || [])
 
     useEffect(() => {
-            let inviteNum = groups.invites.length;
-            let inviteIcon = document.getElementById("groupInvitesIcon");
-            if(inviteNum){
-                inviteIcon.style.backgroundColor = "rgb(197, 14, 14)";
+            if(invites.length){
+                let inviteNum = invites.length;
+                let inviteIcon = document.getElementById("groupInvitesIcon");
+                if(inviteNum > 0){
+                    inviteIcon.style.backgroundColor = "rgb(197, 14, 14)";
+                }
+                else{
+                    inviteIcon.style.backgroundColor = "transparent";
+                }
             }
-            else{
-                inviteIcon.style.backgroundColor = "transparent";
-            }
-    }, [groups.invites.length])
 
-    function sendGroup(){
+    }, [invites])
+
+    function sendGroup(e){
         e.preventDefault();
+        
+    }
+
+    function displayAddPrompt(e){
+        e.preventDefault()
+        let addBox = document.getElementById("addGroup")
+        addBox.style.display = "flex";
     }
 
     return <div className="groupsHome">
@@ -31,9 +42,9 @@ export const Groups = ({userData, isLogged}) => {
             <div className="groupsBox-header">
                 <h1>Groups</h1>
                 <div className="groupsBox-headerActions">
-                    <button id="createGroup">Create New</button>
+                    <button id="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
                     <input type="checkbox" id="groupInvites" style={{display: 'none'}}></input>
-                    <label for="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{groups.invites.length}</span></label>
+                    <label for="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{invites.length}</span></label>
                 </div>
             </div>
             <div className="groups">
@@ -46,7 +57,10 @@ export const Groups = ({userData, isLogged}) => {
                 }
                 
             </div>
-            <div className="addGroup">
+        </div> :
+            <span id="groups-NotLogged">You are currently not logged, to access this feature log in </span>
+        }
+            <div className="addGroup" id="addGroup">
                 <h2>Create a group</h2>
                 <form>
                     <label>Collection Title: </label>
@@ -56,8 +70,5 @@ export const Groups = ({userData, isLogged}) => {
                     <button onClick={(e) => sendGroup(e)}>Submit</button>
                 </form>
             </div>
-        </div> :
-            <span id="groups-NotLogged">You are currently not logged, to access this feature log in </span>
-        }
     </div>
 }
