@@ -1,5 +1,6 @@
 import "../css/groups.css"
 import { BsFillEnvelopeFill } from "react-icons/bs";
+import { BsX } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
@@ -31,14 +32,24 @@ export const Groups = ({userData, isLogged}) => {
     }
 
     function displayAddPrompt(e){
-        e.preventDefault()
-        let addBox = document.getElementById("addGroup")
+        e.preventDefault();
+        let addBox = document.getElementById("addGroup");
         addBox.style.display = "flex";
+        document.getElementById("createGroup").disabled = true;
+    }
+
+    function hidePrompt(e){
+        e.preventDefault();
+        let addBox = document.getElementById("addGroup");
+            if(addBox.style.display !== "none" && e.button === 0){
+                addBox.style.display = "none";
+                document.getElementById("createGroup").disabled = false;
+            }
     }
 
     return <div className="groupsHome">
         {isUserLogged ? 
-        <div className="groupsBox">
+        <div className="groupsBox" onMouseDown={hidePrompt}>
             <div className="groupsBox-header">
                 <h1>Groups</h1>
                 <div className="groupsBox-headerActions">
@@ -62,11 +73,13 @@ export const Groups = ({userData, isLogged}) => {
         }
             <div className="addGroup" id="addGroup">
                 <h2>Create a group</h2>
-                <form>
-                    <label>Collection Title: </label>
-                    <input id="groupTitle" value={newGroup.title} onChange={(e) => setGroupTitle(e.target.value)}></input>
-                    <label>Description: </label>
-                    <input id="groupDesc" value={newGroup.desc} onChange={(e) => setGroupDesc(e.target.value)}></input>
+                <input type="checkbox" id="closeCreate" style={{display: 'none'}}></input>
+                <label for="closeCreate" id="closeCreateIcon" onClick={hidePrompt}><BsX /></label>
+                <form className="promptForm">
+                    <label>Group Title: </label>
+                    <input id="groupTitle" value={newGroup.title} onChange={(e) => {setNewGroup((prev) => {return {title: e.target.value, desc: prev.desc}})}}></input>
+                    <label>Group Description: </label>
+                    <input id="groupDesc" value={newGroup.desc} onChange={(e) => {setNewGroup((prev) => {return {title: prev.title, desc: e.target.value}})}}></input>
                     <button onClick={(e) => sendGroup(e)}>Submit</button>
                 </form>
             </div>
