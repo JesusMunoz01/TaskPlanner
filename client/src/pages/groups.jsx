@@ -43,7 +43,7 @@ export const Groups = ({userData, isLogged}) => {
                     })
                 });
             const data = await response.json()
-            console.log(response)
+            console.log(data)
         }
         catch(error){
 
@@ -86,7 +86,12 @@ export const Groups = ({userData, isLogged}) => {
             <div className="groups">
                 {groups.joined.length !== 0 ? 
                     // Section for: Logged user with groups -------------------------------------------
-                    <span>Your groups</span>
+                    groups.joined.map((group) => (
+                        <div className="groupCard">
+                            <h2>{group.groupName}</h2>
+                            <p>{group.groupDescription}</p>
+                        </div>
+                    ))
                     : 
                     // Section for: Logged user without groups -------------------------------------------
                     <span id="groups-NoGroup">Currently no groups</span> 
