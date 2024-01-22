@@ -28,7 +28,7 @@
   
   .navActions{
     display: flex;
-    height: 100vh;
+    height: inherit;
     flex-direction: column;
     width: 100%;
     justify-content: space-between;
@@ -736,6 +736,7 @@
       top: 0;
       right: 0;
       margin-top: 2px;
+      padding: 0;
       margin-right: 10px;
     }
 

@@ -33,6 +33,7 @@ export const Groups = ({userData, isLogged}) => {
 
     function displayAddPrompt(e){
         e.preventDefault();
+        console.log("test")
         let addBox = document.getElementById("addGroup");
         addBox.style.display = "flex";
         document.getElementById("createGroup").disabled = true;
