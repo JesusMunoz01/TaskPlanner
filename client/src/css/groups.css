@@ -5,6 +5,40 @@
     justify-content: center;
 }
 
+.groups{
+    display: grid;
+    grid-template-columns: (3, 1fr);
+    height: 100%;
+}
+
+.checkInvites{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    margin-top: 65px;
+    font-size: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    min-height: 0;
+    height: 0;
+    width: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(30px);
+    transition: .3s ease;
+    overflow-y: auto;
+}
+
+#groupInvites:checked~.checkInvites{
+    width: 15rem;
+    min-height: 10rem;
+    height: fit-content;
+    max-height: 15rem;
+    font-size: 18px;
+}
+
 #groups-NotLogged{
     display: flex;
     align-items: center;
@@ -12,11 +46,13 @@
     font-size: 42px;
 }
 
-#groups-NoGroups{
+#groups-NoGroup{
     display: flex;
+    width: 100%;
     align-items: center;
     align-content: center;
-    font-size: 42px;
+    justify-content: center;
+    font-size: 32px;
 }
 
 .groupsBox{
@@ -54,14 +90,17 @@
     height: 60%;
 }
 
+#createGroup:disabled{
+    background-color: gray;
+}
+
 #groupInvitesIcon{
     display: flex;
     justify-content: flex-end;
     align-items: center;
     margin: 0px 10px 0px 10px;
     font-size: 32px;
-    background-color: rgb(197, 14, 14);
-    padding: 0px 1px 0px 3px;
+    padding: 0px 3px 0px 3px;
     height: 60%;
     border-radius: 10px;
 }
@@ -70,6 +109,57 @@
     display: flex;
     justify-content: flex-end;
     font-size: 24px;
+}
+
+.addGroup{
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    align-self: center;
+    width: 750px;
+    height: 700px;
+    background-color: var(--card-color);
+    border: 1px solid;
+}
+
+.addGroup h2{
+    margin-bottom: 50px;
+    font-size: 30px;
+}
+
+.promptForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 100px;
+}
+
+.promptForm label{
+    font-size: larger;
+}
+
+.promptForm input{
+    font-size: larger;
+    color: var(--secondary-color);
+}
+
+#closeCreateIcon{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 40px;
+}
+
+.promptForm button{
+    margin-top: 10px;
+    height: 40px;
+    width: 100px;
+    border-radius: 10px;
+    background-color: var(--primary-color);
 }
 
 @media(max-width: 900px){
