@@ -11,7 +11,14 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
     const user = req.params.userID;
     let userObj = new ObjectId(user.toString())
     const userDB = await UserModel.findOne({_id: userObj});
-    res.json(userDB.groups)
+    let groups = [];
+    if(userDB.groups.joined.length > 0){
+        groups = userDB.groups.joined.map(async (group) => {
+            let data = await GroupModel.findOne({_id: group})
+            return data;
+        })
+    }
+    res.json({invites: userDB.groups.invites, joined: await Promise.all(groups)})
 })
 
 groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
@@ -27,14 +34,17 @@ groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
         });
 
         try{
-            await newGroup.save();
+            const creation = await newGroup.save();
+            userDB.groups.joined.push(creation._id.toString())
+            await userDB.save()
             res.json({message: "Group successfully created"})
         }
         catch(error){
             res.send({status: error, message:"A username and password is required"})
         }
     }
-    res.send("Couldnt perform action")
+    else
+        res.send("Couldnt perform action")
 })
 
 module.exports = groupRouter

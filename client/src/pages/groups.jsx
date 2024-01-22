@@ -12,6 +12,7 @@ export const Groups = ({userData, isLogged}) => {
     const [newGroup, setNewGroup] = useState({title: "", desc: ""})
     const [invites, setInvites] = useState(groups.invites || [])
     const [auth,] = useCookies(["access_token"])
+    console.log(userData)
 
     useEffect(() => {
             if(invites.length){
