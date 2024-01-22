@@ -55,8 +55,12 @@ export const Groups = ({userData, isLogged}) => {
                 <div className="groupsBox-headerActions">
                     <button id="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
                     <input type="checkbox" id="groupInvites" style={{display: 'none'}}></input>
-                    <label for="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{invites.length}</span></label>
+                    <label htmlFor="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{invites.length}</span></label>
+                    <div className="checkInvites">
+                        <span id="groups-NoInvites">No Invites</span>
+                    </div>
                 </div>
+
             </div>
             <div className="groups">
                 {groups.joined.length !== 0 ? 
@@ -66,11 +70,11 @@ export const Groups = ({userData, isLogged}) => {
                     // Section for: Logged user without groups -------------------------------------------
                     <span id="groups-NoGroup">Currently no groups</span> 
                 }
-                
             </div>
         </div> :
             <span id="groups-NotLogged">You are currently not logged, to access this feature log in </span>
         }
+            
             <div className="addGroup" id="addGroup">
                 <h2>Create a group</h2>
                 <input type="checkbox" id="closeCreate" style={{display: 'none'}}></input>
