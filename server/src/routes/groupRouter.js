@@ -14,13 +14,27 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
     res.json(userDB.groups)
 })
 
-// groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
-//     const user = req.body.userID;
-//     const userDB = UserModel.findOne(user);
-//     console.log(userDB)
-//     if(userDB.groups.joined){
+groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
+    const user = req.body.userID;
+    const userDB = await UserModel.findOne({_id: user});
+    if(userDB){
+        const newGroup = new GroupModel({
+            groupName: req.body.title,
+            groupDescription: req.body.desc,
+            groupAdmin: [`${user}`],
+            groupMembers: [],
+            collections: [],
+        });
 
-//     }
-// })
+        try{
+            await newGroup.save();
+            res.json({message: "Group successfully created"})
+        }
+        catch(error){
+            res.send({status: error, message:"A username and password is required"})
+        }
+    }
+    res.send("Couldnt perform action")
+})
 
 module.exports = groupRouter

@@ -11,6 +11,7 @@ export const Groups = ({userData, isLogged}) => {
     const [groups, setGroups] = useState(userData || {})
     const [newGroup, setNewGroup] = useState({title: "", desc: ""})
     const [invites, setInvites] = useState(groups.invites || [])
+    const [auth,] = useCookies(["access_token"])
 
     useEffect(() => {
             if(invites.length){
@@ -26,8 +27,26 @@ export const Groups = ({userData, isLogged}) => {
 
     }, [invites])
 
-    function sendGroup(e){
+    async function sendGroup(e){
         e.preventDefault();
+        try{
+            const userID = localStorage.getItem("userId");
+            const response = await fetch(`${__API__}/groups/createGroup`, {
+                method: "POST", headers: {
+                    'Content-Type': 'application/json',
+                    auth: auth.access_token},
+                body: JSON.stringify({
+                    userID,
+                    title: newGroup.title,
+                    desc: newGroup.desc
+                    })
+                });
+            const data = await response.json()
+            console.log(response)
+        }
+        catch(error){
+
+        }
         
     }
 
