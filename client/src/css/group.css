@@ -100,3 +100,9 @@
     height: 93%;
     font-size: 18px;
 }
+
+#noGroupCollections{
+    display: flex;
+    align-items: center;
+    font-size: 32px;
+}

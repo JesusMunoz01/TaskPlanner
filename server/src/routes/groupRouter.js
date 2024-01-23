@@ -51,4 +51,30 @@ groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
         res.send("Couldnt perform action")
 })
 
+groupRouter.post("/groups/:groupID/invite", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const user = req.body.userID;
+    const invitee = req.body.invUsername;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    //console.log(groupDB)
+    if(groupDB && groupDB.groupAdmin.find(admin => admin === user)){
+        try{
+            const inviteeDB = await UserModel.findOne({username: invitee})
+            if(inviteeDB._id == user)
+                throw "Unable to invite yourself"
+
+            //console.log(inviteeDB)
+            if(inviteeDB !== null){
+                console.log('test')
+                res.send({data: "test"})
+            }
+        }
+        catch(error){
+            res.send({status: error, message:"User not found"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
+})
+
 module.exports = groupRouter

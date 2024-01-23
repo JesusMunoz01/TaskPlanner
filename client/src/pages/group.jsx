@@ -4,13 +4,15 @@ import { useLocation, useParams } from "react-router-dom"
 import { Header } from "../components/header";
 import { SubmitForm } from "../components/submitForm";
 import { useState } from "react";
+import { useCookies } from "react-cookie";
 
 export const Group = () => {
+    const [verification, ] = useCookies(["access_token"]);
     const location = useLocation()
     const { from } = location.state
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
-    // console.log(from)
+     console.log(from)
     // console.log(groupID)
 
     function hidePrompt(e, name){
@@ -35,6 +37,29 @@ export const Group = () => {
                 addBox.style.display = "none";
         }
 
+    async function sendInvite(){
+        try{
+            const userID = localStorage.getItem("userId");
+            const response = await fetch(`${__API__}/groups/${from.id}/invite`, {
+                method: "POST", 
+                headers: {
+                    "Content-Type": "application/json",
+                    auth: verification.access_token
+                },
+                body: JSON.stringify({
+                    userID,
+                    invUsername
+                })
+            })
+
+            const data = await response.json();
+            console.log(data)
+
+        }catch(error){
+
+        }
+    }
+
     return <div className="group" id="group">
         <div className="header" onMouseDown={(e) => hidePrompt(e, "Collection")}>
         <Header title={`${from.groupName}`} section="Collection" backArrow={"/groups"}
@@ -52,12 +77,15 @@ export const Group = () => {
             <div className="inviteUser" id="inviteUser" style={{display: "none"}}>
                 <label>Username:</label>
                 <input value={invUsername} onChange={(e) => setUsername(e.target.value)}></input>
-                <button id="inviteBtn" onClick={"test"}>Invite</button>
+                <button id="inviteBtn" onClick={sendInvite}>Invite</button>
             </div>
         </div>
         <div className="groupContent">
             <div className="groupContent" onMouseDown={(e) => hidePrompt(e, "Collection")}>
-                <span>Content</span>
+                {from.collections.length !== 0 ?
+                null:
+                <span id="noGroupCollections">No Collections</span>
+                }
             </div>
             <SubmitForm hide={hidePrompt} title={"Create a Collection"} 
                 labelData={{usePremade: true, title: "Collection", lower: "collection", action: "createCollection"}}/>
