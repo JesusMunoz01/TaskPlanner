@@ -12,7 +12,7 @@ export const Groups = ({userData, isLogged}) => {
     const [newGroup, setNewGroup] = useState({title: "", desc: ""})
     const [invites, setInvites] = useState(groups.invites || [])
     const [auth,] = useCookies(["access_token"])
-    console.log(userData)
+    //console.log(userData)
 
     useEffect(() => {
             if(invites.length){
@@ -53,10 +53,11 @@ export const Groups = ({userData, isLogged}) => {
 
     function displayAddPrompt(e){
         e.preventDefault();
-        console.log("test")
         let addBox = document.getElementById("addGroup");
         addBox.style.display = "flex";
+        addBox.style.backfaceVisibility = "hidden";
         document.getElementById("createGroup").disabled = true;
+        document.getElementById("groups").style.filter = "blur(20px)";
     }
 
     function hidePrompt(e){
@@ -65,6 +66,7 @@ export const Groups = ({userData, isLogged}) => {
             if(addBox.style.display !== "none" && e.button === 0){
                 addBox.style.display = "none";
                 document.getElementById("createGroup").disabled = false;
+                document.getElementById("groups").style.filter = "none";
             }
     }
 
@@ -83,7 +85,7 @@ export const Groups = ({userData, isLogged}) => {
                 </div>
 
             </div>
-            <div className="groups">
+            <div className="groups" id="groups">
                 {groups.joined.length !== 0 ? 
                     // Section for: Logged user with groups -------------------------------------------
                     groups.joined.map((group) => (
@@ -91,6 +93,7 @@ export const Groups = ({userData, isLogged}) => {
                         <div className="groupCard">
                                 <h2>{group.groupName}</h2>
                                 <p>{group.groupDescription}</p>
+                                <p>Status: {group.permissions}</p>
                         </div>
                         </Link>
                     ))
