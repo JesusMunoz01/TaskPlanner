@@ -12,30 +12,34 @@ export const Group = () => {
     const { from } = location.state
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
-     console.log(from)
-    // console.log(groupID)
+    const [collections, setCollections] = useState(from.collections)
 
-    function hidePrompt(e, name){
-        let addBox = document.getElementById(`addGroup${name}`);
-        if(e === undefined){
-            addBox.style.display = "none";
-            document.getElementById("createGroup").disabled = false;
-            document.getElementById("group").style.filter = "none";
-        }
-        if(addBox.style.display !== "none" && e.button === 0){
-            addBox.style.display = "none";
-            document.getElementById("createGroup").disabled = false;
-            document.getElementById("group").style.filter = "none";
-        }
-    }
-
-    function showPrompt(){
-        let addBox = document.getElementById(`inviteUser`);
-            if(addBox.style.display === "none")
-                setTimeout(() => {addBox.style.display = "flex"}, "200")
-            else
+    async function sendGroupCollection(e){
+        e.preventDefault();
+        try{
+            const userID = localStorage.getItem("userId");
+            const response = await fetch(`${__API__}/groups/groupID/createCollection`, {
+                method: "POST", headers: {
+                    'Content-Type': 'application/json',
+                    auth: auth.access_token},
+                body: JSON.stringify({
+                    userID,
+                    title: newGroup.title,
+                    desc: newGroup.desc
+                    })
+                });
+            const data = await response.json()
+            console.log(data)
+            let addBox = document.getElementById("addGroupCollection");
                 addBox.style.display = "none";
+                document.getElementById("createGroup").disabled = false;
+                document.getElementById("groups").style.filter = "none";
         }
+        catch(error){
+
+        }
+        
+    }
 
     async function sendInvite(){
         try{
@@ -60,6 +64,30 @@ export const Group = () => {
         }
     }
 
+    function hidePrompt(e, name){
+        let addBox = document.getElementById(`addGroup${name}`);
+        if(e === undefined){
+            addBox.style.display = "none";
+            document.getElementById("createGroup").disabled = false;
+            document.getElementById("group").style.filter = "none";
+        }
+        if(addBox.style.display !== "none" && e.button === 0){
+            addBox.style.display = "none";
+            document.getElementById("createGroup").disabled = false;
+            document.getElementById("group").style.filter = "none";
+        }
+    }
+
+    function showPrompt(){
+        let addBox = document.getElementById(`inviteUser`);
+            if(addBox.style.display === "none")
+                setTimeout(() => {addBox.style.display = "flex"}, "200")
+            else
+                addBox.style.display = "none";
+        }
+
+
+
     return <div className="group" id="group">
         <div className="header" onMouseDown={(e) => hidePrompt(e, "Collection")}>
         <Header title={`${from.groupName}`} section="Collection" backArrow={"/groups"}
@@ -82,8 +110,13 @@ export const Group = () => {
         </div>
         <div className="groupContent">
             <div className="groupContent" onMouseDown={(e) => hidePrompt(e, "Collection")}>
-                {from.collections.length !== 0 ?
-                null:
+                {collections.length !== 0 ?
+                    collections.map((collection) => (
+                        <div className="groupCollections">
+                            <h1>{collection.title}</h1>
+                        </div>
+                    ))
+                :
                 <span id="noGroupCollections">No Collections</span>
                 }
             </div>

@@ -13,14 +13,15 @@ export const Groups = ({userData, isLogged}) => {
     const [auth,] = useCookies(["access_token"])
 
     useEffect(() => {
-        let inviteIcon = document.getElementById("groupInvitesIcon");
+        if(groups.invites){
+            let inviteIcon = document.getElementById("groupInvitesIcon");
 
             if(groups.invites.length)
                 inviteIcon.style.backgroundColor = "rgb(197, 14, 14)";
             else
                 inviteIcon.style.backgroundColor = "transparent";
-
-    }, [groups.invites.length])
+        }
+    }, [invites.length])
 
     async function sendGroup(e){
         e.preventDefault();
@@ -80,6 +81,7 @@ export const Groups = ({userData, isLogged}) => {
                 }
             })
             setInvites(data.invites);
+            setNewGroup({title: "", desc: ""})
 
         }catch(error){
 
@@ -115,7 +117,7 @@ export const Groups = ({userData, isLogged}) => {
                 <div className="groupsBox-headerActions">
                     <button id="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
                     <input type="checkbox" id="groupInvites" style={{display: 'none'}}></input>
-                    <label htmlFor="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{groups.invites.length}</span></label>
+                    <label htmlFor="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{invites.length}</span></label>
                     <div className="checkInvites">
                         {groups.invites.length !== 0 ?
                             groups.invites.map((invite) => (
@@ -138,7 +140,7 @@ export const Groups = ({userData, isLogged}) => {
                 {groups.joined.length !== 0 ? 
                     // Section for: Logged user with groups -------------------------------------------
                     groups.joined.map((group) => (
-                        <Link key={group.id} to={`/groups/${1}`} state={{from: group}}>
+                        <Link key={group.id} to={`/groups/${group.id}`} state={{from: group}}>
                         <div className="groupCard">
                                 <h2>{group.groupName}</h2>
                                 <p>{group.groupDescription}</p>
