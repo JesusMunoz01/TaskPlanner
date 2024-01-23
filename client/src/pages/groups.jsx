@@ -37,7 +37,17 @@ export const Groups = ({userData, isLogged}) => {
                     })
                 });
             const data = await response.json()
-            console.log(data)
+            setGroups((prev) => {
+                return {
+                    invites: prev.invites,
+                    joined: [...prev.joined, data]
+                }
+            })
+
+            let addBox = document.getElementById("addGroup");
+                addBox.style.display = "none";
+                document.getElementById("createGroup").disabled = false;
+                document.getElementById("groups").style.filter = "none";
         }
         catch(error){
 
@@ -62,7 +72,7 @@ export const Groups = ({userData, isLogged}) => {
             })
 
             const data = await response.json();
-            console.log(data)
+            //if(data.id)
             setGroups((prev) => {
                 return {
                     invites: data.invites,
@@ -110,7 +120,7 @@ export const Groups = ({userData, isLogged}) => {
                         {groups.invites.length !== 0 ?
                             groups.invites.map((invite) => (
                                 <div className="currentInvites">
-                                    <p>{invite}</p>
+                                    <p>Group: {invite}</p>
                                     <div className="inviteActions">
                                         <button id="acceptInvite" onClick={() => inviteAction("accept", invite)}>Accept</button>
                                         <button id="denyInvite" onClick={() => inviteAction("deny", invite)}>Deny</button>
@@ -148,7 +158,7 @@ export const Groups = ({userData, isLogged}) => {
             <div className="addGroup" id="addGroup">
                 <h2>Create a group</h2>
                 <input type="checkbox" id="closeCreate" style={{display: 'none'}}></input>
-                <label for="closeCreate" id="closeCreateIcon" onClick={hidePrompt}><BsX /></label>
+                <label htmlFor="closeCreate" id="closeCreateIcon" onClick={hidePrompt}><BsX /></label>
                 <form className="promptForm">
                     <label>Group Title: </label>
                     <input id="groupTitle" value={newGroup.title} onChange={(e) => {setNewGroup((prev) => {return {title: e.target.value, desc: prev.desc}})}}></input>

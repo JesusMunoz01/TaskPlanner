@@ -41,7 +41,8 @@ groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
             const creation = await newGroup.save();
             userDB.groups.joined.push(creation._id.toString())
             await userDB.save()
-            res.json({message: "Group successfully created"})
+            res.json({groupName: creation.groupName, groupDescription: creation.groupDescription, 
+                collections: creation.collections, id: creation._id, permissions: "Admin"})
         }
         catch(error){
             res.send({status: error, message:"A username and password is required"})
@@ -63,6 +64,8 @@ groupRouter.post("/groups/:groupID/invite", verification, async (req, res) =>{
                 throw "Unable to invite yourself"
             if(inviteeDB === null)
                 throw "User not found"
+            if(inviteeDB.groups.invites.find(invite => invite === groupID))
+                throw "Already invited this user"
 
             inviteeDB.groups.invites.push(groupID)
             await inviteeDB.save()

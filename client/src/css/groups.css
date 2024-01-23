@@ -43,7 +43,7 @@
 
 .checkInvites{
     display: flex;
-    gap: 10px;
+    gap: 30px;
     flex-direction: column;
     margin-top: 66px;
     font-size: 0;
