@@ -8,7 +8,7 @@ const GroupSchema = new Schema({
     groupDescription: {type: String, required: true},
     groupAdmin: [{type: String, required: true}],
     groupMembers: [{type: String, required: true}],
-    collections: {
+    collections: [{
         collectionTitle: {type: String, required: true},
         collectionDescription: {type: String, required: true},
         collectionStatus:{type: String, required: true},
@@ -17,7 +17,7 @@ const GroupSchema = new Schema({
             description: { type: String, required: true},
             status: { type: String, required: true }
         }]
-    }
+    }]
 })
 
 const GroupModel = mongoose.model("Group", GroupSchema);

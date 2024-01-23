@@ -11,16 +11,44 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
     const user = req.params.userID;
     let userObj = new ObjectId(user.toString())
     const userDB = await UserModel.findOne({_id: userObj});
-    res.json(userDB.groups)
+    let groups = [];
+    if(userDB.groups.joined.length > 0){
+        groups = userDB.groups.joined.map(async (group) => {
+            let data = await GroupModel.findOne({_id: group})
+            let userPerm = "Member"
+            if(data.groupAdmin.find((item) => item === user))
+                userPerm = "Admin"
+            return {groupName: data.groupName, groupDescription: data.groupDescription, 
+                collections: data.collections, id: data._id, permissions: userPerm};
+        })
+    }
+    res.json({invites: userDB.groups.invites, joined: await Promise.all(groups)})
 })
 
-// groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
-//     const user = req.body.userID;
-//     const userDB = UserModel.findOne(user);
-//     console.log(userDB)
-//     if(userDB.groups.joined){
+groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
+    const user = req.body.userID;
+    const userDB = await UserModel.findOne({_id: user});
+    if(userDB){
+        const newGroup = new GroupModel({
+            groupName: req.body.title,
+            groupDescription: req.body.desc,
+            groupAdmin: [`${user}`],
+            groupMembers: [],
+            collections: [],
+        });
 
-//     }
-// })
+        try{
+            const creation = await newGroup.save();
+            userDB.groups.joined.push(creation._id.toString())
+            await userDB.save()
+            res.json({message: "Group successfully created"})
+        }
+        catch(error){
+            res.send({status: error, message:"A username and password is required"})
+        }
+    }
+    else
+        res.send("Couldnt perform action")
+})
 
 module.exports = groupRouter
