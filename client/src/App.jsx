@@ -10,6 +10,7 @@ import { Collections } from './pages/collections';
 import { CollectionTasks } from './pages/collectionsTasks';
 import { Landing } from './pages/landing';
 import { Groups } from './pages/groups';
+import { Group } from './pages/group';
 
 function App() {
   const [taskData, setTaskData] = useState([]);
@@ -34,6 +35,8 @@ function App() {
   }
 
   useEffect(() => {
+    if(!window.sessionStorage.getItem("selectedRoute"))
+      window.sessionStorage.setItem("selectedRoute", "Home")
     if(!logExpired.access_token){
       window.localStorage.removeItem("userId");}
     console.log("...calling effect");
@@ -114,6 +117,7 @@ function App() {
             <Route path="/groups" element={<Groups userData={groupData} isLogged={userLogin}/>}/>:
             <Route path="/groups" element={<Groups />}/>
             }
+            <Route path="/groups/:groupID" element={<Group />}/>
           </Routes>
           </div>
         </div>

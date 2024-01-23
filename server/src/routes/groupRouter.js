@@ -15,7 +15,8 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
     if(userDB.groups.joined.length > 0){
         groups = userDB.groups.joined.map(async (group) => {
             let data = await GroupModel.findOne({_id: group})
-            return {groupName: data.groupName, groupDescription: data.groupDescription, collections: data.collectios};
+            return {groupName: data.groupName, groupDescription: data.groupDescription, 
+                collections: data.collections, id: data._id};
         })
     }
     res.json({invites: userDB.groups.invites, joined: await Promise.all(groups)})
