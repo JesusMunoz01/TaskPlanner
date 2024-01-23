@@ -7,29 +7,6 @@ import { useCookies } from 'react-cookie';
 
 export const Header = ({title, newAction}) => {
 
-    async function sendGroup(e){
-        e.preventDefault();
-        try{
-            const userID = localStorage.getItem("userId");
-            const response = await fetch(`${__API__}/groups/createGroup`, {
-                method: "POST", headers: {
-                    'Content-Type': 'application/json',
-                    auth: auth.access_token},
-                body: JSON.stringify({
-                    userID,
-                    title: newGroup.title,
-                    desc: newGroup.desc
-                    })
-                });
-            const data = await response.json()
-            console.log(data)
-        }
-        catch(error){
-
-        }
-        
-    }
-
     function displayAddPrompt(e){
         e.preventDefault();
         console.log("test")
@@ -38,17 +15,7 @@ export const Header = ({title, newAction}) => {
         document.getElementById("createGroup").disabled = true;
     }
 
-    function hidePrompt(e){
-        e.preventDefault();
-        let addBox = document.getElementById("addGroup");
-            if(addBox.style.display !== "none" && e.button === 0){
-                addBox.style.display = "none";
-                document.getElementById("createGroup").disabled = false;
-            }
-    }
-
-    return <div className="groupsHome">
-        <div className="groupsBox" onMouseDown={hidePrompt}>
+    return <div>
             <div className="groupsBox-header">
                 <h1>{title}</h1>
                 <div className="groupsBox-headerActions">
@@ -56,6 +23,5 @@ export const Header = ({title, newAction}) => {
                     {newAction ? newAction : null}
                 </div>
             </div>
-        </div>
     </div>
 }
