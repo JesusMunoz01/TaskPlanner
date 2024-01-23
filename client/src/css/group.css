@@ -14,6 +14,21 @@
     width: 100%;
 }
 
+.groupsBox-headerLeft{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#goBack{
+    border-style: none;
+    background-color: transparent;
+    font-size: 32px;
+    margin-left: 5px;
+    margin-top: 10px;
+}
+
 #delGroup{
     background-color: red;
     border-color: var(--primary-color);

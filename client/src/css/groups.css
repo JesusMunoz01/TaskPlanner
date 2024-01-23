@@ -113,7 +113,7 @@
     color: white;
 }
 
-#createGroup, #delGroup{
+#createGroup{
     background-color: green;
     border-color: var(--primary-color);
     border-style: none;
@@ -156,7 +156,7 @@
     border: 1px solid;
 }
 
-.addGroup, .addGroupCollection h2{
+.addGroup h2, .addGroupCollection h2{
     margin-bottom: 50px;
     font-size: 30px;
 }
@@ -170,11 +170,11 @@
     margin-bottom: 100px;
 }
 
-.promptForm, .promptFormGroupCollection label{
+.promptForm label, .promptFormGroupCollection label{
     font-size: larger;
 }
 
-.promptForm, .promptFormGroupCollection input{
+.promptForm input, .promptFormGroupCollection input{
     font-size: larger;
     color: var(--secondary-color);
 }
@@ -186,7 +186,7 @@
     font-size: 40px;
 }
 
-.promptForm, .promptFormGroupCollection button{
+.promptForm button, .promptFormGroupCollection button{
     margin-top: 10px;
     height: 40px;
     width: 100px;

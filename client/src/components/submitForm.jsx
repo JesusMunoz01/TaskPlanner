@@ -45,6 +45,9 @@ export const SubmitForm = ({hide, title, labelData, children}) => {
                 <button onClick={(e) => sendGroup(e)}>Submit</button>
             </form> : null
             }
-            {children ? children : null}
+            {children ?
+            children 
+            : 
+            null}
         </div>
 }
