@@ -45,9 +45,9 @@
     display: flex;
     gap: 10px;
     flex-direction: column;
-    margin-top: 65px;
+    margin-top: 66px;
     font-size: 0;
-    position: absolute;
+    position: fixed;
     right: 0;
     top: 0;
     min-height: 0;
@@ -61,8 +61,35 @@
     overflow-y: auto;
 }
 
+.currentInvites{
+    display: flex;
+    height: 100%;
+    font-size: larger;
+    flex-direction: column;
+}
+
+.currentInvites p{
+    margin: 0;
+}
+
+.inviteActions button{
+    font-size: 20px;
+    border-radius: 10px;
+    width: 100px;
+}
+
+#acceptInvite{
+    background-color: green;
+    margin-right: 5px;
+}
+
+#denyInvite{
+    background-color: red;
+    margin-left: 5px;
+}
+
 #groupInvites:checked~.checkInvites{
-    width: 15rem;
+    width: 30rem;
     min-height: 10rem;
     height: fit-content;
     max-height: 15rem;
@@ -78,7 +105,8 @@
 
 #groups-NoGroup{
     display: flex;
-    width: 100%;
+    width: 90vw;
+    height: 90vh;
     align-items: center;
     align-content: center;
     justify-content: center;

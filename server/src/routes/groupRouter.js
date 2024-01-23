@@ -56,21 +56,20 @@ groupRouter.post("/groups/:groupID/invite", verification, async (req, res) =>{
     const user = req.body.userID;
     const invitee = req.body.invUsername;
     const groupDB = await GroupModel.findOne({_id: groupID});
-    //console.log(groupDB)
     if(groupDB && groupDB.groupAdmin.find(admin => admin === user)){
         try{
             const inviteeDB = await UserModel.findOne({username: invitee})
             if(inviteeDB._id == user)
                 throw "Unable to invite yourself"
+            if(inviteeDB === null)
+                throw "User not found"
 
-            //console.log(inviteeDB)
-            if(inviteeDB !== null){
-                console.log('test')
-                res.send({data: "test"})
-            }
+            inviteeDB.groups.invites.push(groupID)
+            await inviteeDB.save()
+            res.send({status: `Succesfully invited ${invitee}`})
         }
         catch(error){
-            res.send({status: error, message:"User not found"})
+            res.send({status: error, message:"Unable to perform action"})
         }
     }
     else
