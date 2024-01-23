@@ -3,7 +3,6 @@ import { BsFillEnvelopeFill } from "react-icons/bs";
 import { BsX } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
-import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
 export const Groups = ({userData, isLogged}) => {
@@ -12,21 +11,16 @@ export const Groups = ({userData, isLogged}) => {
     const [newGroup, setNewGroup] = useState({title: "", desc: ""})
     const [invites, setInvites] = useState(groups.invites || [])
     const [auth,] = useCookies(["access_token"])
-    console.log(userData)
 
     useEffect(() => {
-            if(invites.length){
-                let inviteNum = invites.length;
-                let inviteIcon = document.getElementById("groupInvitesIcon");
-                if(inviteNum > 0){
-                    inviteIcon.style.backgroundColor = "rgb(197, 14, 14)";
-                }
-                else{
-                    inviteIcon.style.backgroundColor = "transparent";
-                }
-            }
+        let inviteIcon = document.getElementById("groupInvitesIcon");
 
-    }, [invites])
+            if(groups.invites.length)
+                inviteIcon.style.backgroundColor = "rgb(197, 14, 14)";
+            else
+                inviteIcon.style.backgroundColor = "transparent";
+
+    }, [groups.invites.length])
 
     async function sendGroup(e){
         e.preventDefault();
@@ -52,13 +46,14 @@ export const Groups = ({userData, isLogged}) => {
     }
 
     async function inviteAction(action, id){
+        const controller = new AbortController()
         try{
             const userID = localStorage.getItem("userId");
-            const response = await fetch(`${__API__}/groups/${id}/accept`, {
+            const response = await fetch(`${__API__}/groups/${id}/invite/action`, { signal: controller.signal,
                 method: "POST", 
                 headers: {
                     "Content-Type": "application/json",
-                    auth: verification.access_token
+                    auth: auth.access_token
                 },
                 body: JSON.stringify({
                     userID,
@@ -68,10 +63,19 @@ export const Groups = ({userData, isLogged}) => {
 
             const data = await response.json();
             console.log(data)
+            setGroups((prev) => {
+                return {
+                    invites: data.invites,
+                    joined: [...prev.joined, data]
+                }
+            })
+            setInvites(data.invites);
 
         }catch(error){
 
         }
+
+        return controller.abort();
     }
 
     function displayAddPrompt(e){
@@ -101,15 +105,15 @@ export const Groups = ({userData, isLogged}) => {
                 <div className="groupsBox-headerActions">
                     <button id="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
                     <input type="checkbox" id="groupInvites" style={{display: 'none'}}></input>
-                    <label htmlFor="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{invites.length}</span></label>
+                    <label htmlFor="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{groups.invites.length}</span></label>
                     <div className="checkInvites">
-                        {userData.invites !== 0 ?
-                            userData.invites.map((invite) => (
+                        {groups.invites.length !== 0 ?
+                            groups.invites.map((invite) => (
                                 <div className="currentInvites">
                                     <p>{invite}</p>
                                     <div className="inviteActions">
-                                        <button id="acceptInvite" onClick={inviteAction("accept", invite)}>Accept</button>
-                                        <button id="denyInvite" onClick={inviteAction("deny", invite)}>Deny</button>
+                                        <button id="acceptInvite" onClick={() => inviteAction("accept", invite)}>Accept</button>
+                                        <button id="denyInvite" onClick={() => inviteAction("deny", invite)}>Deny</button>
                                     </div>
                                 </div>
                             ))

@@ -76,4 +76,39 @@ groupRouter.post("/groups/:groupID/invite", verification, async (req, res) =>{
         res.send("Not enough permissions")
 })
 
+groupRouter.post("/groups/:groupID/invite/action", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const user = req.body.userID;
+    const action = req.body.action;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    if(groupDB){
+        try{
+            const inviteeDB = await UserModel.findOne({_id: user})
+            if(inviteeDB.groups.joined.find(group => group === groupID))
+                throw "Already joined group"
+            if(action === "accept"){
+                groupDB.groupMembers.push(user);
+                await groupDB.save();
+                inviteeDB.groups.joined.push(groupID);
+                const updatedInvites = inviteeDB.groups.invites.filter((invite) => invite !== groupID);
+                inviteeDB.groups.invites = updatedInvites;
+                await inviteeDB.save();
+                res.send({groupName: groupDB.groupName, groupDescription: groupDB.groupDescription, 
+                    collections: groupDB.collections, id: groupDB._id, permissions: "Member", invites: updatedInvites})
+            }
+            else{
+                const updatedInvites = inviteeDB.groups.invites.filter((invite) => invite !== groupID)
+                inviteeDB.groups.invites = updatedInvites;
+                await inviteeDB.save();
+                res.send({message: "Successfully denied invite", invites: updatedInvites})
+            }
+        }
+        catch(error){
+            res.send({status: error, message:"Unable to perform action"})
+        }
+    }
+    else
+        res.send({message: "Group no longer exists"})
+})
+
 module.exports = groupRouter
