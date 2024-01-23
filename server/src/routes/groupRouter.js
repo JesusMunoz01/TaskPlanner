@@ -3,8 +3,11 @@ const express = require('express')
 const GroupModel = require('../models/groups.js');
 const verification = require('./authenticate.js');
 const UserModel = require('../models/users.js');
+const CollectionsModel = require('../models/collections.js');
 
 const groupRouter = express.Router()
+
+// Get Routes --------------------------------------------------
 
 groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>{
     let ObjectId = require('mongodb').ObjectId; 
@@ -24,6 +27,8 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
     }
     res.json({invites: userDB.groups.invites, joined: await Promise.all(groups)})
 })
+
+// Create Routes --------------------------------------------------
 
 groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
     const user = req.body.userID;
@@ -47,6 +52,37 @@ groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
         catch(error){
             res.send({status: error, message:"A username and password is required"})
         }
+    }
+    else
+        res.send("Couldnt perform action")
+})
+
+groupRouter.post("/groups/:groupID/createCollection", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const user = req.body.userID;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
+        const newCollection = new CollectionsModel({
+            collectionTitle: req.body.title ,
+            collectionDescription: req.body.desc ,
+            collectionStatus: "Incomplete",
+            tasks: []
+        });
+        console.log(newCollection)
+        console.log("++++++++++++++++++++")
+        console.log(groupDB)
+        groupDB.collections.push(newCollection)
+        res.send(groupDB.collections)
+        // try{
+        //     const creation = await newGroup.save();
+        //     userDB.groups.joined.push(creation._id.toString())
+        //     await userDB.save()
+        //     res.json({groupName: creation.groupName, groupDescription: creation.groupDescription, 
+        //         collections: creation.collections, id: creation._id, permissions: "Admin"})
+        // }
+        // catch(error){
+        //     res.send({status: error, message:"A username and password is required"})
+        // }
     }
     else
         res.send("Couldnt perform action")

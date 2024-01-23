@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 
 
-export const SubmitForm = ({hide, title, labelData, children}) => {
+export const SubmitForm = ({hide, title, labelData, children, getData}) => {
     const [newGroup, setNewGroup] = useState({title: "", desc: ""})
     const [auth,] = useCookies(["access_token"])
 
 
-    async function sendGroup(e, action){
+    async function sendData(e){
         e.preventDefault();
         try{
             const userID = localStorage.getItem("userId");
@@ -24,7 +24,7 @@ export const SubmitForm = ({hide, title, labelData, children}) => {
                     })
                 });
             const data = await response.json()
-            console.log(data)
+            getData(data)
         }
         catch(error){
 
@@ -42,7 +42,7 @@ export const SubmitForm = ({hide, title, labelData, children}) => {
                 <input id={`${labelData.title}Title`} value={newGroup.title} onChange={(e) => {setNewGroup((prev) => {return {title: e.target.value, desc: prev.desc}})}}></input>
                 <label>{labelData.title} Description: </label>
                 <input id={`${labelData.title}Desc`} value={newGroup.desc} onChange={(e) => {setNewGroup((prev) => {return {title: prev.title, desc: e.target.value}})}}></input>
-                <button onClick={(e) => sendGroup(e)}>Submit</button>
+                <button onClick={(e) => sendData(e, labelData.action)}>Submit</button>
             </form> : null
             }
             {children ?

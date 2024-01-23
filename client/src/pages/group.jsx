@@ -14,31 +14,9 @@ export const Group = () => {
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
 
-    async function sendGroupCollection(e){
-        e.preventDefault();
-        try{
-            const userID = localStorage.getItem("userId");
-            const response = await fetch(`${__API__}/groups/groupID/createCollection`, {
-                method: "POST", headers: {
-                    'Content-Type': 'application/json',
-                    auth: auth.access_token},
-                body: JSON.stringify({
-                    userID,
-                    title: newGroup.title,
-                    desc: newGroup.desc
-                    })
-                });
-            const data = await response.json()
-            console.log(data)
-            let addBox = document.getElementById("addGroupCollection");
-                addBox.style.display = "none";
-                document.getElementById("createGroup").disabled = false;
-                document.getElementById("groups").style.filter = "none";
-        }
-        catch(error){
-
-        }
-        
+    function getCollection(params){
+        console.log(params)
+        setCollections(params)
     }
 
     async function sendInvite(){
@@ -109,19 +87,19 @@ export const Group = () => {
             </div>
         </div>
         <div className="groupContent">
-            <div className="groupContent" onMouseDown={(e) => hidePrompt(e, "Collection")}>
+            <div className="groupCollections" onMouseDown={(e) => hidePrompt(e, "Collection")}>
                 {collections.length !== 0 ?
-                    collections.map((collection) => (
-                        <div className="groupCollections">
-                            <h1>{collection.title}</h1>
-                        </div>
-                    ))
+                    <div className="groupCollection">
+                        {collections.map((collection) => (
+                                <h1>{collection.collectionTitle}</h1>
+                        ))}
+                    </div>
                 :
                 <span id="noGroupCollections">No Collections</span>
                 }
             </div>
-            <SubmitForm hide={hidePrompt} title={"Create a Collection"} 
-                labelData={{usePremade: true, title: "Collection", lower: "collection", action: "createCollection"}}/>
+            <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection}
+                labelData={{usePremade: true, title: "Collection", lower: "collection", action: `${groupID}/createCollection`}}/>
         </div>
             
     </div>

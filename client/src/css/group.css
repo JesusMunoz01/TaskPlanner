@@ -104,5 +104,21 @@
 #noGroupCollections{
     display: flex;
     align-items: center;
+    justify-content: center;
+    grid-column: span 3;
     font-size: 32px;
+}
+
+.groupCollections{
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 10px;
+}
+
+.groupCollection{
+    display: flex;
+    justify-content: center;
+    height: 500px;
+    background-color: var(--card-color);
 }
