@@ -13,3 +13,46 @@
     height: 100%;
     width: 100%;
 }
+
+#delGroup{
+    background-color: red;
+    border-color: var(--primary-color);
+    border-style: none;
+    border-radius: 10px;
+    height: 60%;
+    margin: 0px 5px 0px 5px;
+}
+
+#groupUsers{
+    display: flex;
+    font-size: 36px;
+    margin-right: 10px;
+}
+
+.checkUsers{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    margin-top: 65px;
+    font-size: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    min-height: 0;
+    height: 0;
+    width: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(30px);
+    transition: .3s ease;
+    overflow-y: auto;
+}
+
+#groupUsers:checked~.checkUsers{
+    width: 15rem;
+    min-height: 10rem;
+    height: fit-content;
+    max-height: 15rem;
+    font-size: 18px;
+}

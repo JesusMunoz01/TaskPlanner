@@ -9,11 +9,11 @@ export const SubmitForm = ({hide, title, labelData, children}) => {
     const [auth,] = useCookies(["access_token"])
 
 
-    async function sendGroup(e){
+    async function sendGroup(e, action){
         e.preventDefault();
         try{
             const userID = localStorage.getItem("userId");
-            const response = await fetch(`${__API__}/groups/createGroup`, {
+            const response = await fetch(`${__API__}/groups/${labelData.action}`, {
                 method: "POST", headers: {
                     'Content-Type': 'application/json',
                     auth: auth.access_token},
@@ -32,18 +32,19 @@ export const SubmitForm = ({hide, title, labelData, children}) => {
         
     }
 
-    return <div className={`add${labelData.title}`} id={`add${labelData.title}`}>
+    return <div className={`addGroup${labelData.title}`} id={`addGroup${labelData.title}`}>
             <h2>{title}</h2>
             <input type="checkbox" id="closeCreate" style={{display: 'none'}}></input>
             <label for="closeCreate" id="closeCreateIcon" onClick={() => hide(undefined, `${labelData.title}`)}><BsX /></label>
             {labelData.usePremade ?
-            <form className="promptForm">
+            <form className={`promptFormGroup${labelData.title}`}>
                 <label>{labelData.title} Title: </label>
                 <input id={`${labelData.title}Title`} value={newGroup.title} onChange={(e) => {setNewGroup((prev) => {return {title: e.target.value, desc: prev.desc}})}}></input>
                 <label>{labelData.title} Description: </label>
                 <input id={`${labelData.title}Desc`} value={newGroup.desc} onChange={(e) => {setNewGroup((prev) => {return {title: prev.title, desc: e.target.value}})}}></input>
                 <button onClick={(e) => sendGroup(e)}>Submit</button>
-            </form> : {children}
+            </form> : null
             }
+            {children ? children : null}
         </div>
 }

@@ -12,8 +12,7 @@ export const Group = () => {
     // console.log(groupID)
 
     function hidePrompt(e, name){
-        console.log(name)
-        let addBox = document.getElementById(`add${name}`);
+        let addBox = document.getElementById(`addGroup${name}`);
         if(e === undefined){
             addBox.style.display = "none";
             document.getElementById("createGroup").disabled = false;
@@ -32,8 +31,11 @@ export const Group = () => {
             newAction={ from.permissions === "Admin" ? 
             <>
             <button id="delGroup">Delete Group</button>
-            <input type="checkbox" id="userTab" style={{display: "none"}}/>
-            <label id="usersIcon" htmlFor="userTab"><BsFillPersonLinesFill /></label>
+            <input type="checkbox" id="groupUsers" style={{display: "none"}}/>
+            <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
+            <div className="checkUsers">
+                <span id="groups-NoInvites">No Invites</span>
+            </div>
             </>
             :
             null}/>
@@ -42,8 +44,8 @@ export const Group = () => {
             <div className="groupContent" onMouseDown={(e) => hidePrompt(e, "Collection")}>
                 <span>Content</span>
             </div>
-            <SubmitForm hide={hidePrompt} title={"Create a Collection"} labelData={{usePremade: true, title: "Collection", lower: "collection"}}/>
-            {/* <SubmitForm hide={hidePrompt} title={"Create a "} labelData={{usePremade: false} children={}}/> */}
+            <SubmitForm hide={hidePrompt} title={"Create a Collection"} 
+                labelData={{usePremade: true, title: "Collection", lower: "collection", action: "createCollection"}}/>
         </div>
             
     </div>

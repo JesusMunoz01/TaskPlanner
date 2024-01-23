@@ -9,7 +9,7 @@ export const Header = ({title, newAction, section}) => {
 
     function displayAddPrompt(e){
         e.preventDefault();
-        let addBox = document.getElementById(`add${section}`);
+        let addBox = document.getElementById(`addGroup${section}`);
         addBox.style.display = "flex";
         document.getElementById("createGroup").disabled = true;
     }
