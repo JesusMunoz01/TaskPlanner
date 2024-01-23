@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
-export const SubmitForm = ({hide, title, labelData}) => {
+export const SubmitForm = ({hide, title, labelData, children}) => {
     const [newGroup, setNewGroup] = useState({title: "", desc: ""})
     const [auth,] = useCookies(["access_token"])
 
@@ -45,7 +45,7 @@ export const SubmitForm = ({hide, title, labelData}) => {
                 <label>{labelData.title} Description: </label>
                 <input id={`${labelData.title}Desc`} value={newGroup.desc} onChange={(e) => {setNewGroup((prev) => {return {title: prev.title, desc: e.target.value}})}}></input>
                 <button onClick={(e) => sendGroup(e)}>Submit</button>
-            </form> : null
+            </form> : {children}
             }
         </div>
 }

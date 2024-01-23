@@ -5,11 +5,10 @@ import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 
 
-export const Header = ({title, newAction}) => {
+export const Header = ({title, newAction, section}) => {
 
     function displayAddPrompt(e){
         e.preventDefault();
-        console.log("test")
         let addBox = document.getElementById("addGroup");
         addBox.style.display = "flex";
         document.getElementById("createGroup").disabled = true;
