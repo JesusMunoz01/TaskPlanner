@@ -64,10 +64,39 @@
     overflow-y: auto;
 }
 
+.inviteUser{
+    position: absolute;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    right: 0;
+    margin-right: 60px;
+    top: 93%;
+    z-index: 100;
+}
+
+.inviteUser label{
+    font-size: larger;
+    margin-right: 5px;
+}
+
+.inviteUser input{
+    font-size: larger;
+}
+
+.inviteUser button{
+    font-size: larger;
+    margin-right: 5px;
+}
+
+#inviteBtn{
+    background-color: green;
+    margin-left: 5px;
+    border-radius: 10px;
+}
+
 #groupUsers:checked~.checkUsers{
-    width: 15rem;
-    min-height: 10rem;
-    height: fit-content;
-    max-height: 15rem;
+    width: 35rem;
+    height: 93%;
     font-size: 18px;
 }
