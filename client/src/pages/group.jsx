@@ -11,19 +11,24 @@ export const Group = () => {
     // console.log(from)
     // console.log(groupID)
 
-    function hidePrompt(e){
-        e.preventDefault();
-        let addBox = document.getElementById("addGroup");
-            if(addBox.style.display !== "none" && e.button === 0){
-                addBox.style.display = "none";
-                document.getElementById("createGroup").disabled = false;
-                document.getElementById("group").style.filter = "none";
-            }
+    function hidePrompt(e, name){
+        console.log(name)
+        let addBox = document.getElementById(`add${name}`);
+        if(e === undefined){
+            addBox.style.display = "none";
+            document.getElementById("createGroup").disabled = false;
+            document.getElementById("group").style.filter = "none";
+        }
+        if(addBox.style.display !== "none" && e.button === 0){
+            addBox.style.display = "none";
+            document.getElementById("createGroup").disabled = false;
+            document.getElementById("group").style.filter = "none";
+        }
     }
 
     return <div className="group" id="group">
-        <div onMouseDown={hidePrompt}>
-        <Header title={`${from.groupName}`} section="tasks" 
+        <div onMouseDown={(e) => hidePrompt(e, "Collection")}>
+        <Header title={`${from.groupName}`} section="Collection" 
             newAction={ from.permissions === "Admin" ? 
             <>
             <button id="delGroup">Delete Group</button>
@@ -34,7 +39,7 @@ export const Group = () => {
             null}/>
         </div>
         <div className="groupContent">
-            <div className="groupContent" onMouseDown={hidePrompt}>
+            <div className="groupContent" onMouseDown={(e) => hidePrompt(e, "Collection")}>
                 <span>Content</span>
             </div>
             <SubmitForm hide={hidePrompt} title={"Create a Collection"} labelData={{usePremade: true, title: "Collection", lower: "collection"}}/>
