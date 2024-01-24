@@ -13,3 +13,112 @@
     height: 100%;
     width: 100%;
 }
+
+.groupsBox-headerLeft{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#goBack{
+    border-style: none;
+    background-color: transparent;
+    font-size: 32px;
+    margin-left: 5px;
+    margin-top: 10px;
+}
+
+#delGroup{
+    background-color: red;
+    border-color: var(--primary-color);
+    border-style: none;
+    border-radius: 10px;
+    height: 60%;
+    margin: 0px 5px 0px 5px;
+}
+
+#groupUsers{
+    display: flex;
+    font-size: 36px;
+    margin-right: 10px;
+}
+
+.checkUsers{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    margin-top: 65px;
+    font-size: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    min-height: 0;
+    height: 0;
+    width: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(30px);
+    transition: .3s ease;
+    overflow-y: auto;
+}
+
+.inviteUser{
+    position: absolute;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    right: 0;
+    margin-right: 60px;
+    top: 93%;
+    z-index: 100;
+}
+
+.inviteUser label{
+    font-size: larger;
+    margin-right: 5px;
+}
+
+.inviteUser input{
+    font-size: larger;
+}
+
+.inviteUser button{
+    font-size: larger;
+    margin-right: 5px;
+}
+
+#inviteBtn{
+    background-color: green;
+    margin-left: 5px;
+    border-radius: 10px;
+}
+
+#groupUsers:checked~.checkUsers{
+    width: 35rem;
+    height: 93%;
+    font-size: 18px;
+}
+
+#noGroupCollections{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-column: span 3;
+    font-size: 32px;
+}
+
+.groupCollections{
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 10px;
+}
+
+.groupCollection{
+    display: flex;
+    justify-content: center;
+    height: 500px;
+    background-color: var(--card-color);
+}

@@ -3,8 +3,11 @@ const express = require('express')
 const GroupModel = require('../models/groups.js');
 const verification = require('./authenticate.js');
 const UserModel = require('../models/users.js');
+const CollectionsModel = require('../models/collections.js');
 
 const groupRouter = express.Router()
+
+// Get Routes --------------------------------------------------
 
 groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>{
     let ObjectId = require('mongodb').ObjectId; 
@@ -25,6 +28,8 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
     res.json({invites: userDB.groups.invites, joined: await Promise.all(groups)})
 })
 
+// Create Routes --------------------------------------------------
+
 groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
     const user = req.body.userID;
     const userDB = await UserModel.findOne({_id: user});
@@ -41,7 +46,8 @@ groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
             const creation = await newGroup.save();
             userDB.groups.joined.push(creation._id.toString())
             await userDB.save()
-            res.json({message: "Group successfully created"})
+            res.json({groupName: creation.groupName, groupDescription: creation.groupDescription, 
+                collections: creation.collections, id: creation._id, permissions: "Admin"})
         }
         catch(error){
             res.send({status: error, message:"A username and password is required"})
@@ -49,6 +55,99 @@ groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
     }
     else
         res.send("Couldnt perform action")
+})
+
+groupRouter.post("/groups/:groupID/createCollection", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const user = req.body.userID;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
+        const newCollection = new CollectionsModel({
+            collectionTitle: req.body.title ,
+            collectionDescription: req.body.desc ,
+            collectionStatus: "Incomplete",
+            tasks: []
+        });
+        console.log(newCollection)
+        console.log("++++++++++++++++++++")
+        console.log(groupDB)
+        groupDB.collections.push(newCollection)
+        res.send(groupDB.collections)
+        // try{
+        //     const creation = await newGroup.save();
+        //     userDB.groups.joined.push(creation._id.toString())
+        //     await userDB.save()
+        //     res.json({groupName: creation.groupName, groupDescription: creation.groupDescription, 
+        //         collections: creation.collections, id: creation._id, permissions: "Admin"})
+        // }
+        // catch(error){
+        //     res.send({status: error, message:"A username and password is required"})
+        // }
+    }
+    else
+        res.send("Couldnt perform action")
+})
+
+groupRouter.post("/groups/:groupID/invite", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const user = req.body.userID;
+    const invitee = req.body.invUsername;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    if(groupDB && groupDB.groupAdmin.find(admin => admin === user)){
+        try{
+            const inviteeDB = await UserModel.findOne({username: invitee})
+            if(inviteeDB._id == user)
+                throw "Unable to invite yourself"
+            if(inviteeDB === null)
+                throw "User not found"
+            if(inviteeDB.groups.invites.find(invite => invite === groupID))
+                throw "Already invited this user"
+
+            inviteeDB.groups.invites.push(groupID)
+            await inviteeDB.save()
+            res.send({status: `Succesfully invited ${invitee}`})
+        }
+        catch(error){
+            res.send({status: error, message:"Unable to perform action"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
+})
+
+groupRouter.post("/groups/:groupID/invite/action", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const user = req.body.userID;
+    const action = req.body.action;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    if(groupDB){
+        try{
+            const inviteeDB = await UserModel.findOne({_id: user})
+            if(inviteeDB.groups.joined.find(group => group === groupID))
+                throw "Already joined group"
+            if(action === "accept"){
+                groupDB.groupMembers.push(user);
+                await groupDB.save();
+                inviteeDB.groups.joined.push(groupID);
+                const updatedInvites = inviteeDB.groups.invites.filter((invite) => invite !== groupID);
+                inviteeDB.groups.invites = updatedInvites;
+                await inviteeDB.save();
+                res.send({groupName: groupDB.groupName, groupDescription: groupDB.groupDescription, 
+                    collections: groupDB.collections, id: groupDB._id, permissions: "Member", invites: updatedInvites})
+            }
+            else{
+                const updatedInvites = inviteeDB.groups.invites.filter((invite) => invite !== groupID)
+                inviteeDB.groups.invites = updatedInvites;
+                await inviteeDB.save();
+                res.send({message: "Successfully denied invite", invites: updatedInvites})
+            }
+        }
+        catch(error){
+            res.send({status: error, message:"Unable to perform action"})
+        }
+    }
+    else
+        res.send({message: "Group no longer exists"})
 })
 
 module.exports = groupRouter

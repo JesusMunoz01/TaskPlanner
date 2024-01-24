@@ -1,26 +1,27 @@
+import { Link } from "react-router-dom";
 import "../css/groups.css"
-import { BsFillEnvelopeFill } from "react-icons/bs";
-import { BsX } from "react-icons/bs";
-import { useEffect, useState } from "react";
-import { useCookies } from 'react-cookie';
+import { BsArrowLeft } from "react-icons/bs";
 
 
-export const Header = ({title, newAction, section}) => {
+export const Header = ({title, backArrow, newAction, section}) => {
 
     function displayAddPrompt(e){
         e.preventDefault();
-        let addBox = document.getElementById("addGroup");
+        let addBox = document.getElementById(`addGroup${section}`);
         addBox.style.display = "flex";
         document.getElementById("createGroup").disabled = true;
     }
 
-    return <div>
+    return <>
             <div className="groupsBox-header">
-                <h1>{title}</h1>
+                <div className="groupsBox-headerLeft">
+                    {backArrow  ? <Link id="goBack" to={`${backArrow}`}><BsArrowLeft /></Link> : null}
+                    <h1>{title}</h1>
+                </div>
                 <div className="groupsBox-headerActions">
                     <button id="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
                     {newAction ? newAction : null}
                 </div>
             </div>
-    </div>
+    </>
 }

@@ -46,7 +46,7 @@ export const Navbar = ({loginStatus}) => {
     return <div className="navActions">
 
         <input type='checkbox' id='menu'/>
-        <label for="menu" className='expandLinks'>
+        <label htmlFor="menu" className='expandLinks'>
             <BsList id='openMenu'/>
             <BsX id='closeMenu'/>
         </label>
