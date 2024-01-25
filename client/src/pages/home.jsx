@@ -70,13 +70,16 @@ export const Home = (data) => {
 
     async function delTask(taskId){
         if(isUserLogged){
-        await fetch(`${__API__}/tasks/${taskId}`, {
-            method: "DELETE", headers: {auth: cookies.access_token}});
+            const userID = window.localStorage.getItem("userId");
+            const res = await fetch(`${__API__}/tasks/${userID}/${taskId}`, {
+                method: "DELETE", headers: {auth: cookies.access_token}});
+            const resData = await res.json();
+            console.log(resData)
 
-        setTasks(tasks.filter((task) => task._id !== taskId))
-        data.updateTask(tasks.filter((task) => task._id !== taskId))
-        setCurrentFilter(tasks);
-    }
+            setTasks(resData.filter((task) => task._id !== taskId))
+            data.updateTask(resData.filter((task) => task._id !== taskId))
+            setCurrentFilter(resData);
+        }
         else{
             const delItem = JSON.parse(tasks).filter((task) => task._id !== taskId)
             window.localStorage.setItem("localTaskData", JSON.stringify(delItem))

@@ -62,10 +62,16 @@ taskRouter.post("/updateTaskInfo", verification, async (req, res) =>{
     }
 })
 
-taskRouter.delete('/tasks/:taskID', verification, async (req, res) => {
+taskRouter.delete('/tasks/:userID/:taskID', verification, async (req, res) => {
+    const user = req.params.userID;
     const taskID = req.params.taskID;
-    const delTask = await TaskModel.findByIdAndDelete(taskID)
-    res.json(delTask)
+    try{
+        const delTask = await UserModel.findOneAndUpdate({"_id": user}, 
+        {$pull: {"tasks": {_id: taskID}}})
+        res.json(delTask.tasks)
+    }catch(error){
+        res.json({error: error, message: "Couldnt delete collection"})
+    }
 })
 
 module.exports = taskRouter;
