@@ -35,7 +35,7 @@ export const Home = (data) => {
                 setTasks([task])
                 setTasks([...tasks, task])
                 data.updateTask([...tasks, task])
-                setCurrentFilter([...tasks, task])
+                filterTask(filterType, [...tasks, task])
             }catch(error){
                 console.log(error)
             }
@@ -74,11 +74,10 @@ export const Home = (data) => {
             const res = await fetch(`${__API__}/tasks/${userID}/${taskId}`, {
                 method: "DELETE", headers: {auth: cookies.access_token}});
             const resData = await res.json();
-            console.log(resData)
-
-            setTasks(resData.filter((task) => task._id !== taskId))
-            data.updateTask(resData.filter((task) => task._id !== taskId))
-            setCurrentFilter(resData);
+            const filtered = resData.filter((task) => task._id !== taskId)
+            setTasks(filtered)
+            data.updateTask(filtered)
+            filterTask(filterType, filtered);
         }
         else{
             const delItem = JSON.parse(tasks).filter((task) => task._id !== taskId)
@@ -116,7 +115,7 @@ export const Home = (data) => {
                 updatedValues[index].status = `${taskStatus}`
                 setTasks(updatedValues)
                 data.updateTask(updatedValues);
-                setCurrentFilter(updatedValues)
+                filterTask(filterType, updatedValues)
             }catch(error){
                 console.log(error)
             }
@@ -165,7 +164,7 @@ export const Home = (data) => {
                 updatedValues[index].description = `${newDesc}`
                 setTasks(updatedValues)
                 data.updateTask(updatedValues);
-                setCurrentFilter(updatedValues);
+                filterTask(filterType, updatedValues);
             }catch(error){
                 console.log(error)
             }
