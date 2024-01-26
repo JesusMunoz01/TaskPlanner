@@ -21,21 +21,6 @@ export const Collections = (data) => {
             });
 
             setCollections(collections.filter((collection) => collection._id !== collectionID))
-            //setCurrentFilter(collections);
-        }
-        else{
-            const delItem = JSON.parse(collections).filter((collection) => collection._id !== collectionID)
-            window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
-            if(JSON.parse(collections).length === 1){
-                window.localStorage.removeItem("localCollectionData");
-                setCollections(null);
-                //setCurrentFilter(null);
-            }else{
-                const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
-                setCollections(getUpdatedLocal);
-                data.updateCollection(getUpdatedLocal);
-                //setCurrentFilter(getUpdatedLocal);
-            }
         }
     }
 
@@ -71,65 +56,15 @@ export const Collections = (data) => {
                 updatedValues[index].collectionTitle = `${newColTitle}`
                 updatedValues[index].collectionDescription = `${newColDesc}`
                 setCollections(updatedValues)
-                //setCurrentFilter(updatedValues)
             }catch(error){
                 console.log(error)
             }
-        else{
-            const localCollection = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            const index = localCollection.findIndex((collection => collection._id === collectionID))
-            localCollection[index].collectionTitle = `${newColTitle}`
-            localCollection[index].collectionDescription = `${newColDesc}`
-            window.localStorage.setItem("localCollectionData", JSON.stringify(localCollection))
-            const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
-            setCollections(getUpdatedLocal);
-            data.updateCollection(getUpdatedLocal);
-            //setCurrentFilter(getUpdatedLocal);
-        }
 
         updateCollectionTitle("");
         updateCollectionDesc("");
 
     }
-/*
-    function filterTask(action){
-        const selected = document.getElementById(`${action}`)
-        let data = [];
-        if(!isUserLogged)
-        data = JSON.parse(tasks)
-        else
-        data = tasks;
-        switch(action){
-            case "filter1": // All Tasks Filter
-                selected.style.color = "green"
-                document.getElementById("filter2").style.color = "white"
-                document.getElementById("filter3").style.color = "white"
-                isUserLogged ? 
-                setCurrentFilter(data) : 
-                setCurrentFilter(JSON.stringify(data));
-                break;
-            case "filter2": // Incomplete Tasks Filter
-                selected.style.color = "green"
-                document.getElementById("filter1").style.color = "white"
-                document.getElementById("filter3").style.color = "white"
-                isUserLogged ?
-                setCurrentFilter(data.filter((task) => task.status === "complete")) :
-                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "complete")))
-                break;
-            case "filter3": // Completed Tasks Filter
-                selected.style.color = "green"
-                document.getElementById("filter1").style.color = "white"
-                document.getElementById("filter2").style.color = "white"
-                isUserLogged ?
-                setCurrentFilter(data.filter((task) => task.status === "incomplete")) :
-                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "incomplete")))
-                break;
-            default:
-                break;
-        }
 
-    }
-*/
     function displayEdit(id){
         updateCollectionTitle("")
         updateCollectionDesc("")
