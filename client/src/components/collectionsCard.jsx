@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
-export const Collections = (data) => {
+export const CollectionsCard = (data) => {
     const [collections, setCollections] = useState(data.data);
     const [isUserLogged, ] = useState(data.isLogged)
     const [updtCollectionTitle, updateCollectionTitle] = useState("");
@@ -68,36 +68,39 @@ export const Collections = (data) => {
         updateCollectionDesc("")
 
         const currentMode = document.getElementById(`colSetting${id}`).className
-        var list = document.getElementsByClassName("editCollection active")
+        console.log(currentMode)
+        var list = document.getElementsByClassName(`${data.section}Edit active`)
 
         Array.prototype.forEach.call(list, (item) => {
-            item.className = "editCollection"
+            item.className = `${data.section}Edit`
         })
 
-        if(currentMode === "editCollection active")
-            document.getElementById(`colSetting${id}`).className = "editCollection"
+        if(currentMode === `${data.section}Edit active`)
+            document.getElementById(`colSetting${id}`).className = `${data.section}Edit`
         else
-            document.getElementById(`colSetting${id}`).className = "editCollection active"
+            document.getElementById(`colSetting${id}`).className = `${data.section}Edit active`
     }
 
 
     return <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                     {collections.map((collection, index)=> (
-                        <div className={`${data.section}CollectionList`} data-testid={`${data.section}Collection-item`} key={collection._id}>
+                        <div className={`${data.section}List`} data-testid={`${data.section}-item`} key={collection._id}>
                             <li key={collection._id}>
                                 <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
                                     to={`/collections/${index}`}>{collection.collectionTitle}</Link>
                                 <div className="descBox">
-                                    <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
+                                    <p id="collectionDisplayDesc"aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>
-                                <div className="statusBox">
-                                    <span>Status: {collection.collectionStatus}</span>
+                                <div style={{display: "flex", flexDirection: "column", minHeight: "100px"}}>
+                                    <div className="statusBox">
+                                        <span>Status: {collection.collectionStatus}</span>
+                                    </div>
+                                    <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
+                                    <label id={`${data.section}SettingsIcon`} htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                                 </div>
-                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="collectionsSettingsIcon" htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                             </li>
-                            <ul className="editCollection" id={`colSetting${collection._id}`} >
+                            <ul className={`${data.section}Edit`} id={`colSetting${collection._id}`} >
                                 <li id={`colSetting${collection._id}`}>
                                     <label>Edit title:</label>
                                     <input id="collectionTitle" aria-label={`editCollectionTitle${collection._id}`} value={updtCollectionTitle} 

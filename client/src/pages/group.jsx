@@ -5,7 +5,7 @@ import { Header } from "../components/header";
 import { SubmitForm } from "../components/submitForm";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-import { Collections } from "../components/collectionsCard";
+import { CollectionsCard } from "../components/collectionsCard";
 
 export const Group = () => {
     const [verification, ] = useCookies(["access_token"]);
@@ -14,7 +14,7 @@ export const Group = () => {
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
-    console.log(from)
+    console.log(collections)
 
     function getCollection(params){
         console.log(params)
@@ -92,7 +92,7 @@ export const Group = () => {
             <div className="groupCollections" onMouseDown={(e) => hidePrompt(e, "Collection")}>
                 {collections.length !== 0 ?
                     <div className="groupCollection">
-                        <Collections data={collections} section="groups"/>
+                        <CollectionsCard data={collections} section="groupsCollection"/>
                     </div>
                 :
                 <span id="noGroupCollections">No Collections</span>
