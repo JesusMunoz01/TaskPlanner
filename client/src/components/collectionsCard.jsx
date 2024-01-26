@@ -7,8 +7,6 @@ import { Link } from "react-router-dom";
 export const Collections = (data) => {
     const [collections, setCollections] = useState(data.data);
     const [isUserLogged, ] = useState(data.isLogged)
-    const [collectionTitle, setCollectionTitle] = useState("");
-    const [collectionDescription, setCollectionDesc] = useState("");
     const [updtCollectionTitle, updateCollectionTitle] = useState("");
     const [updtCollectionDescription, updateCollectionDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
@@ -83,12 +81,9 @@ export const Collections = (data) => {
     }
 
 
-    return <div className="collectionsHome">
-        <div className="collectionsBox">
-        <h1>Collections</h1>
-            <div className="collections">
+    return <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                     {collections.map((collection, index)=> (
-                        <div className="collectionsList" data-testid="collection-item" key={collection._id}>
+                        <div className={`${data.section}CollectionList`} data-testid={`${data.section}Collection-item`} key={collection._id}>
                             <li key={collection._id}>
                                 <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
                                     to={`/collections/${index}`}>{collection.collectionTitle}</Link>
@@ -119,6 +114,4 @@ export const Collections = (data) => {
                         </div>
                     ))}
             </div>
-        </div>
-    </div>
 }

@@ -22,7 +22,7 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
             if(data.groupAdmin.find((item) => item === user))
                 userPerm = "Admin"
             return {groupName: data.groupName, groupDescription: data.groupDescription, 
-                collections: data.collections, id: data._id, permissions: userPerm};
+                collections: data.collections, _id: data._id, permissions: userPerm};
         })
     }
     res.json({invites: userDB.groups.invites, joined: await Promise.all(groups)})
@@ -47,7 +47,7 @@ groupRouter.post("/groups/createGroup", verification, async (req, res) =>{
             userDB.groups.joined.push(creation._id.toString())
             await userDB.save()
             res.json({groupName: creation.groupName, groupDescription: creation.groupDescription, 
-                collections: creation.collections, id: creation._id, permissions: "Admin"})
+                collections: creation.collections, _id: creation._id, permissions: "Admin"})
         }
         catch(error){
             res.send({status: error, message:"A username and password is required"})
@@ -78,7 +78,7 @@ groupRouter.post("/groups/:groupID/createCollection", verification, async (req, 
         //     userDB.groups.joined.push(creation._id.toString())
         //     await userDB.save()
         //     res.json({groupName: creation.groupName, groupDescription: creation.groupDescription, 
-        //         collections: creation.collections, id: creation._id, permissions: "Admin"})
+        //         collections: creation.collections, _id: creation._id, permissions: "Admin"})
         // }
         // catch(error){
         //     res.send({status: error, message:"A username and password is required"})
@@ -133,7 +133,7 @@ groupRouter.post("/groups/:groupID/invite/action", verification, async (req, res
                 inviteeDB.groups.invites = updatedInvites;
                 await inviteeDB.save();
                 res.send({groupName: groupDB.groupName, groupDescription: groupDB.groupDescription, 
-                    collections: groupDB.collections, id: groupDB._id, permissions: "Member", invites: updatedInvites})
+                    collections: groupDB.collections, _id: groupDB._id, permissions: "Member", invites: updatedInvites})
             }
             else{
                 const updatedInvites = inviteeDB.groups.invites.filter((invite) => invite !== groupID)

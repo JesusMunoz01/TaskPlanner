@@ -5,6 +5,7 @@ import { Header } from "../components/header";
 import { SubmitForm } from "../components/submitForm";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
+import { Collections } from "../components/collectionsCard";
 
 export const Group = () => {
     const [verification, ] = useCookies(["access_token"]);
@@ -13,6 +14,7 @@ export const Group = () => {
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
+    console.log(from)
 
     function getCollection(params){
         console.log(params)
@@ -22,7 +24,7 @@ export const Group = () => {
     async function sendInvite(){
         try{
             const userID = localStorage.getItem("userId");
-            const response = await fetch(`${__API__}/groups/${from.id}/invite`, {
+            const response = await fetch(`${__API__}/groups/${from._id}/invite`, {
                 method: "POST", 
                 headers: {
                     "Content-Type": "application/json",
@@ -90,9 +92,7 @@ export const Group = () => {
             <div className="groupCollections" onMouseDown={(e) => hidePrompt(e, "Collection")}>
                 {collections.length !== 0 ?
                     <div className="groupCollection">
-                        {collections.map((collection) => (
-                                <h1>{collection.collectionTitle}</h1>
-                        ))}
+                        <Collections data={collections} section="groups"/>
                     </div>
                 :
                 <span id="noGroupCollections">No Collections</span>
