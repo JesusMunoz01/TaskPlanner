@@ -4,11 +4,9 @@ import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
-export const Collections = (data) => {
+export const CollectionsCard = (data) => {
     const [collections, setCollections] = useState(data.data);
     const [isUserLogged, ] = useState(data.isLogged)
-    const [collectionTitle, setCollectionTitle] = useState("");
-    const [collectionDescription, setCollectionDesc] = useState("");
     const [updtCollectionTitle, updateCollectionTitle] = useState("");
     const [updtCollectionDescription, updateCollectionDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
@@ -21,21 +19,6 @@ export const Collections = (data) => {
             });
 
             setCollections(collections.filter((collection) => collection._id !== collectionID))
-            //setCurrentFilter(collections);
-        }
-        else{
-            const delItem = JSON.parse(collections).filter((collection) => collection._id !== collectionID)
-            window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
-            if(JSON.parse(collections).length === 1){
-                window.localStorage.removeItem("localCollectionData");
-                setCollections(null);
-                //setCurrentFilter(null);
-            }else{
-                const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
-                setCollections(getUpdatedLocal);
-                data.updateCollection(getUpdatedLocal);
-                //setCurrentFilter(getUpdatedLocal);
-            }
         }
     }
 
@@ -71,103 +54,53 @@ export const Collections = (data) => {
                 updatedValues[index].collectionTitle = `${newColTitle}`
                 updatedValues[index].collectionDescription = `${newColDesc}`
                 setCollections(updatedValues)
-                //setCurrentFilter(updatedValues)
             }catch(error){
                 console.log(error)
             }
-        else{
-            const localCollection = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            const index = localCollection.findIndex((collection => collection._id === collectionID))
-            localCollection[index].collectionTitle = `${newColTitle}`
-            localCollection[index].collectionDescription = `${newColDesc}`
-            window.localStorage.setItem("localCollectionData", JSON.stringify(localCollection))
-            const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
-            setCollections(getUpdatedLocal);
-            data.updateCollection(getUpdatedLocal);
-            //setCurrentFilter(getUpdatedLocal);
-        }
 
         updateCollectionTitle("");
         updateCollectionDesc("");
 
     }
-/*
-    function filterTask(action){
-        const selected = document.getElementById(`${action}`)
-        let data = [];
-        if(!isUserLogged)
-        data = JSON.parse(tasks)
-        else
-        data = tasks;
-        switch(action){
-            case "filter1": // All Tasks Filter
-                selected.style.color = "green"
-                document.getElementById("filter2").style.color = "white"
-                document.getElementById("filter3").style.color = "white"
-                isUserLogged ? 
-                setCurrentFilter(data) : 
-                setCurrentFilter(JSON.stringify(data));
-                break;
-            case "filter2": // Incomplete Tasks Filter
-                selected.style.color = "green"
-                document.getElementById("filter1").style.color = "white"
-                document.getElementById("filter3").style.color = "white"
-                isUserLogged ?
-                setCurrentFilter(data.filter((task) => task.status === "complete")) :
-                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "complete")))
-                break;
-            case "filter3": // Completed Tasks Filter
-                selected.style.color = "green"
-                document.getElementById("filter1").style.color = "white"
-                document.getElementById("filter2").style.color = "white"
-                isUserLogged ?
-                setCurrentFilter(data.filter((task) => task.status === "incomplete")) :
-                setCurrentFilter(JSON.stringify(data.filter((task) => task.status === "incomplete")))
-                break;
-            default:
-                break;
-        }
 
-    }
-*/
     function displayEdit(id){
         updateCollectionTitle("")
         updateCollectionDesc("")
 
         const currentMode = document.getElementById(`colSetting${id}`).className
-        var list = document.getElementsByClassName("editCollection active")
+        console.log(currentMode)
+        var list = document.getElementsByClassName(`${data.section}Edit active`)
 
         Array.prototype.forEach.call(list, (item) => {
-            item.className = "editCollection"
+            item.className = `${data.section}Edit`
         })
 
-        if(currentMode === "editCollection active")
-            document.getElementById(`colSetting${id}`).className = "editCollection"
+        if(currentMode === `${data.section}Edit active`)
+            document.getElementById(`colSetting${id}`).className = `${data.section}Edit`
         else
-            document.getElementById(`colSetting${id}`).className = "editCollection active"
+            document.getElementById(`colSetting${id}`).className = `${data.section}Edit active`
     }
 
 
-    return <div className="collectionsHome">
-        <div className="collectionsBox">
-        <h1>Collections</h1>
-            <div className="collections">
+    return <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                     {collections.map((collection, index)=> (
-                        <div className="collectionsList" data-testid="collection-item" key={collection._id}>
+                        <div className={`${data.section}List`} data-testid={`${data.section}-item`} key={collection._id}>
                             <li key={collection._id}>
                                 <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
                                     to={`/collections/${index}`}>{collection.collectionTitle}</Link>
                                 <div className="descBox">
-                                    <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
+                                    <p id="collectionDisplayDesc"aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>
-                                <div className="statusBox">
-                                    <span>Status: {collection.collectionStatus}</span>
+                                <div style={{display: "flex", flexDirection: "column", minHeight: "100px"}}>
+                                    <div className="statusBox">
+                                        <span>Status: {collection.collectionStatus}</span>
+                                    </div>
+                                    <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
+                                    <label id={`${data.section}SettingsIcon`} htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                                 </div>
-                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="collectionsSettingsIcon" htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                             </li>
-                            <ul className="editCollection" id={`colSetting${collection._id}`} >
+                            <ul className={`${data.section}Edit`} id={`colSetting${collection._id}`} >
                                 <li id={`colSetting${collection._id}`}>
                                     <label>Edit title:</label>
                                     <input id="collectionTitle" aria-label={`editCollectionTitle${collection._id}`} value={updtCollectionTitle} 
@@ -184,6 +117,4 @@ export const Collections = (data) => {
                         </div>
                     ))}
             </div>
-        </div>
-    </div>
 }
