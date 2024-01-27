@@ -1,24 +1,26 @@
 import "../css/group.css"
 import { BsFillPersonLinesFill } from "react-icons/bs";
-import { useLocation, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Header } from "../components/header";
 import { SubmitForm } from "../components/submitForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { CollectionsCard } from "../components/collectionsCard";
 
 export const Group = () => {
     const [verification, ] = useCookies(["access_token"]);
     const location = useLocation()
+    const navigate = useNavigate()
     const { from } = location.state
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
-    console.log(collections)
-
+    const [stateChanged, setStateChanged] = useState(false)
+    
     function getCollection(params){
-        console.log(params)
         setCollections(params)
+        location.state.from.collections = params;
+        navigate(".", {state: {from: location.state.from}});
     }
 
     async function sendInvite(){
@@ -92,7 +94,12 @@ export const Group = () => {
             <div className="groupCollections" onMouseDown={(e) => hidePrompt(e, "Collection")}>
                 {collections.length !== 0 ?
                     <div className="groupCollection">
-                        <CollectionsCard data={collections} section="groupsCollection"/>
+                        <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
+                            {collections.map((collection, index)=> (
+                                <CollectionsCard data={collections} collection={collection} 
+                                index={index} returnCollection={getCollection} section="groupsCollection"/>
+                            ))}
+                        </div>
                     </div>
                 :
                 <span id="noGroupCollections">No Collections</span>
