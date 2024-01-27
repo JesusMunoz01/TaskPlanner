@@ -70,7 +70,7 @@ groupRouter.post("/groups/:groupID/createCollection", verification, async (req, 
         });
         try{
             groupDB.collections.push(newCollection)
-            // groupDB.save()
+            groupDB.save()
             res.send(groupDB.collections)
         }
         catch(error){

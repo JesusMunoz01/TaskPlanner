@@ -12,8 +12,7 @@ export const CollectionsCard = (data) => {
     const [updtCollectionTitle, updateCollectionTitle] = useState("");
     const [updtCollectionDescription, updateCollectionDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
-    console.log(collections)
-
+ 
     async function delCollection(collectionID){
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");

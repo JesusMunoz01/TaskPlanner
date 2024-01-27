@@ -11,6 +11,7 @@ export const SubmitForm = ({hide, title, labelData, children, getData}) => {
 
     async function sendData(e){
         e.preventDefault();
+        if(newGroup.title !== "" && newGroup.desc !== "")
         try{
             const userID = localStorage.getItem("userId");
             const response = await fetch(`${__API__}/groups/${labelData.action}`, {
@@ -25,6 +26,7 @@ export const SubmitForm = ({hide, title, labelData, children, getData}) => {
                 });
             const data = await response.json()
             getData(data)
+            setNewGroup({title: "", desc: ""})
         }
         catch(error){
 
@@ -35,7 +37,7 @@ export const SubmitForm = ({hide, title, labelData, children, getData}) => {
     return <div className={`addGroup${labelData.title}`} id={`addGroup${labelData.title}`}>
             <h2>{title}</h2>
             <input type="checkbox" id="closeCreate" style={{display: 'none'}}></input>
-            <label for="closeCreate" id="closeCreateIcon" onClick={() => hide(undefined, `${labelData.title}`)}><BsX /></label>
+            <label htmlFor="closeCreate" id="closeCreateIcon" onClick={() => hide(undefined, `${labelData.title}`)}><BsX /></label>
             {labelData.usePremade ?
             <form className={`promptFormGroup${labelData.title}`}>
                 <label>{labelData.title} Title: </label>

@@ -15,7 +15,6 @@ export const Group = () => {
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
-    const [stateChanged, setStateChanged] = useState(false)
     
     function getCollection(params){
         setCollections(params)
@@ -96,7 +95,7 @@ export const Group = () => {
                     <div className="groupCollection">
                         <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                             {collections.map((collection, index)=> (
-                                <CollectionsCard data={collections} collection={collection} 
+                                <CollectionsCard key={collection._id} data={collections} collection={collection} 
                                 index={index} returnCollection={getCollection} section="groupsCollection"/>
                             ))}
                         </div>
