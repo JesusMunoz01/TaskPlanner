@@ -75,8 +75,6 @@ collectionRouter.post("/addCollection/newTask", verification, async (req, res) =
 collectionRouter.post("/updateCollection", verification, async (req, res) =>{
     const user = req.body.userID;
     const collectionUpdate = req.body.collectionID;
-    console.log(user)
-    console.log(collectionUpdate)
     try{
         const update = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionUpdate}, 
         {$set: { "collections.$.collectionTitle": `${req.body.newColTitle}`, "collections.$.collectionDescription": `${req.body.newColDesc}`}})

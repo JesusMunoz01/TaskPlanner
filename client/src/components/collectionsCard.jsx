@@ -36,11 +36,12 @@ export const CollectionsCard = (data) => {
             newColDesc = oldColDesc;
         else
             newColDesc = updtCollectionDescription;
-
+        console.log(isUserLogged)
         if(isUserLogged)
             try{
+                console.log("test")
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${__API__}/updateCollection`, {
+                const res = await fetch(`${__API__}${data.route}/updateCollection`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token

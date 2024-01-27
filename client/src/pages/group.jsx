@@ -95,8 +95,8 @@ export const Group = () => {
                     <div className="groupCollection">
                         <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                             {collections.map((collection, index)=> (
-                                <CollectionsCard key={collection._id} data={collections} collection={collection} 
-                                index={index} returnCollection={getCollection} section="groupsCollection"/>
+                                <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={true}
+                                index={index} returnCollection={getCollection} section="groupsCollection" route={`/groups/${from._id}`}/>
                             ))}
                         </div>
                     </div>
