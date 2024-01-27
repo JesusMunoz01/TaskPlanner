@@ -6,11 +6,13 @@ import { Link } from "react-router-dom";
 
 export const CollectionsCard = (data) => {
     const [collections, setCollections] = useState(data.data);
+    const [collection, setCollection] = useState(data.collection);
+    const [index, setIndex] = useState(data.index);
     const [isUserLogged, ] = useState(data.isLogged)
     const [updtCollectionTitle, updateCollectionTitle] = useState("");
     const [updtCollectionDescription, updateCollectionDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
-
+ 
     async function delCollection(collectionID){
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
@@ -19,6 +21,7 @@ export const CollectionsCard = (data) => {
             });
 
             setCollections(collections.filter((collection) => collection._id !== collectionID))
+            data.returnCollection(collections.filter((collection) => collection._id !== collectionID))
         }
     }
 
@@ -54,6 +57,7 @@ export const CollectionsCard = (data) => {
                 updatedValues[index].collectionTitle = `${newColTitle}`
                 updatedValues[index].collectionDescription = `${newColDesc}`
                 setCollections(updatedValues)
+                data.returnCollection(updatedValues)
             }catch(error){
                 console.log(error)
             }
@@ -82,9 +86,7 @@ export const CollectionsCard = (data) => {
     }
 
 
-    return <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
-                    {collections.map((collection, index)=> (
-                        <div className={`${data.section}List`} data-testid={`${data.section}-item`} key={collection._id}>
+    return <div className={`${data.section}List`} data-testid={`${data.section}-item`} key={collection._id}>
                             <li key={collection._id}>
                                 <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
                                     to={`/collections/${index}`}>{collection.collectionTitle}</Link>
@@ -115,6 +117,4 @@ export const CollectionsCard = (data) => {
                                     onClick={() => changeInfo(collection._id, collection.collectionTitle, collection.collectionDescription)}>Save Changes</button>
                             </ul>
                         </div>
-                    ))}
-            </div>
 }

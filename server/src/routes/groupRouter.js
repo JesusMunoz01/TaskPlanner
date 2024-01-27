@@ -68,21 +68,14 @@ groupRouter.post("/groups/:groupID/createCollection", verification, async (req, 
             collectionStatus: "Incomplete",
             tasks: []
         });
-        console.log(newCollection)
-        console.log("++++++++++++++++++++")
-        console.log(groupDB)
-        groupDB.collections.push(newCollection)
-        res.send(groupDB.collections)
-        // try{
-        //     const creation = await newGroup.save();
-        //     userDB.groups.joined.push(creation._id.toString())
-        //     await userDB.save()
-        //     res.json({groupName: creation.groupName, groupDescription: creation.groupDescription, 
-        //         collections: creation.collections, _id: creation._id, permissions: "Admin"})
-        // }
-        // catch(error){
-        //     res.send({status: error, message:"A username and password is required"})
-        // }
+        try{
+            groupDB.collections.push(newCollection)
+            groupDB.save()
+            res.send(groupDB.collections)
+        }
+        catch(error){
+            res.send({status: error, message:"A username and password is required"})
+        }
     }
     else
         res.send("Couldnt perform action")

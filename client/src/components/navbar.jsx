@@ -10,6 +10,7 @@ export const Navbar = ({loginStatus}) => {
     const [activeTab, setActive] = useState(window.sessionStorage.getItem("selectedRoute"));
     
     useEffect(() => {
+        if(activeTab)
         if(document.getElementById(activeTab).className !== "navbar active") 
             document.getElementById(activeTab).className = "navbar active";
         }, [])
