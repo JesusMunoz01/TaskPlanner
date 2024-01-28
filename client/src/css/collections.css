@@ -22,7 +22,7 @@
 .collections{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(1, 530px);
+    grid-template-rows: repeat(1, fit-content);
     min-height: 92vh;
     width: 100%;
     text-align: center;
@@ -181,6 +181,10 @@
     justify-content: center;
     align-items: center;
     margin-top: 375px;
+}
+
+#closeCreateIcon{
+    cursor: pointer;
 }
 
   .addCollection form{

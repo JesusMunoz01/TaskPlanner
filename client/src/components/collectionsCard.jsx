@@ -1,5 +1,5 @@
 import "../css/collections.css"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -16,8 +16,9 @@ export const CollectionsCard = (data) => {
     async function delCollection(collectionID){
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
+            let test;
             if(data.route)
-            await fetch(`${__API__}${data.route}/deleteCollection/${collectionID}`, {
+            test = await fetch(`${__API__}${data.route}/deleteCollection/${collectionID}`, {
                 method: "DELETE", headers: {auth: cookies.access_token}, 
             });
             else
@@ -25,12 +26,13 @@ export const CollectionsCard = (data) => {
                 method: "DELETE", headers: {auth: cookies.access_token}, 
             });
 
-            setCollections(collections.filter((collection) => collection._id !== collectionID))
+            setCollections((prevCollections) => prevCollections.filter((collection) => collection._id !== collectionID));
+            setCollection((prevCollections) => prevCollections.filter((collection) => collection._id !== collectionID));
             data.returnCollection(collections.filter((collection) => collection._id !== collectionID))
         }
         else{
-            const delItem = JSON.parse(collections).filter((collection) => collection._id !== collectionID)
-            console.log(delItem)
+            const localData = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            const delItem = localData.filter((collection) => collection._id !== collectionID)
             window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
             if(JSON.parse(collections).length === 1){
                 window.localStorage.removeItem("localCollectionData");
@@ -39,7 +41,7 @@ export const CollectionsCard = (data) => {
             }else{
                 const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
                 setCollections(JSON.parse(getUpdatedLocal));
-                setCollection(JSON.parse(getUpdatedLocal)[index])
+                setCollection(JSON.parse(getUpdatedLocal))
                 data.returnCollection(getUpdatedLocal);
                 //setCurrentFilter(getUpdatedLocal);
             }
@@ -106,7 +108,8 @@ export const CollectionsCard = (data) => {
             localCollection[index].collectionDescription = `${newColDesc}`
             window.localStorage.setItem("localCollectionData", JSON.stringify(localCollection))
             const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
-            setCollections(getUpdatedLocal);
+            setCollections(JSON.parse(getUpdatedLocal));
+            setCollection(JSON.parse(getUpdatedLocal)[index])
             data.returnCollection(getUpdatedLocal);
             //setCurrentFilter(getUpdatedLocal);
         }

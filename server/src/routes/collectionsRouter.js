@@ -35,15 +35,15 @@ collectionRouter.post("/addCollection", verification, async (req, res) =>{
     try{
         userCheck = await UserModel.findOne({_id: user })
         const newCollection = new CollectionsModel({
-            collectionTitle: req.body.collectionTitle ,
-            collectionDescription: req.body.collectionDescription ,
+            collectionTitle: req.body.title ,
+            collectionDescription: req.body.desc ,
             collectionStatus: "Incomplete",
             tasks: []
         });
         try{
             userCheck.collections.push(newCollection);
             await userCheck.save();
-            res.json(newCollection)
+            res.json(userCheck.collections)
         }catch(error){
             res.json({error: error, message: "Title and description is required"})
         }

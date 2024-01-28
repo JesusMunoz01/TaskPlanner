@@ -15,7 +15,7 @@ export const SubmitForm = ({hide, title, labelData, children, getData, section, 
             if(isLogged){
                 try{
                     const userID = localStorage.getItem("userId");
-                    const response = await fetch(`${__API__}/groups/${labelData.action}`, {
+                    const response = await fetch(`${__API__}/${labelData.action}`, {
                         method: "POST", headers: {
                             'Content-Type': 'application/json',
                             auth: auth.access_token},
@@ -26,6 +26,7 @@ export const SubmitForm = ({hide, title, labelData, children, getData, section, 
                             })
                         });
                     const data = await response.json()
+                    console.log(data)
                     getData(data)
                     setNewGroup({title: "", desc: ""})
                     
