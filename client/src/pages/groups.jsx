@@ -1,11 +1,13 @@
 import "../css/groups.css"
 import { BsFillEnvelopeFill } from "react-icons/bs";
 import { BsX } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { Link } from "react-router-dom";
+import { UserContext } from "../App";
 
 export const Groups = ({userData, isLogged}) => {
+    const {groupData, setGroupData} = useContext(UserContext)
     const [isUserLogged, ] = useState(isLogged)
     const [groups, setGroups] = useState(userData || {})
     const [newGroup, setNewGroup] = useState({title: "", desc: ""})
@@ -44,6 +46,12 @@ export const Groups = ({userData, isLogged}) => {
                     joined: [...prev.joined, data]
                 }
             })
+            setGroupData((prev) => {
+                return {
+                    invites: prev.invites,
+                    joined: [...prev.joined, data]
+                }
+            })
 
             let addBox = document.getElementById("addGroup");
                 addBox.style.display = "none";
@@ -75,6 +83,12 @@ export const Groups = ({userData, isLogged}) => {
             const data = await response.json();
             //if(data.id)
             setGroups((prev) => {
+                return {
+                    invites: data.invites,
+                    joined: [...prev.joined, data]
+                }
+            })
+            setGroupData((prev) => {
                 return {
                     invites: data.invites,
                     joined: [...prev.joined, data]

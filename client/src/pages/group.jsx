@@ -17,7 +17,6 @@ export const Group = () => {
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
-    console.log(index)
     
     function getCollection(params){
         setCollections(params)

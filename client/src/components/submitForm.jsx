@@ -1,6 +1,6 @@
 import "../css/groups.css"
 import { BsX } from "react-icons/bs";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useCookies } from 'react-cookie';
 
 

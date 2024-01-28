@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export const CollectionsCard = (data) => {
     const [collections, setCollections] = useState(data.data);
     const [collection, setCollection] = useState(data.collection);
-    const [index, setIndex] = useState(data.index);
+    const [index, ] = useState(data.index);
     const [isUserLogged, ] = useState(data.isLogged)
     const [updtCollectionTitle, updateCollectionTitle] = useState("");
     const [updtCollectionDescription, updateCollectionDesc] = useState("");
