@@ -1,6 +1,6 @@
 import "../css/groups.css"
 import { BsX } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
 import { useCookies } from 'react-cookie';
 
 
@@ -27,6 +27,7 @@ export const SubmitForm = ({hide, title, labelData, children, getData}) => {
             const data = await response.json()
             getData(data)
             setNewGroup({title: "", desc: ""})
+            
         }
         catch(error){
 

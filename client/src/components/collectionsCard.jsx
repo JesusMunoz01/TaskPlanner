@@ -58,12 +58,11 @@ export const CollectionsCard = (data) => {
                         })
                     });
                 const updatedValues = await res.json()
-                console.log(updatedValues)
                 const index = updatedValues.findIndex((collection => collection._id === collectionID))
                 updatedValues[index].collectionTitle = `${newColTitle}`
                 updatedValues[index].collectionDescription = `${newColDesc}`
-                console.log(updatedValues)
                 setCollections(updatedValues)
+                setCollection(updatedValues[index])
                 data.returnCollection(updatedValues)
             }catch(error){
                 console.log(error)

@@ -17,13 +17,14 @@ export const Group = () => {
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
+    console.log(index)
     
     function getCollection(params){
         setCollections(params)
         groupData.joined[index].collections = params;
         setGroupData(groupData)
         location.state.from.collections = params;
-        navigate(".", {state: {from: location.state.from}});
+        navigate(".", {state: {from: location.state.from, index: index}});
     }
 
     async function sendInvite(){
