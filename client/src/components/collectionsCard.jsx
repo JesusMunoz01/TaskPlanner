@@ -28,6 +28,22 @@ export const CollectionsCard = (data) => {
             setCollections(collections.filter((collection) => collection._id !== collectionID))
             data.returnCollection(collections.filter((collection) => collection._id !== collectionID))
         }
+        else{
+            const delItem = JSON.parse(collections).filter((collection) => collection._id !== collectionID)
+            console.log(delItem)
+            window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
+            if(JSON.parse(collections).length === 1){
+                window.localStorage.removeItem("localCollectionData");
+                setCollections(null);
+                //setCurrentFilter(null);
+            }else{
+                const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
+                setCollections(JSON.parse(getUpdatedLocal));
+                setCollection(JSON.parse(getUpdatedLocal)[index])
+                data.returnCollection(getUpdatedLocal);
+                //setCurrentFilter(getUpdatedLocal);
+            }
+        }
     }
 
     async function changeInfo(collectionID, oldColTitle, oldColDesc){
@@ -42,10 +58,25 @@ export const CollectionsCard = (data) => {
         else
             newColDesc = updtCollectionDescription;
 
-        if(isUserLogged)
+        if(isUserLogged){
             try{
+                let res;
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${__API__}${data.route}/updateCollection`, {
+                if(data.route)
+                res = await fetch(`${__API__}${data.route}/updateCollection`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        collectionID,
+                        newColTitle,
+                        newColDesc
+                        })
+                    });
+                else
+                res = await fetch(`${__API__}/updateCollection`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -67,6 +98,18 @@ export const CollectionsCard = (data) => {
             }catch(error){
                 console.log(error)
             }
+        }
+        else{
+            const localCollection = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            const index = localCollection.findIndex((collection => collection._id === collectionID))
+            localCollection[index].collectionTitle = `${newColTitle}`
+            localCollection[index].collectionDescription = `${newColDesc}`
+            window.localStorage.setItem("localCollectionData", JSON.stringify(localCollection))
+            const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
+            setCollections(getUpdatedLocal);
+            data.returnCollection(getUpdatedLocal);
+            //setCurrentFilter(getUpdatedLocal);
+        }
 
         updateCollectionTitle("");
         updateCollectionDesc("");

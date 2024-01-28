@@ -1,7 +1,7 @@
 .collectionsHome{
     display: flex;
     overflow: auto;
-    min-height: 95vh;
+    min-height: 100%;
     min-width: 100%;
     align-items: flex-start;
     justify-content: center;
@@ -9,7 +9,7 @@
 
 .collectionsBox{
     display: flex;
-    min-height: 100%;
+    min-height: 92vh;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
@@ -22,9 +22,9 @@
 .collections{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    border-style: solid;
-    height: 525px;
-    min-width: 50vw;
+    grid-template-rows: repeat(1, 530px);
+    min-height: 92vh;
+    width: 100%;
     text-align: center;
     overflow-y: auto;
     background-color: var(--card-color);
@@ -32,10 +32,12 @@
 
 .collections li{
     display: flex;
-    max-height: 250px;
+    justify-content:space-around;
+    height: 500px;
+    max-height: 500px;
     border: solid;
     flex-direction: column;
-    margin: 4px 4px 0px 4px;
+    margin: 10px 10px 0px 10px;
 }
 
 #collectionDisplayTitle{
@@ -92,7 +94,7 @@
     margin-bottom: 5px;
 }
 
-.editCollection{
+.collectionsEdit{
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -107,7 +109,7 @@
     transition: all .3s ease-in;
 }
 
-.editCollection.active{
+.collectionsEdit.active{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -116,12 +118,13 @@
     background-color: rgba(119, 136, 153, 0.377);
     position: relative;
     height: 200px;
+    max-height: 200px;
     width: inherit;
     transition: all .3s ease-in;
     flex-direction: column;
 }
 
-.editCollection li{
+.collectionsEdit li{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -131,7 +134,7 @@
     font-size: 95%;
 }
 
-.editCollection li input{
+.collectionsEdit li input{
     display: flex;
     border-color: black;
     padding: 5px;
@@ -139,7 +142,7 @@
     width: 100%;
 }
 
-.editCollection button{
+.collectionsEdit button{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -170,6 +173,14 @@
     grid-column-end: 4;
     justify-content: center;
     align-self: center;
+}
+
+#test{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 375px;
 }
 
   .addCollection form{

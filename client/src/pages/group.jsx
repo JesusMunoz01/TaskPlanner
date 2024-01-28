@@ -75,7 +75,7 @@ export const Group = () => {
 
     return <div className="group" id="group">
         <div className="header" onMouseDown={(e) => hidePrompt(e, "Collection")}>
-        <Header title={`${from.groupName}`} section="Collection" backArrow={"/groups"}
+        <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             newAction={ from.permissions === "Admin" ? 
             <>
             <button id="delGroup">Delete Group</button>
@@ -108,7 +108,7 @@ export const Group = () => {
                 <span id="noGroupCollections">No Collections</span>
                 }
             </div>
-            <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection}
+            <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="GroupCollection"
                 labelData={{usePremade: true, title: "Collection", lower: "collection", action: `${groupID}/createCollection`}}/>
         </div>
             

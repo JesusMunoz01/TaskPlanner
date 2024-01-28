@@ -1,10 +1,15 @@
 import "../css/collections.css"
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { CollectionsCard } from "../components/collectionsCard";
+import { UserContext } from "../App";
+import { Header } from "../components/header";
+import { SubmitForm } from "../components/submitForm";
 
 export const Collections = (data) => {
+    const { collectionData, setCollectionData } = useContext(UserContext)
     const [collections, setCollections] = useState(data.data);
     const [isUserLogged, ] = useState(data.isLogged)
     const [collectionTitle, setCollectionTitle] = useState("");
@@ -12,6 +17,18 @@ export const Collections = (data) => {
     const [updtCollectionTitle, updateCollectionTitle] = useState("");
     const [updtCollectionDescription, updateCollectionDesc] = useState("");
     const [cookies, ] = useCookies(["access_token"]);
+
+    function getCollection(params){
+        if(isUserLogged){
+            setCollections(params)
+            setCollectionData(params)
+        }
+        else{
+            const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
+            setCollections(getUpdatedLocal)
+            setCollectionData(getUpdatedLocal)
+        }
+    }
 
     async function sendCollection(e){
         e.preventDefault();
@@ -257,97 +274,52 @@ export const Collections = (data) => {
             document.getElementById(`colSetting${id}`).className = "editCollection active"
     }
 
+    function hidePrompt(e){
+        let addBox = document.getElementById(`addCollections`);
+        if(e === undefined){
+            addBox.style.display = "none";
+            document.getElementById("createGroup").disabled = false;
+            document.getElementById("collections").style.filter = "none";
+        }
+        if(addBox.style.display !== "none" && e.button === 0){
+            addBox.style.display = "none";
+            document.getElementById("createGroup").disabled = false;
+            document.getElementById("collections").style.filter = "none";
+        }
+    }
 
-    return <div className="collectionsHome">
-        
-        <div className="collectionsBox">
-        <h1>Collections</h1>
-            <div className="collections">
-            {isUserLogged ? 
-                collections.length !== 0 ? 
-                    // Section for: Logged user with collections -------------------------------------------
-                    collections.map((collection, index)=> (
-                        <div className="collectionsList" data-testid="collection-item" key={collection._id}>
-                            <li key={collection._id}>
-                                <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
-                                    to={`/collections/${index}`}>{collection.collectionTitle}</Link>
-                                <div className="descBox">
-                                    <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
-                                </div>
-                                <div className="statusBox">
-                                    <span>Status: {collection.collectionStatus}</span>
-                                </div>
-                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="collectionsSettingsIcon" htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
-                            </li>
-                            <ul className="editCollection" id={`colSetting${collection._id}`} >
-                                <li id={`colSetting${collection._id}`}>
-                                    <label>Edit title:</label>
-                                    <input id="collectionTitle" aria-label={`editCollectionTitle${collection._id}`} value={updtCollectionTitle} 
-                                        onChange={(e) => updateCollectionTitle(e.target.value)}></input>
-                                </li>
-                                <li id={`colSetting${collection._id}`}>
-                                    <label>Edit Description:</label>
-                                    <input aria-label={`editCollectionDesc${collection._id}`} id="collectionDesc" value={updtCollectionDescription} 
-                                        onChange={(e) => updateCollectionDesc(e.target.value)}></input>
-                                </li>
-                                <button id="confirmColEdit" aria-label={`confirmColEdit${collection._id}`} 
-                                    onClick={() => changeInfo(collection._id, collection.collectionTitle, collection.collectionDescription)}>Save Changes</button>
-                            </ul>
-                        </div>
-                    )) : 
-                        // Section for: Logged user without collections -------------------------------------------
-                    <span id="collectionEmptyPrompt">Currently no Collections</span>
-                :
-                    collections ? 
-                    // Section for: Not logged user with collections -------------------------------------------
-                    JSON.parse(collections).map((collection)=> (
-                        <div className="collectionsList" data-testid="collection-item" key={collection._id}>
-                            <li key={collection._id}>
-                                <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
-                                    to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>
-                                <div className="descBox">
-                                    <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
-                                </div>
-                                <div className="statusBox">
-                                    <span>Status: {collection.status}</span>
-                                </div>
-                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="collectionsSettingsIcon" htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
-                            </li>
-                            <ul className="editCollection" id={`colSetting${collection._id}`} >
-                                <li id={`colSetting${collection._id}`}>
-                                    <label>Edit title:</label>
-                                    <input id="collectionTitle" aria-label={`editCollectionTitle${collection._id}`} value={updtCollectionTitle} 
-                                        onChange={(e) => updateCollectionTitle(e.target.value)}></input>
-                                </li>
-                                <li id={`colSetting${collection._id}`}>
-                                    <label>Edit Description:</label>
-                                    <input aria-label={`editCollectionDesc${collection._id}`} id="collectionDesc" value={updtCollectionDescription} 
-                                        onChange={(e) => updateCollectionDesc(e.target.value)}></input>
-                                </li>
-                                <button id="confirmColEdit" aria-label={`confirmColEdit${collection._id}`} 
-                                    onClick={() => changeInfo(collection._id, collection.collectionTitle, collection.collectionDescription)}>Save Changes</button>
-                            </ul>
-                        </div>
-                    )) : 
-                        // Section for: Not logged user without collections -------------------------------------------
-                    <span id="collectionEmptyPrompt">Currently no Collections</span>
-                    
+
+    return <div className="collectionsHome" id="collectionsHome">
+        <div style={{width: '100%', height: "100%"}}>
+            <Header title={"Collections"} section="Collections" mainDiv="collections"/>
+            <div className="collectionsBox" >
+                <div className="collections" id="collections" onMouseDown={hidePrompt}>
+                {isUserLogged ? 
+                    collections.length !== 0 ? 
+                        // Section for: Logged user with collections -------------------------------------------
+                        collections.map((collection, index)=> (
+                            <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={true}
+                            index={index} returnCollection={getCollection} section="collections"/>
+                        )) : 
+                            // Section for: Logged user without collections -------------------------------------------
+                        <span id="collectionEmptyPrompt">Currently no Collections</span>
+                    :
+                        collections ? 
+                        // Section for: Not logged user with collections -------------------------------------------
+                        JSON.parse(collections).map((collection, index)=> (
+                            <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={false}
+                            index={index} returnCollection={getCollection} section="collections"/>
+                        )) : 
+                            // Section for: Not logged user without collections -------------------------------------------
+                        <span id="collectionEmptyPrompt">Currently no Collections</span>
+                        
                 }
-                
         </div>
-            <div className="addCollection">
-                <h2>Add Collection</h2>
-                <form>
-                    <label>Collection Title: </label>
-                    <input aria-label="addCollectionTitle" id="collectionTitle" value={collectionTitle} onChange={(e) => setCollectionTitle(e.target.value)}></input>
-                    <label>Description: </label>
-                    <input aria-label="addCollectionDesc" id="collectionDesc" value={collectionDescription} onChange={(e) => setCollectionDesc(e.target.value)}></input>
-                    <button aria-label="createNewCollection" onClick={(e) => sendCollection(e)}>Submit</button>
-                </form>
+        <div id="test">
+            <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section={"Collections"}
+                labelData={{usePremade: true, title: "Collection", lower: "collection", action: `createCollection`}} isLogged={isUserLogged}/>
+        </div>
+                
             </div>
         </div> 
     </div>

@@ -108,7 +108,6 @@ export const Groups = ({userData, isLogged}) => {
         e.preventDefault();
         let addBox = document.getElementById("addGroup");
         addBox.style.display = "flex";
-        addBox.style.backfaceVisibility = "hidden";
         document.getElementById("createGroup").disabled = true;
         document.getElementById("groups").style.filter = "blur(20px)";
     }
