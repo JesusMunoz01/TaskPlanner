@@ -3,21 +3,25 @@ import { BsFillPersonLinesFill } from "react-icons/bs";
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Header } from "../components/header";
 import { SubmitForm } from "../components/submitForm";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useCookies } from "react-cookie";
 import { CollectionsCard } from "../components/collectionsCard";
+import { UserContext } from "../App";
 
 export const Group = () => {
     const [verification, ] = useCookies(["access_token"]);
+    const { groupData, setGroupData } = useContext(UserContext)
     const location = useLocation()
     const navigate = useNavigate()
-    const { from } = location.state
+    const { from, index } = location.state
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
     
     function getCollection(params){
         setCollections(params)
+        groupData.joined[index].collections = params;
+        setGroupData(groupData)
         location.state.from.collections = params;
         navigate(".", {state: {from: location.state.from}});
     }

@@ -113,8 +113,6 @@ groupRouter.post("/groups/:groupID/invite", verification, async (req, res) =>{
 groupRouter.post("/groups/:groupID/updateCollection", verification, async (req, res) =>{
     const groupID = req.params.groupID;
     const collectionUpdate = req.body.collectionID;
-    console.log(groupID)
-    console.log(collectionUpdate)
     try{
         const update = await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionUpdate}, 
         {$set: { "collections.$.collectionTitle": `${req.body.newColTitle}`, "collections.$.collectionDescription": `${req.body.newColDesc}`}})
