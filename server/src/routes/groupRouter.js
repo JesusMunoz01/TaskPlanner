@@ -159,4 +159,18 @@ groupRouter.post("/groups/:groupID/invite/action", verification, async (req, res
         res.send({message: "Group no longer exists"})
 })
 
+// Delete Routes --------------------------------------------------
+
+groupRouter.delete('/groups/:groupID/deleteCollection/:collectionID', verification, async (req, res) => {
+    const group = req.params.groupID;
+    const collectionID = req.params.collectionID;
+    try{
+        const delCollection = await GroupModel.findOneAndUpdate({"_id": group, "collections._id": collectionID}, 
+        {$pull: {collections: {_id: collectionID}}})
+        res.json(delCollection)
+    }catch(error){
+        res.json({error: error, message: "Couldnt delete collection"})
+    }
+})
+
 module.exports = groupRouter

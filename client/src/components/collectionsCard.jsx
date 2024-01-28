@@ -16,6 +16,11 @@ export const CollectionsCard = (data) => {
     async function delCollection(collectionID){
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
+            if(data.route)
+            await fetch(`${__API__}${data.route}/deleteCollection/${collectionID}`, {
+                method: "DELETE", headers: {auth: cookies.access_token}, 
+            });
+            else
             await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}`, {
                 method: "DELETE", headers: {auth: cookies.access_token}, 
             });
@@ -39,7 +44,6 @@ export const CollectionsCard = (data) => {
         console.log(isUserLogged)
         if(isUserLogged)
             try{
-                console.log("test")
                 const userID = window.localStorage.getItem("userId");
                 const res = await fetch(`${__API__}${data.route}/updateCollection`, {
                     method: "POST", headers: {
