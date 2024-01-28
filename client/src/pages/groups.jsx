@@ -139,8 +139,8 @@ export const Groups = ({userData, isLogged}) => {
             <div className="groups" id="groups">
                 {groups.joined.length !== 0 ? 
                     // Section for: Logged user with groups -------------------------------------------
-                    groups.joined.map((group) => (
-                        <Link key={group._id} to={`/groups/${group._id}`} state={{from: group}}>
+                    groups.joined.map((group, index) => (
+                        <Link key={group._id} to={`/groups/${group._id}`} state={{from: group, index: index}}>
                         <div className="groupCard">
                                 <h2>{group.groupName}</h2>
                                 <p>{group.groupDescription}</p>

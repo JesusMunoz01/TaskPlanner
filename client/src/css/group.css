@@ -63,6 +63,7 @@
     backdrop-filter: blur(30px);
     transition: .3s ease;
     overflow-y: auto;
+    z-index: 100;
 }
 
 .inviteUser{

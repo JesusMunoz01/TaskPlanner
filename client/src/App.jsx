@@ -1,5 +1,5 @@
 import './css/App.css';
-import { useState } from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from 'react-cookie'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
@@ -12,10 +12,12 @@ import { Landing } from './pages/landing';
 import { Groups } from './pages/groups';
 import { Group } from './pages/group';
 
+export const UserContext = React.createContext();
+
 function App() {
   const [taskData, setTaskData] = useState([]);
   const [collectionData, setCollectionData] = useState([]);
-  const [groupData, setgroupData] = useState([]);
+  const [groupData, setGroupData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userLogin, setLogin] = useState(false);
   const [logStatus, setLogStatus] = useState("Not Logged");
@@ -66,7 +68,7 @@ function App() {
             setLoading(false);
             setTaskData(taskData);
             setCollectionData(collectionData);
-            setgroupData(groupData);
+            setGroupData(groupData);
             }catch(error){
         
             }
@@ -102,6 +104,7 @@ function App() {
     :
     <div className="App">
       <Router>
+        <UserContext.Provider value={{taskData, setTaskData, collectionData, setCollectionData, groupData, setGroupData}}>
         <div className='pageFormat'>
           <div className='navbar'>
             <Navbar loginStatus={loginStatus}/>
@@ -121,6 +124,7 @@ function App() {
           </Routes>
           </div>
         </div>
+          </UserContext.Provider>
       </Router>
     </div>
     }

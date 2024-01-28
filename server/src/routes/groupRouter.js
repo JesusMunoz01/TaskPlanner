@@ -108,6 +108,20 @@ groupRouter.post("/groups/:groupID/invite", verification, async (req, res) =>{
         res.send("Not enough permissions")
 })
 
+// Update Routes --------------------------------------------------
+
+groupRouter.post("/groups/:groupID/updateCollection", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const collectionUpdate = req.body.collectionID;
+    try{
+        const update = await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionUpdate}, 
+        {$set: { "collections.$.collectionTitle": `${req.body.newColTitle}`, "collections.$.collectionDescription": `${req.body.newColDesc}`}})
+        res.json(update.collections)
+    }catch(error){
+        res.json({error: error, message: "Couldnt update information"})
+    }
+})
+
 groupRouter.post("/groups/:groupID/invite/action", verification, async (req, res) =>{
     const groupID = req.params.groupID;
     const user = req.body.userID;
@@ -141,6 +155,20 @@ groupRouter.post("/groups/:groupID/invite/action", verification, async (req, res
     }
     else
         res.send({message: "Group no longer exists"})
+})
+
+// Delete Routes --------------------------------------------------
+
+groupRouter.delete('/groups/:groupID/deleteCollection/:collectionID', verification, async (req, res) => {
+    const group = req.params.groupID;
+    const collectionID = req.params.collectionID;
+    try{
+        const delCollection = await GroupModel.findOneAndUpdate({"_id": group, "collections._id": collectionID}, 
+        {$pull: {collections: {_id: collectionID}}})
+        res.json(delCollection)
+    }catch(error){
+        res.json({error: error, message: "Couldnt delete collection"})
+    }
 })
 
 module.exports = groupRouter
