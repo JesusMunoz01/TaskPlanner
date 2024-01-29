@@ -1,10 +1,12 @@
 import "../css/collections.css"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { UserContext } from "../App";
 
 export const CollectionsCard = (data) => {
+    const { collectionData, setCollectionData, groupData } = useContext(UserContext)
     const [collections, setCollections] = useState(data.data);
     const [collection, setCollection] = useState(data.collection);
     const [index, ] = useState(data.index);
@@ -17,18 +19,18 @@ export const CollectionsCard = (data) => {
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
             let test;
-            if(data.route)
+            if(data.route !== undefined)
             test = await fetch(`${__API__}${data.route}/deleteCollection/${collectionID}`, {
                 method: "DELETE", headers: {auth: cookies.access_token}, 
             });
             else
-            await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}`, {
+            test = await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}`, {
                 method: "DELETE", headers: {auth: cookies.access_token}, 
             });
-
-            setCollections((prevCollections) => prevCollections.filter((collection) => collection._id !== collectionID));
-            setCollection((prevCollections) => prevCollections.filter((collection) => collection._id !== collectionID));
-            data.returnCollection(collections.filter((collection) => collection._id !== collectionID))
+            const response = await test.json();
+            setCollections(response);
+            setCollection(response);
+            data.returnCollection(response)
         }
         else{
             const localData = JSON.parse(window.localStorage.getItem("localCollectionData"))

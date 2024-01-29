@@ -9,11 +9,6 @@ export const Collections = (data) => {
     const { collectionData, setCollectionData } = useContext(UserContext)
     const [collections, setCollections] = useState(collectionData);
     const [isUserLogged, ] = useState(data.isLogged)
-    console.log(collectionData)
-
-    useEffect(() => {
-        console.log(collections);
-      }, [collections]);
 
     function getCollection(params){
         if(isUserLogged){
