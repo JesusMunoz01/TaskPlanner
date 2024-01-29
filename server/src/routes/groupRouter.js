@@ -165,7 +165,8 @@ groupRouter.delete('/groups/:groupID/deleteCollection/:collectionID', verificati
     try{
         const delCollection = await GroupModel.findOneAndUpdate({"_id": group, "collections._id": collectionID}, 
         {$pull: {collections: {_id: collectionID}}})
-        res.json(delCollection)
+        const filteredCollection = delCollection.collections.filter((collection) => collection._id != collectionID)
+        res.json(filteredCollection)
     }catch(error){
         res.json({error: error, message: "Couldnt delete collection"})
     }

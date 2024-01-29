@@ -19,11 +19,12 @@ export const Group = () => {
     const [collections, setCollections] = useState(from.collections)
     
     function getCollection(params){
+        console.log(params)
         setCollections(params)
         groupData.joined[index].collections = params;
         setGroupData(groupData)
         location.state.from.collections = params;
-        navigate(".", {state: {from: location.state.from}});
+        navigate(".", {state: {from: location.state.from, index: index}});
     }
 
     async function sendInvite(){
@@ -54,12 +55,12 @@ export const Group = () => {
         if(e === undefined){
             addBox.style.display = "none";
             document.getElementById("createGroup").disabled = false;
-            document.getElementById("group").style.filter = "none";
+            document.getElementById("groupCollections").style.filter = "none";
         }
         if(addBox.style.display !== "none" && e.button === 0){
             addBox.style.display = "none";
             document.getElementById("createGroup").disabled = false;
-            document.getElementById("group").style.filter = "none";
+            document.getElementById("groupCollections").style.filter = "none";
         }
     }
 
@@ -75,8 +76,8 @@ export const Group = () => {
 
     return <div className="group" id="group">
         <div className="header" onMouseDown={(e) => hidePrompt(e, "Collection")}>
-        <Header title={`${from.groupName}`} section="Collection" backArrow={"/groups"}
-            newAction={ from.permissions === "Admin" ? 
+        <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
+            mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>
             <button id="delGroup">Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
@@ -94,9 +95,9 @@ export const Group = () => {
             </div>
         </div>
         <div className="groupContent">
-            <div className="groupCollections" onMouseDown={(e) => hidePrompt(e, "Collection")}>
+            <div className="groupCollections" id="groupCollections" onMouseDown={(e) => hidePrompt(e, "Collection")}>
                 {collections.length !== 0 ?
-                    <div className="groupCollection">
+                    <div className="groupCollection" id="groupCollections">
                         <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                             {collections.map((collection, index)=> (
                                 <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={true}
@@ -108,8 +109,8 @@ export const Group = () => {
                 <span id="noGroupCollections">No Collections</span>
                 }
             </div>
-            <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection}
-                labelData={{usePremade: true, title: "Collection", lower: "collection", action: `${groupID}/createCollection`}}/>
+            <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="GroupCollection" isLogged={true}
+                labelData={{usePremade: true, title: "Collection", lower: "collection", action: `groups/${groupID}/createCollection`}}/>
         </div>
             
     </div>

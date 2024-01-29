@@ -1,13 +1,15 @@
 import "../css/collections.css"
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { UserContext } from "../App";
 
 export const CollectionsCard = (data) => {
+    const { collectionData, setCollectionData, groupData } = useContext(UserContext)
     const [collections, setCollections] = useState(data.data);
     const [collection, setCollection] = useState(data.collection);
-    const [index, setIndex] = useState(data.index);
+    const [index, ] = useState(data.index);
     const [isUserLogged, ] = useState(data.isLogged)
     const [updtCollectionTitle, updateCollectionTitle] = useState("");
     const [updtCollectionDescription, updateCollectionDesc] = useState("");
@@ -16,17 +18,35 @@ export const CollectionsCard = (data) => {
     async function delCollection(collectionID){
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
-            if(data.route)
-            await fetch(`${__API__}${data.route}/deleteCollection/${collectionID}`, {
+            let test;
+            if(data.route !== undefined)
+            test = await fetch(`${__API__}${data.route}/deleteCollection/${collectionID}`, {
                 method: "DELETE", headers: {auth: cookies.access_token}, 
             });
             else
-            await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}`, {
+            test = await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}`, {
                 method: "DELETE", headers: {auth: cookies.access_token}, 
             });
-
-            setCollections(collections.filter((collection) => collection._id !== collectionID))
-            data.returnCollection(collections.filter((collection) => collection._id !== collectionID))
+            const response = await test.json();
+            setCollections(response);
+            setCollection(response);
+            data.returnCollection(response)
+        }
+        else{
+            const localData = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            const delItem = localData.filter((collection) => collection._id !== collectionID)
+            window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
+            if(JSON.parse(collections).length === 1){
+                window.localStorage.removeItem("localCollectionData");
+                setCollections(null);
+                //setCurrentFilter(null);
+            }else{
+                const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
+                setCollections(JSON.parse(getUpdatedLocal));
+                setCollection(JSON.parse(getUpdatedLocal))
+                data.returnCollection(getUpdatedLocal);
+                //setCurrentFilter(getUpdatedLocal);
+            }
         }
     }
 
@@ -42,10 +62,25 @@ export const CollectionsCard = (data) => {
         else
             newColDesc = updtCollectionDescription;
 
-        if(isUserLogged)
+        if(isUserLogged){
             try{
+                let res;
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${__API__}${data.route}/updateCollection`, {
+                if(data.route)
+                res = await fetch(`${__API__}${data.route}/updateCollection`, {
+                    method: "POST", headers: {
+                        'Content-Type': 'application/json',
+                        auth: cookies.access_token
+                    },
+                    body: JSON.stringify({
+                        userID,
+                        collectionID,
+                        newColTitle,
+                        newColDesc
+                        })
+                    });
+                else
+                res = await fetch(`${__API__}/updateCollection`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: cookies.access_token
@@ -58,16 +93,28 @@ export const CollectionsCard = (data) => {
                         })
                     });
                 const updatedValues = await res.json()
-                console.log(updatedValues)
                 const index = updatedValues.findIndex((collection => collection._id === collectionID))
                 updatedValues[index].collectionTitle = `${newColTitle}`
                 updatedValues[index].collectionDescription = `${newColDesc}`
-                console.log(updatedValues)
                 setCollections(updatedValues)
+                setCollection(updatedValues[index])
                 data.returnCollection(updatedValues)
             }catch(error){
                 console.log(error)
             }
+        }
+        else{
+            const localCollection = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            const index = localCollection.findIndex((collection => collection._id === collectionID))
+            localCollection[index].collectionTitle = `${newColTitle}`
+            localCollection[index].collectionDescription = `${newColDesc}`
+            window.localStorage.setItem("localCollectionData", JSON.stringify(localCollection))
+            const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
+            setCollections(JSON.parse(getUpdatedLocal));
+            setCollection(JSON.parse(getUpdatedLocal)[index])
+            data.returnCollection(getUpdatedLocal);
+            //setCurrentFilter(getUpdatedLocal);
+        }
 
         updateCollectionTitle("");
         updateCollectionDesc("");
@@ -95,10 +142,10 @@ export const CollectionsCard = (data) => {
 
     return <div className={`${data.section}List`} data-testid={`${data.section}-item`} key={collection._id}>
                             <li key={collection._id}>
-                                <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
+                                <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
                                     to={`/collections/${index}`}>{collection.collectionTitle}</Link>
                                 <div className="descBox">
-                                    <p id="collectionDisplayDesc"aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
+                                    <p id="collectionDisplayDesc" aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>
                                 <div style={{display: "flex", flexDirection: "column", minHeight: "100px"}}>
                                     <div className="statusBox">
@@ -106,7 +153,7 @@ export const CollectionsCard = (data) => {
                                     </div>
                                     <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
                                     <label id={`${data.section}SettingsIcon`} htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                    <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
+                                    <button aria-label={`del${data.section}${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                                 </div>
                             </li>
                             <ul className={`${data.section}Edit`} id={`colSetting${collection._id}`} >

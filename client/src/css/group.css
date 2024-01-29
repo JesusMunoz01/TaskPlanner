@@ -37,12 +37,24 @@
     border-radius: 10px;
     height: 60%;
     margin: 0px 5px 0px 5px;
+    cursor: pointer;
+}
+
+#createGroup{
+    background-color: green;
+    border-color: var(--primary-color);
+    border-style: none;
+    border-radius: 10px;
+    height: 60%;
+    margin: 0px 5px 0px 5px;
+    cursor: pointer;
 }
 
 #groupUsers{
     display: flex;
     font-size: 36px;
     margin-right: 10px;
+    cursor: pointer;
 }
 
 .checkUsers{

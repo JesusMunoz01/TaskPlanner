@@ -1,74 +1,27 @@
 import "../css/collections.css"
-import { useState } from "react";
-import { useCookies } from 'react-cookie';
-import { BsGearFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { CollectionsCard } from "../components/collectionsCard";
+import { UserContext } from "../App";
+import { Header } from "../components/header";
+import { SubmitForm } from "../components/submitForm";
 
 export const Collections = (data) => {
-    const [collections, setCollections] = useState(data.data);
+    const { collectionData, setCollectionData } = useContext(UserContext)
+    const [collections, setCollections] = useState(collectionData);
     const [isUserLogged, ] = useState(data.isLogged)
-    const [collectionTitle, setCollectionTitle] = useState("");
-    const [collectionDescription, setCollectionDesc] = useState("");
-    const [updtCollectionTitle, updateCollectionTitle] = useState("");
-    const [updtCollectionDescription, updateCollectionDesc] = useState("");
-    const [cookies, ] = useCookies(["access_token"]);
 
-    async function sendCollection(e){
-        e.preventDefault();
+    function getCollection(params){
         if(isUserLogged){
-            try{
-                const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${__API__}/addCollection`, {
-                    method: "POST", headers: {
-                        'Content-Type': 'application/json',
-                        auth: cookies.access_token
-                    },
-                    body: JSON.stringify({
-                        userID,
-                        collectionTitle,
-                        collectionDescription,
-                        })
-                    });
-                const collection = await res.json()
-                if(collection == null)
-                    console.log("Failed to create collection")
-                else{
-                    setCollections([...collections, collection])
-                    data.updateCollection([...collections, collection])
-                }
-            }catch(error){
-                console.log(error)
-            }
+            setCollectionData((prev) => prev = params)
+            setCollections((prev) => prev = params)
         }
         else{
-            const getLocal = window.localStorage.getItem("localCollectionData");
-            let nextId = 0;
-            let localCollection = [];
-            let lastCollectionID = [];
-            if(getLocal)
-                localCollection = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            let localCopy = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            if(localCopy)
-                lastCollectionID = localCopy.pop();
-            if(lastCollectionID.length !== 0)
-                nextId = lastCollectionID._id + 1;
-
-                const newCollection = {
-                    collectionTitle: collectionTitle, collectionDescription: collectionDescription, 
-                    _id: nextId, tasks: [], status:"Incomplete"
-                }
-
-            localCollection.push(newCollection)
-            window.localStorage.setItem("localCollectionData", JSON.stringify(localCollection))
             const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
-            setCollections(getUpdatedLocal);
-            data.updateCollection(getUpdatedLocal)
-            // setCurrentFilter(getUpdatedLocal);
+            setCollections(getUpdatedLocal)
+            setCollectionData(getUpdatedLocal)
         }
-
-        setCollectionTitle('');
-        setCollectionDesc('');
     }
+
 /*
     async function sendCollectionTask(e){
         e.preventDefault();
@@ -99,31 +52,6 @@ export const Collections = (data) => {
         setCollectionDesc('');
     }
 */
-    async function delCollection(collectionID){
-        if(isUserLogged){
-            const userID = window.localStorage.getItem("userId");
-            await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}`, {
-                method: "DELETE", headers: {auth: cookies.access_token}, 
-            });
-
-            setCollections(collections.filter((collection) => collection._id !== collectionID))
-            //setCurrentFilter(collections);
-        }
-        else{
-            const delItem = JSON.parse(collections).filter((collection) => collection._id !== collectionID)
-            window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
-            if(JSON.parse(collections).length === 1){
-                window.localStorage.removeItem("localCollectionData");
-                setCollections(null);
-                //setCurrentFilter(null);
-            }else{
-                const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
-                setCollections(getUpdatedLocal);
-                data.updateCollection(getUpdatedLocal);
-                //setCurrentFilter(getUpdatedLocal);
-            }
-        }
-    }
 
     // async function changeStatus(collectionStatus, collectionID){
     //         try{
@@ -149,58 +77,6 @@ export const Collections = (data) => {
     //         }
     // }
 
-    async function changeInfo(collectionID, oldColTitle, oldColDesc){
-        let newColTitle = "", newColDesc = "";
-
-        if(updtCollectionTitle === "")
-            newColTitle = oldColTitle;
-        else
-            newColTitle = updtCollectionTitle;
-        if(updtCollectionDescription === "")
-            newColDesc = oldColDesc;
-        else
-            newColDesc = updtCollectionDescription;
-
-        if(isUserLogged)
-            try{
-                const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${__API__}/updateCollection`, {
-                    method: "POST", headers: {
-                        'Content-Type': 'application/json',
-                        auth: cookies.access_token
-                    },
-                    body: JSON.stringify({
-                        userID,
-                        collectionID,
-                        newColTitle,
-                        newColDesc
-                        })
-                    });
-                const updatedValues = await res.json()
-                const index = updatedValues.findIndex((collection => collection._id === collectionID))
-                updatedValues[index].collectionTitle = `${newColTitle}`
-                updatedValues[index].collectionDescription = `${newColDesc}`
-                setCollections(updatedValues)
-                //setCurrentFilter(updatedValues)
-            }catch(error){
-                console.log(error)
-            }
-        else{
-            const localCollection = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            const index = localCollection.findIndex((collection => collection._id === collectionID))
-            localCollection[index].collectionTitle = `${newColTitle}`
-            localCollection[index].collectionDescription = `${newColDesc}`
-            window.localStorage.setItem("localCollectionData", JSON.stringify(localCollection))
-            const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
-            setCollections(getUpdatedLocal);
-            data.updateCollection(getUpdatedLocal);
-            //setCurrentFilter(getUpdatedLocal);
-        }
-
-        updateCollectionTitle("");
-        updateCollectionDesc("");
-
-    }
 /*
     function filterTask(action){
         const selected = document.getElementById(`${action}`)
@@ -240,114 +116,53 @@ export const Collections = (data) => {
 
     }
 */
-    function displayEdit(id){
-        updateCollectionTitle("")
-        updateCollectionDesc("")
 
-        const currentMode = document.getElementById(`colSetting${id}`).className
-        var list = document.getElementsByClassName("editCollection active")
-
-        Array.prototype.forEach.call(list, (item) => {
-            item.className = "editCollection"
-        })
-
-        if(currentMode === "editCollection active")
-            document.getElementById(`colSetting${id}`).className = "editCollection"
-        else
-            document.getElementById(`colSetting${id}`).className = "editCollection active"
+    function hidePrompt(e){
+        let addBox = document.getElementById(`addCollections`);
+        if(e === undefined){
+            addBox.style.display = "none";
+            document.getElementById("createGroup").disabled = false;
+            document.getElementById("collections").style.filter = "none";
+        }
+        if(addBox.style.display !== "none" && e.button === 0){
+            addBox.style.display = "none";
+            document.getElementById("createGroup").disabled = false;
+            document.getElementById("collections").style.filter = "none";
+        }
     }
 
 
-    return <div className="collectionsHome">
-        
-        <div className="collectionsBox">
-        <h1>Collections</h1>
-            <div className="collections">
-            {isUserLogged ? 
-                collections.length !== 0 ? 
-                    // Section for: Logged user with collections -------------------------------------------
-                    collections.map((collection, index)=> (
-                        <div className="collectionsList" data-testid="collection-item" key={collection._id}>
-                            <li key={collection._id}>
-                                <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
-                                    to={`/collections/${index}`}>{collection.collectionTitle}</Link>
-                                <div className="descBox">
-                                    <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
-                                </div>
-                                <div className="statusBox">
-                                    <span>Status: {collection.collectionStatus}</span>
-                                </div>
-                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="collectionsSettingsIcon" htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
-                            </li>
-                            <ul className="editCollection" id={`colSetting${collection._id}`} >
-                                <li id={`colSetting${collection._id}`}>
-                                    <label>Edit title:</label>
-                                    <input id="collectionTitle" aria-label={`editCollectionTitle${collection._id}`} value={updtCollectionTitle} 
-                                        onChange={(e) => updateCollectionTitle(e.target.value)}></input>
-                                </li>
-                                <li id={`colSetting${collection._id}`}>
-                                    <label>Edit Description:</label>
-                                    <input aria-label={`editCollectionDesc${collection._id}`} id="collectionDesc" value={updtCollectionDescription} 
-                                        onChange={(e) => updateCollectionDesc(e.target.value)}></input>
-                                </li>
-                                <button id="confirmColEdit" aria-label={`confirmColEdit${collection._id}`} 
-                                    onClick={() => changeInfo(collection._id, collection.collectionTitle, collection.collectionDescription)}>Save Changes</button>
-                            </ul>
-                        </div>
-                    )) : 
-                        // Section for: Logged user without collections -------------------------------------------
-                    <span id="collectionEmptyPrompt">Currently no Collections</span>
-                :
-                    collections ? 
-                    // Section for: Not logged user with collections -------------------------------------------
-                    JSON.parse(collections).map((collection)=> (
-                        <div className="collectionsList" data-testid="collection-item" key={collection._id}>
-                            <li key={collection._id}>
-                                <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
-                                    to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>
-                                <div className="descBox">
-                                    <p id="collectionDisplayDesc"aria-label={`collectionDesc${collection._id}`}>{collection.collectionDescription}</p>
-                                </div>
-                                <div className="statusBox">
-                                    <span>Status: {collection.status}</span>
-                                </div>
-                                <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                <label id="collectionsSettingsIcon" htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
-                            </li>
-                            <ul className="editCollection" id={`colSetting${collection._id}`} >
-                                <li id={`colSetting${collection._id}`}>
-                                    <label>Edit title:</label>
-                                    <input id="collectionTitle" aria-label={`editCollectionTitle${collection._id}`} value={updtCollectionTitle} 
-                                        onChange={(e) => updateCollectionTitle(e.target.value)}></input>
-                                </li>
-                                <li id={`colSetting${collection._id}`}>
-                                    <label>Edit Description:</label>
-                                    <input aria-label={`editCollectionDesc${collection._id}`} id="collectionDesc" value={updtCollectionDescription} 
-                                        onChange={(e) => updateCollectionDesc(e.target.value)}></input>
-                                </li>
-                                <button id="confirmColEdit" aria-label={`confirmColEdit${collection._id}`} 
-                                    onClick={() => changeInfo(collection._id, collection.collectionTitle, collection.collectionDescription)}>Save Changes</button>
-                            </ul>
-                        </div>
-                    )) : 
-                        // Section for: Not logged user without collections -------------------------------------------
-                    <span id="collectionEmptyPrompt">Currently no Collections</span>
-                    
+    return <div className="collectionsHome" id="collectionsHome">
+        <div style={{width: '100%', height: "100%"}}>
+            <Header title={"Collections"} section="Collections" mainDiv="collections"/>
+            <div className="collectionsBox" >
+                <div className="collections" id="collections" onMouseDown={hidePrompt}>
+                {isUserLogged ? 
+                    collections.length !== 0 ? 
+                        // Section for: Logged user with collections -------------------------------------------
+                        collections.map((collection, index)=> (
+                            <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={true}
+                            index={index} returnCollection={getCollection} section="collections"/>
+                        )) : 
+                            // Section for: Logged user without collections -------------------------------------------
+                        <span id="collectionEmptyPrompt">Currently no Collections</span>
+                    :
+                        collections ? 
+                        // Section for: Not logged user with collections -------------------------------------------
+                        JSON.parse(collections).map((collection, index)=> (
+                            <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={false}
+                            index={index} returnCollection={getCollection} section="collections"/>
+                        )) : 
+                            // Section for: Not logged user without collections -------------------------------------------
+                        <span id="collectionEmptyPrompt">Currently no Collections</span>
+                        
                 }
-                
         </div>
-            <div className="addCollection">
-                <h2>Add Collection</h2>
-                <form>
-                    <label>Collection Title: </label>
-                    <input aria-label="addCollectionTitle" id="collectionTitle" value={collectionTitle} onChange={(e) => setCollectionTitle(e.target.value)}></input>
-                    <label>Description: </label>
-                    <input aria-label="addCollectionDesc" id="collectionDesc" value={collectionDescription} onChange={(e) => setCollectionDesc(e.target.value)}></input>
-                    <button aria-label="createNewCollection" onClick={(e) => sendCollection(e)}>Submit</button>
-                </form>
+        <div id="test">
+            <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="Collections"
+                labelData={{usePremade: true, title: "Collection", lower: "collection", action: `addCollection`}} isLogged={isUserLogged}/>
+        </div>
+                
             </div>
         </div> 
     </div>
