@@ -16,6 +16,7 @@ export const CollectionsCard = (data) => {
     const [cookies, ] = useCookies(["access_token"]);
  
     async function delCollection(collectionID){
+        console.log(collectionID)
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
             let test;
@@ -36,12 +37,13 @@ export const CollectionsCard = (data) => {
             const localData = JSON.parse(window.localStorage.getItem("localCollectionData"))
             const delItem = localData.filter((collection) => collection._id !== collectionID)
             window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
-            if(JSON.parse(collections).length === 1){
+            if(JSON.parse(collections).length === 0){
                 window.localStorage.removeItem("localCollectionData");
                 setCollections(null);
                 //setCurrentFilter(null);
             }else{
                 const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
+                console.log(getUpdatedLocal)
                 setCollections(JSON.parse(getUpdatedLocal));
                 setCollection(JSON.parse(getUpdatedLocal))
                 data.returnCollection(getUpdatedLocal);
@@ -159,15 +161,15 @@ export const CollectionsCard = (data) => {
                             <ul className={`${data.section}Edit`} id={`colSetting${collection._id}`} >
                                 <li id={`colSetting${collection._id}`}>
                                     <label>Edit title:</label>
-                                    <input id="collectionTitle" aria-label={`editCollectionTitle${collection._id}`} value={updtCollectionTitle} 
+                                    <input id="collectionTitle" aria-label={`edit${data.section}Title${collection._id}`} value={updtCollectionTitle} 
                                         onChange={(e) => updateCollectionTitle(e.target.value)}></input>
                                 </li>
                                 <li id={`colSetting${collection._id}`}>
                                     <label>Edit Description:</label>
-                                    <input aria-label={`editCollectionDesc${collection._id}`} id="collectionDesc" value={updtCollectionDescription} 
+                                    <input aria-label={`edit${data.section}Desc${collection._id}`} id="collectionDesc" value={updtCollectionDescription} 
                                         onChange={(e) => updateCollectionDesc(e.target.value)}></input>
                                 </li>
-                                <button id="confirmColEdit" aria-label={`confirmColEdit${collection._id}`} 
+                                <button id="confirmColEdit" aria-label={`confirm${data.section}Edit${collection._id}`} 
                                     onClick={() => changeInfo(collection._id, collection.collectionTitle, collection.collectionDescription)}>Save Changes</button>
                             </ul>
                         </div>

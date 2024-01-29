@@ -19,7 +19,7 @@ describe('Tests for collections Page', () => {
         const renderedCollections = render(
         <UserContext.Provider value={{collectionData, setCollectionData}}>
             <MemoryRouter>
-            <Collections/>
+                <Collections/>
             </MemoryRouter>
         </UserContext.Provider>)
         
@@ -30,9 +30,9 @@ describe('Tests for collections Page', () => {
         const collectionData = JSON.stringify(mockData)
         const renderedCollections = render(
         <UserContext.Provider value={{collectionData, setCollectionData}}>
-        <MemoryRouter>
-            <Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>
-        </MemoryRouter>
+            <MemoryRouter>
+                <Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>
+            </MemoryRouter>
         </UserContext.Provider>
         )
 
@@ -44,11 +44,11 @@ describe('Tests for collections Page', () => {
     test('Testing creating a collection with no previous collections', async () => {
         let collectionData = JSON.stringify([])
         const renderedCollections = render(
-            <UserContext.Provider value={{collectionData, setCollectionData}}>
-        <MemoryRouter>
-            <Collections isLogged={userLogin} updateCollection={updateCollection}/>
-        </MemoryRouter>
-            </UserContext.Provider>
+        <UserContext.Provider value={{collectionData, setCollectionData}}>
+            <MemoryRouter>
+                <Collections isLogged={userLogin} updateCollection={updateCollection}/>
+            </MemoryRouter>
+        </UserContext.Provider>
         )
         const createBox = await renderedCollections.findByLabelText('createGroup')
         const inputCollectionCollectionTitle = await renderedCollections.findByLabelText('addCollectionsTitle')
@@ -78,11 +78,11 @@ describe('Tests for collections Page', () => {
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData))
         let collectionData = JSON.stringify(mockData)
         const renderedCollections = render(
-            <UserContext.Provider value={{collectionData, setCollectionData}}>
-        <MemoryRouter>
-            <Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>
-        </MemoryRouter>
-            </UserContext.Provider>
+        <UserContext.Provider value={{collectionData, setCollectionData}}>
+            <MemoryRouter>
+                <Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>
+            </MemoryRouter>
+        </UserContext.Provider>
         )
         const inputCollectionCollectionTitle = await renderedCollections.findByLabelText('addCollectionsTitle')
         const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionsDesc')
@@ -105,137 +105,139 @@ describe('Tests for collections Page', () => {
         expect(inputCollectionDesc.value).toEqual("")
     })
 
+    
+    test('Updating a collection', async () => {
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData))
+        let collectionData = JSON.stringify(mockData)
+        const renderedCollections = render(
+        <UserContext.Provider value={{collectionData, setCollectionData}}>
+            <MemoryRouter>
+                <Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>
+            </MemoryRouter>
+        </UserContext.Provider>)
+        const updateCollectionTitle = await renderedCollections.findByLabelText('editcollectionsTitle1')
+        const updateCollectionDesc = await renderedCollections.findByLabelText('editcollectionsDesc1')
+        const cupdateCollection = await renderedCollections.findByLabelText('confirmcollectionsEdit1')
+        
+        await act(async () => {
+            await user.type(updateCollectionTitle, "Updated Mock Collection")
+            await user.type(updateCollectionDesc, "Updated Mock Description")
+            await user.click(cupdateCollection)
+        })
+        
+        const collections = await renderedCollections.findAllByTestId(/^collection/);
+        const prevCollectionTitle = await renderedCollections.findByLabelText("collectionsTitle1")
+        
+        expect(collections.length).toEqual(1);
+        expect(prevCollectionTitle.innerHTML).toEqual("Updated Mock Collection")
+        expect(updateCollectionTitle.value).toEqual("")
+        expect(updateCollectionDesc.value).toEqual("")
+    })
+    
+    test('Creating a collection and updating it', async () => {
+        window.localStorage.removeItem("localCollectionData")
+        const renderedCollections = render(
+        <UserContext.Provider value={{collectionData, setCollectionData}}>
+            <MemoryRouter>
+                <Collections isLogged={userLogin} updateCollection={updateCollection}/>
+            </MemoryRouter>
+        </UserContext.Provider>)
+        const inputCollectionTitle = await renderedCollections.findByLabelText('addCollectionsTitle')
+        const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionsDesc')
+        const createCollection = await renderedCollections.findByLabelText('createNewCollections')
+        
+        await act(async () => {
+            await user.type(inputCollectionTitle, "Test Collection")
+            await user.type(inputCollectionDesc, "Test Description")
+            await user.click(createCollection)
+        })
+        
+        const collectionTitle = await renderedCollections.findByLabelText("collectionsTitle0")
+        const collectionDesc = await renderedCollections.findByLabelText("collectionsDesc0")
+
+        expect(collectionTitle.innerHTML).toEqual("Test Collection")
+        expect(collectionDesc.innerHTML).toEqual("Test Description")
+
+        const updateCollectionTitle = await renderedCollections.findByLabelText('editcollectionsTitle0')
+        const updateCollectionDesc = await renderedCollections.findByLabelText('editcollectionsDesc0')
+        const updateCollectionBtn = await renderedCollections.findByLabelText('confirmcollectionsEdit0')
+
+        await act(async () => {
+                await user.type(updateCollectionTitle, "Updated Test Collection")
+                await user.type(updateCollectionDesc, "Updated Test Description")
+                await user.click(updateCollectionBtn)
+            })
+    
+        const collections = await renderedCollections.findAllByTestId(/^collection/);
+        const updatedCollectionTitle = await renderedCollections.findByLabelText("collectionsTitle0")
+        const updatedCollectionDesc = await renderedCollections.findByLabelText("collectionsDesc0")
+
+        expect(collections.length).toEqual(1);
+        expect(updatedCollectionTitle.innerHTML).toEqual("Updated Test Collection")
+        expect(updatedCollectionDesc.innerHTML).toEqual("Updated Test Description")
+        expect(inputCollectionTitle.value).toEqual("")
+        expect(inputCollectionDesc.value).toEqual("")
+        expect(updateCollectionTitle.value).toEqual("")
+        expect(updateCollectionDesc.value).toEqual("")
+        })
+            
+        test('Testing creating and deleting a collection', async () => {
+            window.localStorage.removeItem("localCollectionData")
+            const renderedCollections = render(
+            <UserContext.Provider value={{collectionData, setCollectionData}}>
+                <MemoryRouter>
+                    <Collections isLogged={userLogin} updateCollection={updateCollection}/>
+                </MemoryRouter>
+            </UserContext.Provider>)
+        const inputCollectionTitle = await renderedCollections.findByLabelText('addCollectionsTitle')
+        const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionsDesc')
+        const createCollection = await renderedCollections.findByLabelText('createNewCollections')
+        
+        await act(async () => {
+            await user.type(inputCollectionTitle, "Test Collection")
+            await user.type(inputCollectionDesc, "Test Description")
+            await user.click(createCollection)
+        })
+        
+        const collectionTitle = await renderedCollections.findByLabelText("collectionsTitle0")
+        const collectionDesc = await renderedCollections.findByLabelText("collectionsDesc0")
+        
+        expect(collectionTitle.innerHTML).toEqual("Test Collection")
+        expect(collectionDesc.innerHTML).toEqual("Test Description")
+        
+        const deleteCollectionBtn = await renderedCollections.findByLabelText('delcollections0')
+        
+        await act(async () => {
+            await user.click(deleteCollectionBtn)
+        })
+        
+        expect(deleteCollectionBtn).not.toBeInTheDocument()
+        expect(await renderedCollections.queryByLabelText("collectionsTitle0")).not.toBeInTheDocument()
+        expect(await renderedCollections.queryByLabelText("collectionsDesc0")).not.toBeInTheDocument()
+    })
+    
+    test('Testing deleting an old collection', async () => {
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData))
+        const collectionData = JSON.stringify(mockData)
+        const renderedCollections = render(
+            <UserContext.Provider value={{collectionData, setCollectionData}}>
+                <MemoryRouter>
+                    <Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>
+                </MemoryRouter>
+            </UserContext.Provider>)
+
+        const deleteCollectionBtn = await renderedCollections.findByLabelText('delcollections1')
+
+        await act(async () => {
+            await user.click(deleteCollectionBtn)
+        })
+
+        expect(deleteCollectionBtn).not.toBeInTheDocument()
+        expect(await renderedCollections.queryByLabelText("collectionTitle1")).not.toBeInTheDocument()
+        expect(await renderedCollections.queryByLabelText("collectionDesc1")).not.toBeInTheDocument()
+    })
+
 })
-
-//     test('Updating a collection', async () => {
-//         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData))
-//         const renderedCollections = render(
-//         <UserContext.Provider value={{collectionData, setCollectionData}}>
-//         <MemoryRouter>
-//             <Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>
-//             </MemoryRouter>
-//         </UserContext.Provider>)
-//         const updateCollectionTitle = await renderedCollections.findByLabelText('editCollectionTitle1')
-//         const updateCollectionDesc = await renderedCollections.findByLabelText('editCollectionDesc1')
-//         const cupdateCollection = await renderedCollections.findByLabelText('confirmColEdit1')
-
-//         await act(async () => {
-//             await user.type(updateCollectionTitle, "Updated Mock Collection")
-//             await user.type(updateCollectionDesc, "Updated Mock Description")
-//             await user.click(cupdateCollection)
-//         })
-
-//         const collections = await renderedCollections.findAllByTestId(/^collection/);
-//         const prevCollectionTitle = await renderedCollections.findByLabelText("collectionTitle1")
-
-//         expect(collections.length).toEqual(1);
-//         expect(prevCollectionTitle.innerHTML).toEqual("Updated Mock Collection")
-//         expect(updateCollectionTitle.value).toEqual("")
-//         expect(updateCollectionDesc.value).toEqual("")
-//     })
-
-//     test('Creating a collection and updating it', async () => {
-//         window.localStorage.removeItem("localCollectionData")
-//         const renderedCollections = render(
-//             <UserContext.Provider value={{collectionData, setCollectionData}}>
-//         <MemoryRouter>
-//             <Collections isLogged={userLogin} updateCollection={updateCollection}/>
-//             </MemoryRouter>
-//             </UserContext.Provider>)
-//         const inputCollectionTitle = await renderedCollections.findByLabelText('addCollectionTitle')
-//         const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionDesc')
-//         const createCollection = await renderedCollections.findByLabelText('createNewCollection')
-
-//         await act(async () => {
-//             await user.type(inputCollectionTitle, "Test Collection")
-//             await user.type(inputCollectionDesc, "Test Description")
-//             await user.click(createCollection)
-//         })
-
-//         const collectionTitle = await renderedCollections.findByLabelText("collectionTitle0")
-//         const collectionDesc = await renderedCollections.findByLabelText("collectionDesc0")
-
-//         expect(collectionTitle.innerHTML).toEqual("Test Collection")
-//         expect(collectionDesc.innerHTML).toEqual("Test Description")
-
-//         const updateCollectionTitle = await renderedCollections.findByLabelText('editCollectionTitle0')
-//         const updateCollectionDesc = await renderedCollections.findByLabelText('editCollectionDesc0')
-//         const updateCollectionBtn = await renderedCollections.findByLabelText('confirmColEdit0')
-
-//         await act(async () => {
-//             await user.type(updateCollectionTitle, "Updated Test Collection")
-//             await user.type(updateCollectionDesc, "Updated Test Description")
-//             await user.click(updateCollectionBtn)
-//         })
-
-//         const collections = await renderedCollections.findAllByTestId(/^collection/);
-//         const updatedCollectionTitle = await renderedCollections.findByLabelText("collectionTitle0")
-//         const updatedCollectionDesc = await renderedCollections.findByLabelText("collectionDesc0")
-
-//         expect(collections.length).toEqual(1);
-//         expect(updatedCollectionTitle.innerHTML).toEqual("Updated Test Collection")
-//         expect(updatedCollectionDesc.innerHTML).toEqual("Updated Test Description")
-//         expect(inputCollectionTitle.value).toEqual("")
-//         expect(inputCollectionDesc.value).toEqual("")
-//         expect(updateCollectionTitle.value).toEqual("")
-//         expect(updateCollectionDesc.value).toEqual("")
-//     })
-
-//     test('Testing creating and deleting a collection', async () => {
-//         window.localStorage.removeItem("localCollectionData")
-//         const renderedCollections = render(
-//             <UserContext.Provider value={{collectionData, setCollectionData}}>
-//         <MemoryRouter>
-//             <Collections isLogged={userLogin} updateCollection={updateCollection}/>
-//             </MemoryRouter>
-//             </UserContext.Provider>)
-//         const inputCollectionTitle = await renderedCollections.findByLabelText('addCollectionTitle')
-//         const inputCollectionDesc = await renderedCollections.findByLabelText('addCollectionDesc')
-//         const createCollection = await renderedCollections.findByLabelText('createNewCollection')
-
-//         await act(async () => {
-//             await user.type(inputCollectionTitle, "Test Collection")
-//             await user.type(inputCollectionDesc, "Test Description")
-//             await user.click(createCollection)
-//         })
-
-//         const collectionTitle = await renderedCollections.findByLabelText("collectionTitle0")
-//         const collectionDesc = await renderedCollections.findByLabelText("collectionDesc0")
-
-//         expect(collectionTitle.innerHTML).toEqual("Test Collection")
-//         expect(collectionDesc.innerHTML).toEqual("Test Description")
-
-//         const deleteCollectionBtn = await renderedCollections.findByLabelText('delCollection0')
-        
-//         await act(async () => {
-//             await user.click(deleteCollectionBtn)
-//         })
-
-//         expect(deleteCollectionBtn).not.toBeInTheDocument()
-//         expect(await renderedCollections.queryByLabelText("collectionTitle0")).not.toBeInTheDocument()
-//         expect(await renderedCollections.queryByLabelText("collectionDesc0")).not.toBeInTheDocument()
-//     })
-
-//     test('Testing deleting an old collection', async () => {
-//         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData))
-//         const renderedCollections = render(
-//             <UserContext.Provider value={{collectionData, setCollectionData}}>
-//             <MemoryRouter>
-//                 <Collections data={JSON.stringify(mockData)} isLogged={userLogin} updateCollection={updateCollection}/>
-//             </MemoryRouter>
-//             </UserContext.Provider>)
-
-//         const deleteCollectionBtn = await renderedCollections.findByLabelText('delCollection1')
-        
-//         await act(async () => {
-//             await user.click(deleteCollectionBtn)
-//         })
-
-//         expect(deleteCollectionBtn).not.toBeInTheDocument()
-//         expect(await renderedCollections.queryByLabelText("collectionTitle1")).not.toBeInTheDocument()
-//         expect(await renderedCollections.queryByLabelText("collectionDesc1")).not.toBeInTheDocument()
-//     })
-
 //     test('Testing deleting an old collection with other collections', async () => {
 //         const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
 //         {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: []},
