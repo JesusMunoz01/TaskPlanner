@@ -37,7 +37,6 @@ export const CollectionsCard = (data) => {
             const delItem = localData.filter((collection) => collection._id !== collectionID)
             window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
             const updatedData = JSON.parse(window.localStorage.getItem("localCollectionData"))
-            console.log(updatedData)
             if(updatedData.length === 0){
                 window.localStorage.removeItem("localCollectionData");
                 setCollections(null);
