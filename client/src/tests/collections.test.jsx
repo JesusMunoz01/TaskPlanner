@@ -233,89 +233,88 @@ describe('Tests for collections Page', () => {
         })
 
         expect(deleteCollectionBtn).not.toBeInTheDocument()
-        expect(await renderedCollections.queryByLabelText("collectionTitle1")).not.toBeInTheDocument()
-        expect(await renderedCollections.queryByLabelText("collectionDesc1")).not.toBeInTheDocument()
+        expect(await renderedCollections.queryByLabelText("collectionsTitle1")).not.toBeInTheDocument()
+        expect(await renderedCollections.queryByLabelText("collectionsDesc1")).not.toBeInTheDocument()
     })
 
+    test('Testing deleting an old collection with other collections', async () => {
+        const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
+        {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: []},
+        {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
+
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
+        const collectionData = JSON.stringify(mockData1)
+        const setCollectionData = () => {}
+        const renderedCollections = render(
+        <UserContext.Provider value={{collectionData, setCollectionData}}>
+            <MemoryRouter>
+                <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+            </MemoryRouter>
+        </UserContext.Provider>)
+
+        const deleteCollectionBtn1 = await renderedCollections.findByLabelText('delcollections1')
+        
+        await act(async () => {
+            await user.click(deleteCollectionBtn1)
+        })
+
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionsTitle2")
+        const collectionDesc2 = await renderedCollections.findByLabelText("collectionsDesc2")
+        const collectionTitle3 = await renderedCollections.findByLabelText("collectionsTitle3")
+        const collectionDesc3 = await renderedCollections.findByLabelText("collectionsDesc3")
+
+        const collections = await renderedCollections.findAllByTestId(/^collection/);
+
+        expect(collections.length).toEqual(2)
+        expect(await renderedCollections.queryByLabelText("collectionTitle1")).toEqual(null)
+        expect(await renderedCollections.queryByLabelText("collectionDesc1")).toEqual(null)
+        expect(collectionTitle2.textContent).toEqual("Mock Collection 2")
+        expect(collectionDesc2.innerHTML).toEqual("Fake description 2")
+        expect(collectionTitle3.textContent).toEqual("Mock Collection 3")
+        expect(collectionDesc3.innerHTML).toEqual("Fake description 3")
+    })
+
+    test('Deleting a collection with tasks', async () => {
+        const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
+        {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: [{title: "test", description: "test", _id: 1, status: "Incomplete"}]},
+        {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
+
+        window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
+        const collectionData = JSON.stringify(mockData1)
+        const setCollectionData = () => {}
+        const renderedCollections = render(
+        <UserContext.Provider value={{collectionData, setCollectionData}}>
+        <MemoryRouter>
+            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+            <Routes>
+                <Route path='/' element={null}/>
+                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+            </Routes>
+        </MemoryRouter>
+        </UserContext.Provider>)
+
+        const deleteCollectionBtn2 = await renderedCollections.findByLabelText('delcollections2')
+        
+        await act(async () => {
+            await user.click(deleteCollectionBtn2)
+        })
+
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionsTitle1")
+        const collectionDesc2 = await renderedCollections.findByLabelText("collectionsDesc1")
+        const collectionTitle3 = await renderedCollections.findByLabelText("collectionsTitle3")
+        const collectionDesc3 = await renderedCollections.findByLabelText("collectionsDesc3")
+
+        const collections = await renderedCollections.findAllByTestId(/^collection/);
+
+        expect(collections.length).toEqual(2)
+        expect(await renderedCollections.queryByLabelText("collectionTitle2")).toEqual(null)
+        expect(await renderedCollections.queryByLabelText("collectionDesc2")).toEqual(null)
+        expect(collectionTitle2.textContent).toEqual("Mock Collection")
+        expect(collectionDesc2.innerHTML).toEqual("Fake description")
+        expect(collectionTitle3.textContent).toEqual("Mock Collection 3")
+        expect(collectionDesc3.innerHTML).toEqual("Fake description 3")
+    })
 })
-//     test('Testing deleting an old collection with other collections', async () => {
-//         const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
-//         {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: []},
-//         {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
-
-//         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
-//         const collectionData = JSON.stringify(mockData1)
-//         const setCollectionData = () => {}
-//         const renderedCollections = render(
-//         <UserContext.Provider value={{collectionData, setCollectionData}}>
-//             <MemoryRouter>
-//                 <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
-//             </MemoryRouter>
-//         </UserContext.Provider>)
-
-//         const deleteCollectionBtn1 = await renderedCollections.findByLabelText('delcollections1')
-        
-//         await act(async () => {
-//             await user.click(deleteCollectionBtn1)
-//         })
-
-//         const collectionTitle2 = await renderedCollections.findByLabelText("collectionTitle2")
-//         const collectionDesc2 = await renderedCollections.findByLabelText("collectionDesc2")
-//         const collectionTitle3 = await renderedCollections.findByLabelText("collectionTitle3")
-//         const collectionDesc3 = await renderedCollections.findByLabelText("collectionDesc3")
-
-//         const collections = await renderedCollections.findAllByTestId(/^collection/);
-
-//         expect(collections.length).toEqual(2)
-//         expect(await renderedCollections.queryByLabelText("collectionTitle1")).toEqual(null)
-//         expect(await renderedCollections.queryByLabelText("collectionDesc1")).toEqual(null)
-//         expect(collectionTitle2.textContent).toEqual("Mock Collection 2")
-//         expect(collectionDesc2.innerHTML).toEqual("Fake description 2")
-//         expect(collectionTitle3.textContent).toEqual("Mock Collection 3")
-//         expect(collectionDesc3.innerHTML).toEqual("Fake description 3")
-//     })
-
-//     test('Deleting a collection with tasks', async () => {
-//         const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},
-//         {collectionTitle: "Mock Collection 2", collectionDescription: "Fake description 2", _id: 2, tasks: [{title: "test", description: "test", _id: 1, status: "Incomplete"}]},
-//         {collectionTitle: "Mock Collection 3", collectionDescription: "Fake description 3", _id: 3, tasks: []}]
-
-//         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
-//         const collectionData = JSON.stringify(mockData1)
-//         const setCollectionData = () => {}
-//         const renderedCollections = render(
-//         <UserContext.Provider value={{collectionData, setCollectionData}}>
-//         <MemoryRouter>
-//             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
-//             <Routes>
-//                 <Route path='/' element={null}/>
-//                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
-//             </Routes>
-//         </MemoryRouter>
-//         </UserContext.Provider>)
-
-//         const deleteCollectionBtn2 = await renderedCollections.findByLabelText('delcollections2')
-        
-//         await act(async () => {
-//             await user.click(deleteCollectionBtn2)
-//         })
-
-//         const collectionTitle2 = await renderedCollections.findByLabelText("collectionsTitle1")
-//         const collectionDesc2 = await renderedCollections.findByLabelText("collectionsDesc1")
-//         const collectionTitle3 = await renderedCollections.findByLabelText("collectionsTitle3")
-//         const collectionDesc3 = await renderedCollections.findByLabelText("collectionsDesc3")
-
-//         const collections = await renderedCollections.findAllByTestId(/^collection/);
-
-//         expect(collections.length).toEqual(2)
-//         expect(await renderedCollections.queryByLabelText("collectionTitle2")).toEqual(null)
-//         expect(await renderedCollections.queryByLabelText("collectionDesc2")).toEqual(null)
-//         expect(collectionTitle2.textContent).toEqual("Mock Collection")
-//         expect(collectionDesc2.innerHTML).toEqual("Fake description")
-//         expect(collectionTitle3.textContent).toEqual("Mock Collection 3")
-//         expect(collectionDesc3.innerHTML).toEqual("Fake description 3")
-//     })
-// })
 
 // describe('Tests for collections Page API', () => {
 
