@@ -142,10 +142,10 @@ export const CollectionsCard = (data) => {
 
     return <div className={`${data.section}List`} data-testid={`${data.section}-item`} key={collection._id}>
                             <li key={collection._id}>
-                                <Link id="collectionDisplayTitle" aria-label={`collectionTitle${collection._id}`} 
+                                <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
                                     to={`/collections/${index}`}>{collection.collectionTitle}</Link>
                                 <div className="descBox">
-                                    <p id="collectionDisplayDesc"aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
+                                    <p id="collectionDisplayDesc" aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>
                                 <div style={{display: "flex", flexDirection: "column", minHeight: "100px"}}>
                                     <div className="statusBox">
@@ -153,7 +153,7 @@ export const CollectionsCard = (data) => {
                                     </div>
                                     <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
                                     <label id={`${data.section}SettingsIcon`} htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
-                                    <button aria-label={`delCollection${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
+                                    <button aria-label={`del${data.section}${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                                 </div>
                             </li>
                             <ul className={`${data.section}Edit`} id={`colSetting${collection._id}`} >

@@ -144,7 +144,8 @@ collectionRouter.delete('/deleteCollection/:userID/:collectionID', verification,
     try{
         const delCollection = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID}, 
         {$pull: {collections: {_id: collectionID}}})
-        res.json(delCollection)
+        const filteredCollection = delCollection.collections.filter((collection) => collection._id != collectionID)
+        res.json(filteredCollection)
     }catch(error){
         res.json({error: error, message: "Couldnt delete collection"})
     }

@@ -21,7 +21,7 @@ export const Header = ({title, backArrow, newAction, section, mainDiv}) => {
                     <h1>{title}</h1>
                 </div>
                 <div className="groupsBox-headerActions">
-                    <button id="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
+                    <button id="createGroup" aria-label="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
                     {newAction ? newAction : null}
                 </div>
             </div>

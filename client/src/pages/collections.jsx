@@ -1,5 +1,5 @@
 import "../css/collections.css"
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { CollectionsCard } from "../components/collectionsCard";
 import { UserContext } from "../App";
 import { Header } from "../components/header";
@@ -149,7 +149,7 @@ export const Collections = (data) => {
                     :
                         collections ? 
                         // Section for: Not logged user with collections -------------------------------------------
-                        JSON.parse(collectionData).map((collection, index)=> (
+                        JSON.parse(collections).map((collection, index)=> (
                             <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={false}
                             index={index} returnCollection={getCollection} section="collections"/>
                         )) : 
@@ -159,7 +159,7 @@ export const Collections = (data) => {
                 }
         </div>
         <div id="test">
-            <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section={"Collections"}
+            <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="Collections"
                 labelData={{usePremade: true, title: "Collection", lower: "collection", action: `addCollection`}} isLogged={isUserLogged}/>
         </div>
                 

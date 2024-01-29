@@ -66,14 +66,14 @@ export const SubmitForm = ({hide, title, labelData, children, getData, section, 
     return <div className={`add${section}`} id={`add${section}`}>
             <h2>{title}</h2>
             <input type="checkbox" id="closeCreate" style={{display: 'none'}}></input>
-            <label htmlFor="closeCreate" id="closeCreateIcon" onClick={() => hide(undefined, `${labelData.title}`)}><BsX /></label>
+            <label htmlFor="closeCreate" id="closeCreateIcon" aria-label="closeCreateIcon" onClick={() => hide(undefined, `${labelData.title}`)}><BsX /></label>
             {labelData.usePremade ?
             <form className={`promptForm${section}`}>
                 <label>{labelData.title} Title: </label>
-                <input id={`${labelData.title}Title`} value={newGroup.title} onChange={(e) => {setNewGroup((prev) => {return {title: e.target.value, desc: prev.desc}})}}></input>
+                <input id={`${labelData.title}Title`} aria-label={`add${section}Title`} value={newGroup.title} onChange={(e) => {setNewGroup((prev) => {return {title: e.target.value, desc: prev.desc}})}}></input>
                 <label>{labelData.title} Description: </label>
-                <input id={`${labelData.title}Desc`} value={newGroup.desc} onChange={(e) => {setNewGroup((prev) => {return {title: prev.title, desc: e.target.value}})}}></input>
-                <button onClick={(e) => sendData(e, labelData.action)}>Submit</button>
+                <input id={`${labelData.title}Desc`} aria-label={`add${section}Desc`} value={newGroup.desc} onChange={(e) => {setNewGroup((prev) => {return {title: prev.title, desc: e.target.value}})}}></input>
+                <button aria-label={`createNew${section}`} onClick={(e) => sendData(e, labelData.action)}>Submit</button>
             </form> : null
             }
             {children ?
