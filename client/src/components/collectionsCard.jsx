@@ -16,7 +16,6 @@ export const CollectionsCard = (data) => {
     const [cookies, ] = useCookies(["access_token"]);
  
     async function delCollection(collectionID){
-        console.log(collectionID)
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
             let test;
@@ -37,13 +36,16 @@ export const CollectionsCard = (data) => {
             const localData = JSON.parse(window.localStorage.getItem("localCollectionData"))
             const delItem = localData.filter((collection) => collection._id !== collectionID)
             window.localStorage.setItem("localCollectionData", JSON.stringify(delItem))
-            if(JSON.parse(collections).length === 0){
+            const updatedData = JSON.parse(window.localStorage.getItem("localCollectionData"))
+            console.log(updatedData)
+            if(updatedData.length === 0){
                 window.localStorage.removeItem("localCollectionData");
                 setCollections(null);
+                setCollection(JSON.parse(null))
+                data.returnCollection(null);
                 //setCurrentFilter(null);
             }else{
                 const getUpdatedLocal = window.localStorage.getItem("localCollectionData");
-                console.log(getUpdatedLocal)
                 setCollections(JSON.parse(getUpdatedLocal));
                 setCollection(JSON.parse(getUpdatedLocal))
                 data.returnCollection(getUpdatedLocal);
@@ -145,7 +147,7 @@ export const CollectionsCard = (data) => {
     return <div className={`${data.section}List`} data-testid={`${data.section}-item`} key={collection._id}>
                             <li key={collection._id}>
                                 <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
-                                    to={`/collections/${index}`}>{collection.collectionTitle}</Link>
+                                    to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>
                                 <div className="descBox">
                                     <p id="collectionDisplayDesc" aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>

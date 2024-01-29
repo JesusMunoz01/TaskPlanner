@@ -316,125 +316,125 @@ describe('Tests for collections Page', () => {
     })
 })
 
-// describe('Tests for collections Page API', () => {
+describe('Tests for collections Page API', () => {
 
-//     const userLogin = true;
-//     const updateCollection = () => {}
+    const userLogin = true;
+    const updateCollection = () => {}
 
-//     const mockCollectionDB = [{collections: [{collectionTitle: "mockCollection1",
-//         collectionDescription: "fake collection response 1", collectionStatus: "Incomplete", _id: 1, tasks: []},
-//         {collectionTitle: "mockCollection2", collectionDescription: "fake collection response 2",
-//             collectionStatus: "Incomplete", _id: 2, tasks: []}]},
-//         {collections: [{collectionTitle: "mockCollection1", collectionDescription: "fake collection response 1",
-//             collectionStatus: "Incomplete", _id: 1, tasks: []}]},
-//         {collections: []},
-//         {collections: [{collectionTitle: "mockCollection1 user4", collectionDescription: "fake collection response 1",
-//             collectionStatus: "Incomplete", _id: 1, tasks: []},
-//         {collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2",
-//             collectionStatus: "Incomplete", _id: 2, tasks: []}]},]
+    const mockCollectionDB = [{collections: [{collectionTitle: "mockCollection1",
+        collectionDescription: "fake collection response 1", collectionStatus: "Incomplete", _id: 1, tasks: []},
+        {collectionTitle: "mockCollection2", collectionDescription: "fake collection response 2",
+            collectionStatus: "Incomplete", _id: 2, tasks: []}]},
+        {collections: [{collectionTitle: "mockCollection1", collectionDescription: "fake collection response 1",
+            collectionStatus: "Incomplete", _id: 1, tasks: []}]},
+        {collections: []},
+        {collections: [{collectionTitle: "mockCollection1 user4", collectionDescription: "fake collection response 1",
+            collectionStatus: "Incomplete", _id: 1, tasks: []},
+        {collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2",
+            collectionStatus: "Incomplete", _id: 2, tasks: []}]},]
 
-//     afterEach(() => {localStorage.clear()})
+    afterEach(() => {localStorage.clear()})
 
-//     test('Testing page with no collection data', async () => {
-//         window.localStorage.setItem("userId", 3);
-//         const response = await fetch(`http://localhost:8080/collections/${localStorage.getItem("userId")}`)
-//         expect(await response.json()).toEqual([])
-//     })
+    test('Testing page with no collection data', async () => {
+        window.localStorage.setItem("userId", 3);
+        const response = await fetch(`http://localhost:8080/collections/${localStorage.getItem("userId")}`)
+        expect(await response.json()).toEqual([])
+    })
 
-//     test('Testing fetching collections and tasks', async () => {
-//         window.localStorage.setItem("userId", 1);
-//         const response = await fetch(`http://localhost:8080/collections/${localStorage.getItem("userId")}`)
-//         expect(await response.json()).toEqual(mockCollectionDB[0].collections)
-//     })
+    test('Testing fetching collections and tasks', async () => {
+        window.localStorage.setItem("userId", 1);
+        const response = await fetch(`http://localhost:8080/collections/${localStorage.getItem("userId")}`)
+        expect(await response.json()).toEqual(mockCollectionDB[0].collections)
+    })
 
-//     test('Testing creating a collection on a user with previous collections', async () => {
-//         const userID = 1;
-//         const title = "New collection";
-//         const desc = "New description";
-//         const response = await fetch(`http://localhost:8080/collections/create`, {
-//             method: "POST", headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 userID,
-//                 title,
-//                 desc,
-//                 status: "Incomplete"
-//                 })
-//             });
-//         const addedCol = {collectionTitle: title, collectionDescription: desc, collectionStatus: "Incomplete",
-//                 _id: 3, tasks: []}
+    test('Testing creating a collection on a user with previous collections', async () => {
+        const userID = 1;
+        const title = "New collection";
+        const desc = "New description";
+        const response = await fetch(`http://localhost:8080/collections/create`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                title,
+                desc,
+                status: "Incomplete"
+                })
+            });
+        const addedCol = {collectionTitle: title, collectionDescription: desc, collectionStatus: "Incomplete",
+                _id: 3, tasks: []}
        
-//         const updatedData = await response.json();
-//         expect(updatedData.length).toEqual(3)
-//         expect(updatedData).toEqual([...mockCollectionDB[0].collections, addedCol])
-//     })
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(3)
+        expect(updatedData).toEqual([...mockCollectionDB[0].collections, addedCol])
+    })
 
-//     test('Testing creating a collection on a user without previous collections', async () => {
-//         const userID = 3;
-//         const title = "First collection";
-//         const desc = "First description";
-//         const response = await fetch(`http://localhost:8080/collections/create`, {
-//             method: "POST", headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 userID,
-//                 title,
-//                 desc,
-//                 status: "Incomplete"
-//                 })
-//             });
-//         const updatedData = await response.json();
-//         expect(updatedData.length).toEqual(1)
-//         expect(updatedData).toEqual([{collectionTitle: "First collection", collectionDescription: "First description", 
-//             collectionStatus: "Incomplete", _id: 0, tasks: []}])
-//     })
+    test('Testing creating a collection on a user without previous collections', async () => {
+        const userID = 3;
+        const title = "First collection";
+        const desc = "First description";
+        const response = await fetch(`http://localhost:8080/collections/create`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                title,
+                desc,
+                status: "Incomplete"
+                })
+            });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{collectionTitle: "First collection", collectionDescription: "First description", 
+            collectionStatus: "Incomplete", _id: 0, tasks: []}])
+    })
 
-//     test('Testing deleting a collection', async () => {
-//         const userID = 4;
-//         const collectionID = 1;
-//         const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}`, {
-//             method: "DELETE", body: JSON.stringify({userID})
-//         });
-//         const updatedData = await response.json();
-//         expect(updatedData.length).toEqual(1)
-//         expect(updatedData).toEqual([{collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2",
-//         collectionStatus: "Incomplete", _id: 2, tasks: []}])
-//     })
+    test('Testing deleting a collection', async () => {
+        const userID = 4;
+        const collectionID = 1;
+        const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}`, {
+            method: "DELETE", body: JSON.stringify({userID})
+        });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2",
+        collectionStatus: "Incomplete", _id: 2, tasks: []}])
+    })
 
-//     test('Testing deleting the last collection', async () => {
-//         const userID = 2;
-//         const collectionID = 1;
-//         const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}`, {
-//             method: "DELETE", body: JSON.stringify({userID})
-//         });
-//         const updatedData = await response.json();
-//         expect(updatedData.length).toEqual(0)
-//         expect(updatedData).toEqual([])
-//     })
+    test('Testing deleting the last collection', async () => {
+        const userID = 2;
+        const collectionID = 1;
+        const response = await fetch(`http://localhost:8080/collections/delete/${collectionID}`, {
+            method: "DELETE", body: JSON.stringify({userID})
+        });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(0)
+        expect(updatedData).toEqual([])
+    })
 
-//     test('Updating a collection', async () => {
-//         const userID = 2;
-//         const collectionID = 1;
-//         const newTitle = "updated mockCollection1"
-//         const newDesc = "updated fake collection response 1"
-//         const response = await fetch(`http://localhost:8080/collections/update`, {
-//             method: "POST", headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 userID,
-//                 collectionID,
-//                 newTitle,
-//                 newDesc
-//                 })
-//             });
-//         const updatedData = await response.json();
-//         expect(updatedData.length).toEqual(1)
-//         expect(updatedData).toEqual([{collectionTitle: "updated mockCollection1",
-//         collectionDescription: "updated fake collection response 1",
-//         collectionStatus: "Incomplete", _id: 1, tasks: []}])
-//     })
+    test('Updating a collection', async () => {
+        const userID = 2;
+        const collectionID = 1;
+        const newTitle = "updated mockCollection1"
+        const newDesc = "updated fake collection response 1"
+        const response = await fetch(`http://localhost:8080/collections/update`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                collectionID,
+                newTitle,
+                newDesc
+                })
+            });
+        const updatedData = await response.json();
+        expect(updatedData.length).toEqual(1)
+        expect(updatedData).toEqual([{collectionTitle: "updated mockCollection1",
+        collectionDescription: "updated fake collection response 1",
+        collectionStatus: "Incomplete", _id: 1, tasks: []}])
+    })
 
-// })
+})
