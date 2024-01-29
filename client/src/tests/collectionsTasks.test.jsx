@@ -5,6 +5,7 @@ import user from '@testing-library/user-event'
 import { Collections } from '../pages/collections'
 import { Link, MemoryRouter, Route, Routes } from 'react-router-dom'
 import { CollectionTasks } from '../pages/collectionsTasks'
+import { UserContext } from '../App'
 
 describe('Tests for collections Page', () => {
 
@@ -19,15 +20,18 @@ describe('Tests for collections Page', () => {
 
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
         const renderedCollections = render(
-        <MemoryRouter>
-            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
-            <Routes>
-                <Route path='/' element={null}/>
-                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
-            </Routes>
-        </MemoryRouter>)
+        <UserContext.Provider value={{collectionData: JSON.stringify(mockData1), setCollectionData: () => {}}}>
+            <MemoryRouter>
+                <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+                <Routes>
+                    <Route path='/' element={null}/>
+                    <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+                </Routes>
+            </MemoryRouter>
+        </UserContext.Provider>
+        )
 
-        const collectionTitle1 = await renderedCollections.findByLabelText("collectionTitle1")
+        const collectionTitle1 = await renderedCollections.findByLabelText("collectionsTitle1")
         await act(async () => {
             await user.click(collectionTitle1)
         })
@@ -42,15 +46,17 @@ describe('Tests for collections Page', () => {
 
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
         const renderedCollections = render(
-        <MemoryRouter>
-            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
-            <Routes>
-                <Route path='/' element={null}/>
-                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
-            </Routes>
-        </MemoryRouter>)
+        <UserContext.Provider value={{collectionData: JSON.stringify(mockData1), setCollectionData: () => {}}}>
+            <MemoryRouter>
+                <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+                <Routes>
+                    <Route path='/' element={null}/>
+                    <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+                </Routes>
+            </MemoryRouter>
+        </UserContext.Provider>)
 
-        const collectionTitle2 = await renderedCollections.findByLabelText("collectionTitle2")
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionsTitle2")
         await act(async () => {
             await user.click(collectionTitle2)
         })
@@ -65,15 +71,17 @@ describe('Tests for collections Page', () => {
 
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
         const renderedCollections = render(
-        <MemoryRouter>
-            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
-            <Routes>
-                <Route path='/' element={null}/>
-                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
-            </Routes>
-        </MemoryRouter>)
+        <UserContext.Provider value={{collectionData: JSON.stringify(mockData1), setCollectionData: () => {}}}>
+            <MemoryRouter>
+                <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+                <Routes>
+                    <Route path='/' element={null}/>
+                    <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+                </Routes>
+            </MemoryRouter>
+        </UserContext.Provider>)
 
-        const collectionTitle1 = await renderedCollections.findByLabelText("collectionTitle1")
+        const collectionTitle1 = await renderedCollections.findByLabelText("collectionsTitle1")
         await act(async () => {
             await user.click(collectionTitle1)
         })
@@ -102,15 +110,17 @@ describe('Tests for collections Page', () => {
 
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
         const renderedCollections = render(
-        <MemoryRouter>
-            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
-            <Routes>
-                <Route path='/' element={null}/>
-                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
-            </Routes>
-        </MemoryRouter>)
+        <UserContext.Provider value={{collectionData: JSON.stringify(mockData1), setCollectionData: () => {}}}>
+            <MemoryRouter>
+                <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+                <Routes>
+                    <Route path='/' element={null}/>
+                    <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+                </Routes>
+            </MemoryRouter>
+        </UserContext.Provider>)
 
-        const collectionTitle2 = await renderedCollections.findByLabelText("collectionTitle2")
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionsTitle2")
         await act(async () => {
             await user.click(collectionTitle2)
         })
@@ -142,15 +152,17 @@ describe('Tests for collections Page', () => {
 
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
         const renderedCollections = render(
+        <UserContext.Provider value={{collectionData: JSON.stringify(mockData1), setCollectionData: () => {}}}>
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
                 <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
-        </MemoryRouter>)
+        </MemoryRouter>
+        </UserContext.Provider>)
 
-        const collectionTitle2 = await renderedCollections.findByLabelText("collectionTitle2")
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionsTitle2")
         await act(async () => {
             await user.click(collectionTitle2)
         })
@@ -178,30 +190,32 @@ describe('Tests for collections Page', () => {
 
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
         const renderedCollections = render(
-        <MemoryRouter>
-            <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
-            <Routes>
-                <Route path='/' element={null}/>
-                <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
-            </Routes>
-        </MemoryRouter>)
+        <UserContext.Provider value={{collectionData: JSON.stringify(mockData1), setCollectionData: () => {}}}>
+            <MemoryRouter>
+                <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
+                <Routes>
+                    <Route path='/' element={null}/>
+                    <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+                </Routes>
+            </MemoryRouter>
+        </UserContext.Provider>)
 
-        const deleteCollectionBtn2 = await renderedCollections.findByLabelText('delCollection2')
+        const deleteCollectionBtn2 = await renderedCollections.findByLabelText('delcollections2')
         
         await act(async () => {
             await user.click(deleteCollectionBtn2)
         })
 
-        const collectionTitle2 = await renderedCollections.findByLabelText("collectionTitle1")
-        const collectionDesc2 = await renderedCollections.findByLabelText("collectionDesc1")
-        const collectionTitle3 = await renderedCollections.findByLabelText("collectionTitle3")
-        const collectionDesc3 = await renderedCollections.findByLabelText("collectionDesc3")
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionsTitle1")
+        const collectionDesc2 = await renderedCollections.findByLabelText("collectionsDesc1")
+        const collectionTitle3 = await renderedCollections.findByLabelText("collectionsTitle3")
+        const collectionDesc3 = await renderedCollections.findByLabelText("collectionsDesc3")
 
         const collections = await renderedCollections.findAllByTestId(/^collection/);
 
         expect(collections.length).toEqual(2)
-        expect(await renderedCollections.queryByLabelText("collectionTitle2")).toEqual(null)
-        expect(await renderedCollections.queryByLabelText("collectionDesc2")).toEqual(null)
+        expect(await renderedCollections.queryByLabelText("collectionsTitle2")).toEqual(null)
+        expect(await renderedCollections.queryByLabelText("collectionsDesc2")).toEqual(null)
         expect(collectionTitle2.textContent).toEqual("Mock Collection")
         expect(collectionDesc2.innerHTML).toEqual("Fake description")
         expect(collectionTitle3.textContent).toEqual("Mock Collection 3")
@@ -215,15 +229,17 @@ describe('Tests for collections Page', () => {
 
         window.localStorage.setItem("localCollectionData", JSON.stringify(mockData1))
         const renderedCollections = render(
+        <UserContext.Provider value={{collectionData: JSON.stringify(mockData1), setCollectionData: () => {}}}>
         <MemoryRouter>
             <Collections data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>
             <Routes>
                 <Route path='/' element={null}/>
                 <Route path="/collections/:collectionID" element={<CollectionTasks data={JSON.stringify(mockData1)} isLogged={userLogin} updateCollection={updateCollection}/>}/>
             </Routes>
-        </MemoryRouter>)
+        </MemoryRouter>
+        </UserContext.Provider>)
 
-        const collectionTitle2 = await renderedCollections.findByLabelText("collectionTitle2")
+        const collectionTitle2 = await renderedCollections.findByLabelText("collectionsTitle2")
         await act(async () => {
             await user.click(collectionTitle2)
         })

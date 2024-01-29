@@ -6,7 +6,6 @@ import { BsArrowLeft } from "react-icons/bs";
 export const Header = ({title, backArrow, newAction, section, mainDiv}) => {
 
     function displayAddPrompt(e){
-        console.log(mainDiv)
         e.preventDefault();
         let addBox = document.getElementById(`add${section}`);
         addBox.style.display = "flex";
