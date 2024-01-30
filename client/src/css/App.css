@@ -2,6 +2,37 @@
     font-size: medium;
   }
 
+  .checklistHome{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header{
+    display: flex;
+    width: 100%;
+  }
+
+  .groupsBox-header{
+    width: 100%;
+  }
+
+  .groupsBox-header button{
+    display: none;
+  }
+
+  .filter{
+    display: flex;
+    flex-direction: row;
+    width: 60vw;
+    padding-top: 30px;
+  }
+
   .pageFormat {
     height: 100vh;
     width: 100vw;
@@ -265,7 +296,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 99%;
+    width: 60vw;
     min-height: 25vh;
     border-style: solid;
     overflow-y: auto;
@@ -510,7 +541,7 @@
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items:center;
     text-align: center;
     margin: 0;
@@ -526,6 +557,13 @@
   .tasks {
     width: 85vw;
     min-height: 50vh;
+  }
+
+  .filter{
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    width: 86vw;
   }
   
   .tasks li {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
+import { Header } from "../components/header";
 
 export const Home = (data) => {
     const [tasks, setTasks] = useState(data.data);
@@ -233,13 +234,17 @@ export const Home = (data) => {
     }
 
     return <div className="checklistHome">
-        <div className="intro">
-        <h1>Checklist</h1>
-            <span className="filterClass">
-                <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id, tasks)}>All Tasks</button>
-                <button id="filter2" onClick={(e) => filterTask(e.target.id, tasks)}>Completed</button>
-                <button id="filter3" onClick={(e) => filterTask(e.target.id, tasks)}>Incomplete</button>
-            </span>
+        <div className="intro" style={{width: "100%"}}>
+            <div className="header">
+                <Header title="Checklist" section="checklist" mainDiv="checklistHome"/>
+            </div>
+            <div className="filter">
+                <span className="filterClass">
+                    <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id, tasks)}>All Tasks</button>
+                    <button id="filter2" onClick={(e) => filterTask(e.target.id, tasks)}>Completed</button>
+                    <button id="filter3" onClick={(e) => filterTask(e.target.id, tasks)}>Incomplete</button>
+                </span>
+            </div>
             <div className="tasks">
                 {isUserLogged ?
                     taskFilter.length !== 0 ? 
