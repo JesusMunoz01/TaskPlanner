@@ -4,15 +4,32 @@ import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
 import { Groups } from '../pages/groups'
 import { Link, MemoryRouter, Route, Routes } from 'react-router-dom'
+import { UserContext } from '../App'
 
 describe('Tests for the groups Page', () => {
 
-    test.skip('Testing user not logged', () => {
+    test('Testing user not logged', () => {
+        const renderedGroup = render(
+        <UserContext.Provider value={{groupData: [], setGroupData: () => {}}}>
+            <Groups/>
+        </UserContext.Provider>)
 
+        const text = renderedGroup.getByText('You are currently not logged, to access this feature log in')
+
+        expect(text).toBeInTheDocument()
     })
 
-    test.skip('Testing user logged with no groups', () => {
+    test('Testing user logged with no groups and no invites', () => {
+        const renderedGroup = render(
+        <UserContext.Provider value={{groupData: [], setGroupData: () => {}}}>
+            <Groups userData={{invites: [], joined: []}} isLogged={true}/>
+        </UserContext.Provider>)
 
+        const text = renderedGroup.getByText('Currently no groups')
+        const invText = renderedGroup.getByText('No Invites')
+
+        expect(text).toBeInTheDocument()
+        expect(invText).toBeInTheDocument()
     })
 
     test.skip('Testing user logged with one group', () => {
