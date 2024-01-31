@@ -22,7 +22,7 @@
     width: 100%;
   }
 
-  .groupsBox-header button{
+  .header .groupsBox-header button{
     display: none;
   }
 
@@ -63,6 +63,13 @@
     flex-direction: column;
     width: 100%;
     justify-content: space-between;
+  }
+
+  #logoutBtn{
+    border-color: red;
+    background-color: red;
+    margin-top: 10px;
+    margin-bottom: 0;
   }
 
   .expandLinks{
