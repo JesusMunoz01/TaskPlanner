@@ -135,7 +135,7 @@ export const Groups = ({userData, isLogged}) => {
                         {groups.invites.length !== 0 ?
                             groups.invites.map((invite) => (
                                 <div className="currentInvites">
-                                    <p>Group: {invite}</p>
+                                    <p aria-label={`inviteTitle${invite}`}>Group: {invite}</p>
                                     <div className="inviteActions">
                                         <button id="acceptInvite" onClick={() => inviteAction("accept", invite)}>Accept</button>
                                         <button id="denyInvite" onClick={() => inviteAction("deny", invite)}>Deny</button>
@@ -155,7 +155,7 @@ export const Groups = ({userData, isLogged}) => {
                     groups.joined.map((group, index) => (
                         <Link key={group._id} to={`/groups/${group._id}`} state={{from: group, index: index}}>
                         <div className="groupCard">
-                                <h2>{group.groupName}</h2>
+                                <h2 aria-label={`groupTitle${group._id}`}>{group.groupName}</h2>
                                 <p>{group.groupDescription}</p>
                                 <p>Status: {group.permissions}</p>
                         </div>
