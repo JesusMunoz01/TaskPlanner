@@ -32,6 +32,18 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
                               collectionStatus: "Incomplete", _id: 2, tasks: []}]
               },]
 
+  const mockDBGroups = [{_id: 1, username: "TUser1", password: "TPassword1!", tasks: [], collections: [],
+    groups: {invites: [], joined: {groupTitle: "mockGroup1", groupDescription: "fake group response 1", groupStatus: "Incomplete", _id: 1, tasks: []}}},
+    {_id: 2, username: "TUser2", password: "TPassword2!", tasks: [], collections: [], groups: {invites: [], joined: []}},
+    {_id: 3, username: "TUser3", password: "TPassword3!", tasks: [], collections: [], groups: {invites: [], joined: []}},
+    {_id: 4, username: "TUser4", password: "TPassword4!", 
+      tasks: [{title: "mock1", description: "fake response 1", _id: 1}, {title: "mock2", description: "fake response 2", _id: 2},
+        {title: "mock3", description: "fake response 3", _id: 3}],
+      collections: [{collectionTitle: "mockCollection1 user4", collectionDescription: "fake collection response 1",
+        collectionStatus: "Incomplete", _id: 1, tasks: []},
+        {collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2", collectionStatus: "Incomplete", _id: 2, tasks: []}]
+    }]
+
 export const handlers = [
   // -------------------------------------- Home Page Handlers --------------------------------------------------------
     rest.get('http://localhost:8080/fetchTasks/:userID', (req, res, ctx) => {
@@ -258,5 +270,54 @@ export const handlers = [
         userIndex[0].collections[collectionIndex].tasks[taskIndex].description = data.newDesc
         return res(ctx.json(userIndex[0].collections[collectionIndex].tasks))
       }
+    }),
+
+    // Groups Page Handlers
+    rest.post('http://localhost:8080/groups/createGroup', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        let nextId = 1;
+        let lastGroup = [];
+        try{
+        const dbCollection = userIndex[0].groups.joined
+        let localCopy = JSON.parse(JSON.stringify(dbCollection))
+        if(localCopy)
+            lastGroup = localCopy.pop();
+        if(lastGroup.length !== 0)
+            nextId = lastGroup._id + 1;}
+        catch(error){}
+          const newGroup = {groupName: data.title, groupDescription: data.desc, 
+            collections: [], _id: nextId, permissions: "Admin"}
+          userIndex[0].groups.joined.push(newGroup)
+          return res(ctx.json(userIndex[0]))
+        }
+    }),
+
+    rest.post('http://localhost:8000/groups/createGroup', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        let nextId = 1;
+        let lastGroup = [];
+        try{
+        const dbCollection = userIndex[0].groups.joined
+        let localCopy = JSON.parse(JSON.stringify(dbCollection))
+        if(localCopy)
+            lastGroup = localCopy.pop();
+        if(lastGroup.length !== 0)
+            nextId = lastGroup._id + 1;}
+        catch(error){}
+          const newGroup = {groupName: data.title, groupDescription: data.desc, 
+            collections: [], _id: 1, permissions: "Admin"}
+          userIndex[0].groups.joined.push(newGroup)
+          return res(ctx.json(newGroup))
+        }
     }),
 ]

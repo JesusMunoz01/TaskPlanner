@@ -59,7 +59,7 @@ export const Groups = ({userData, isLogged}) => {
                 document.getElementById("groups").style.filter = "none";
         }
         catch(error){
-
+            console.log(error)
         }
         
     }
@@ -156,7 +156,7 @@ export const Groups = ({userData, isLogged}) => {
                         <Link key={group._id} to={`/groups/${group._id}`} state={{from: group, index: index}}>
                         <div className="groupCard">
                                 <h2 aria-label={`groupTitle${group._id}`}>{group.groupName}</h2>
-                                <p>{group.groupDescription}</p>
+                                <p aria-label={`groupDesc${group._id}`}>{group.groupDescription}</p>
                                 <p>Status: {group.permissions}</p>
                         </div>
                         </Link>
@@ -176,10 +176,10 @@ export const Groups = ({userData, isLogged}) => {
                 <label htmlFor="closeCreate" id="closeCreateIcon" onClick={hidePrompt}><BsX /></label>
                 <form className="promptForm">
                     <label>Group Title: </label>
-                    <input id="groupTitle" value={newGroup.title} onChange={(e) => {setNewGroup((prev) => {return {title: e.target.value, desc: prev.desc}})}}></input>
+                    <input id="groupTitle" aria-label="groupTitleNew" value={newGroup.title} onChange={(e) => {setNewGroup((prev) => {return {title: e.target.value, desc: prev.desc}})}}></input>
                     <label>Group Description: </label>
-                    <input id="groupDesc" value={newGroup.desc} onChange={(e) => {setNewGroup((prev) => {return {title: prev.title, desc: e.target.value}})}}></input>
-                    <button onClick={(e) => sendGroup(e)}>Submit</button>
+                    <input id="groupDesc" aria-label="groupDescNew" value={newGroup.desc} onChange={(e) => {setNewGroup((prev) => {return {title: prev.title, desc: e.target.value}})}}></input>
+                    <button aria-label="submitNewGroup" onClick={(e) => sendGroup(e)}>Submit</button>
                 </form>
             </div>
     </div>
