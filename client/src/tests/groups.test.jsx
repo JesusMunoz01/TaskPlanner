@@ -32,12 +32,43 @@ describe('Tests for the groups Page', () => {
         expect(invText).toBeInTheDocument()
     })
 
-    test.skip('Testing user logged with one group', () => {
-
+    test('Testing user logged with one group and no invites', () => {
+        const mockData = {invites: [], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin'}]}
+        const renderedGroup = render(
+            <UserContext.Provider value={{groupData: mockData, setGroupData: () => {}}}>
+                <MemoryRouter>
+                    <Groups userData={mockData} isLogged={true}/>
+                    <Routes>
+                        <Route path="/groups/:groupId" element={<div>Group Page</div>}/>
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>)
+    
+            const groupText = renderedGroup.getByLabelText('groupTitle1')
+            const invText = renderedGroup.getByText('No Invites')
+    
+            expect(groupText).toBeInTheDocument()
+            expect(invText).toBeInTheDocument()
     })
 
-    test.skip('Testing user logged with multiple groups', () => {
-
+    test('Testing user logged with multiple groups and invites', () => {
+        const mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin'},
+        {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member'}]}
+        const renderedGroup = render(
+            <UserContext.Provider value={{groupData: mockData, setGroupData: () => {}}}>
+                <MemoryRouter>
+                    <Groups userData={mockData} isLogged={true}/>
+                    <Routes>
+                        <Route path="/groups/:groupId" element={<div>Group Page</div>}/>
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>)
+    
+            const groupText = renderedGroup.getByLabelText('groupTitle1')
+            const invText = renderedGroup.getByLabelText('inviteTitletestGroup')
+    
+            expect(groupText).toBeInTheDocument()
+            expect(invText).toBeInTheDocument()
     })
 
     test.skip('Test creating a group', () => {
