@@ -75,7 +75,7 @@ export const Group = () => {
 
 
     return <div className="group" id="group">
-        <div className="header" onMouseDown={(e) => hidePrompt(e, "Collection")}>
+        <div className="groupHeader" onMouseDown={(e) => hidePrompt(e, "Collection")}>
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>

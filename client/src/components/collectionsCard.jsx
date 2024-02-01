@@ -145,8 +145,12 @@ export const CollectionsCard = (data) => {
 
     return <div className={`${data.section}List`} data-testid={`${data.section}-item`} key={collection._id}>
                             <li key={collection._id}>
-                                <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
-                                    to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>
+                                {isUserLogged ?
+                                    <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
+                                    to={`/collections/${index}`}>{collection.collectionTitle}</Link>
+                                :
+                                    <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
+                                    to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>}
                                 <div className="descBox">
                                     <p id="collectionDisplayDesc" aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>
