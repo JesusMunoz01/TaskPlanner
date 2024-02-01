@@ -133,12 +133,12 @@ export const Groups = ({userData, isLogged}) => {
                     <label htmlFor="groupInvites" id="groupInvitesIcon"><BsFillEnvelopeFill /><span id="groupInvitesNumber">{invites.length}</span></label>
                     <div className="checkInvites">
                         {groups.invites.length !== 0 ?
-                            groups.invites.map((invite) => (
+                            groups.invites.map((invite, index) => (
                                 <div className="currentInvites">
                                     <p aria-label={`inviteTitle${invite}`}>Group: {invite}</p>
                                     <div className="inviteActions">
-                                        <button id="acceptInvite" onClick={() => inviteAction("accept", invite)}>Accept</button>
-                                        <button id="denyInvite" onClick={() => inviteAction("deny", invite)}>Deny</button>
+                                        <button id="acceptInvite" aria-label={`acceptGroup${index}`} onClick={() => inviteAction("accept", invite)}>Accept</button>
+                                        <button id="denyInvite" aria-label={`denyGroup${index}`} onClick={() => inviteAction("deny", invite)}>Deny</button>
                                     </div>
                                 </div>
                             ))

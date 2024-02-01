@@ -296,28 +296,4 @@ export const handlers = [
           return res(ctx.json(userIndex[0]))
         }
     }),
-
-    rest.post('http://localhost:8000/groups/createGroup', async (req, res, ctx) => {
-      const data = await req.json()
-      const userCheck = data.userID;
-      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
-      if(userIndex[0].user_id == 0)
-       return res(ctx.status(400))
-      else{
-        let nextId = 1;
-        let lastGroup = [];
-        try{
-        const dbCollection = userIndex[0].groups.joined
-        let localCopy = JSON.parse(JSON.stringify(dbCollection))
-        if(localCopy)
-            lastGroup = localCopy.pop();
-        if(lastGroup.length !== 0)
-            nextId = lastGroup._id + 1;}
-        catch(error){}
-          const newGroup = {groupName: data.title, groupDescription: data.desc, 
-            collections: [], _id: 1, permissions: "Admin"}
-          userIndex[0].groups.joined.push(newGroup)
-          return res(ctx.json(newGroup))
-        }
-    }),
 ]
