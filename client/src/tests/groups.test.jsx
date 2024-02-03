@@ -5,6 +5,7 @@ import user from '@testing-library/user-event'
 import { Groups } from '../pages/groups'
 import { Link, MemoryRouter, Route, Routes } from 'react-router-dom'
 import { UserContext } from '../App'
+import { Group } from '../pages/group'
 
 describe('Tests for the groups Page', () => {
 
@@ -262,8 +263,32 @@ describe('Tests for the groups Page', () => {
     })
     
     
-    test.skip('Test moving to a group page', () => {
-        
+    test('Test moving to a group page', async () => {
+        const mockData = {invites: ["testGroup"], joined: [{_id: "1ab3y25", groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+        collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
+        const setGroupData = newData => {mockData = newData};
+        localStorage.setItem('userId', 2)
+
+        const {getByLabelText} = render(
+            <UserContext.Provider value={{groupData: mockData, setGroupData}}>
+                <MemoryRouter>
+                    <Groups userData={mockData} isLogged={true}/>
+                    <Routes>
+                        <Route path='/' element={null}/>
+                        <Route path="/groups/:groupId" element={<Group />}/>
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>)
+    
+        const linkBtn = getByLabelText('group1ab3y25')
+
+        await act(async () => {
+            await user.click(linkBtn)
+        })
+
+        const groupTitleCheck = getByLabelText('Test Group-Header')
+
+        expect(groupTitleCheck).toBeInTheDocument()
     })
     
     test.skip('Test leaving a group', () => {
