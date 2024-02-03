@@ -300,7 +300,7 @@ describe('Tests for the groups Page', () => {
 
 describe('Tests for the groups Page API and response rendering', () => {
             
-    test.skip('Test creating a group API', async () => {
+    test('Test creating a group API', async () => {
         const title = "Test Group";
         const desc = "Test Description";
         const userID = 2;

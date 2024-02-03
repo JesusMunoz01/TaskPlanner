@@ -296,4 +296,24 @@ export const handlers = [
           return res(ctx.json(userIndex[0]))
         }
     }),
+    rest.post('http://localhost:8080/groups/:groupID/invite/action', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const inviteCheck = params.groupID;
+      const action = data.action;
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const inviteIndex = userIndex[0].groups.invites.findIndex((invite) => invite === inviteCheck)
+        if(action === "accept"){
+          userIndex[0].groups.joined.push(inviteCheck)
+          userIndex[0].groups.invites.splice(inviteIndex, 1)
+          return res(ctx.json(userIndex[0].groups))
+        } else if(action === "decline"){
+          userIndex[0].groups.invites.splice(inviteIndex, 1)
+          return res(ctx.json(userIndex[0].groups))
+        }
+      }
+    }),
 ]
