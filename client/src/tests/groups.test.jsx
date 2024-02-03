@@ -339,4 +339,21 @@ describe('Tests for the groups Page API and response rendering', () => {
             groupDescription: "Fake invite group", _id: 10, collections: [], permissions: "Member"}]})
     })
 
+    test('Test denying an invitation API', async () => {
+        const userID = 3;
+        const action = "deny";
+        const response = await fetch(`http://localhost:8080/groups/testInvite/invite/action`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                action
+                })
+            });
+
+        const data = await response.json()
+        expect(data).toEqual({invites: ["testInvite2"], joined: []})
+    })
+
 })
