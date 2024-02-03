@@ -153,7 +153,7 @@ export const Groups = ({userData, isLogged}) => {
                 {groups.joined.length !== 0 ? 
                     // Section for: Logged user with groups -------------------------------------------
                     groups.joined.map((group, index) => (
-                        <Link key={group._id} to={`/groups/${group._id}`} state={{from: group, index: index}}>
+                        <Link key={group._id} aria-label={`group${group._id}`} to={`/groups/${group._id}`} state={{from: group, index: index}}>
                         <div className="groupCard">
                                 <h2 aria-label={`groupTitle${group._id}`}>{group.groupName}</h2>
                                 <p aria-label={`groupDesc${group._id}`}>{group.groupDescription}</p>

@@ -17,7 +17,7 @@ export const Header = ({title, backArrow, newAction, section, mainDiv}) => {
             <div className="groupsBox-header">
                 <div className="groupsBox-headerLeft">
                     {backArrow  ? <Link id="goBack" to={`${backArrow}`}><BsArrowLeft /></Link> : null}
-                    <h1>{title}</h1>
+                    <h1 aria-label={`${title}-Header`}>{title}</h1>
                 </div>
                 <div className="groupsBox-headerActions">
                     <button id="createGroup" aria-label="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
