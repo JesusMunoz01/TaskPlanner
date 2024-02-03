@@ -320,4 +320,23 @@ describe('Tests for the groups Page API and response rendering', () => {
             "groupDescription": "Test Description", "permissions": "Admin"}]}, "password": "TPassword2!", "tasks": [], "username": "TUser2"})
     })
 
+    test('Test joining a group API', async () => {
+        const userID = 4;
+        const action = "accept";
+        const response = await fetch(`http://localhost:8080/groups/testInvite/invite/action`, {
+            method: "POST", headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userID,
+                action
+                })
+            });
+
+        const data = await response.json()
+        expect(data).toEqual({invites: ["testInvite2"], joined: [{groupTitle: "mockGroup1", groupDescription: "fake group response 1", 
+            groupStatus: "Incomplete", _id: 1, collections: [], permissions: "Admin"}, {groupTitle: "testInvite", groupStatus: "Incomplete", 
+            groupDescription: "Fake invite group", _id: 10, collections: [], permissions: "Member"}]})
+    })
+
 })

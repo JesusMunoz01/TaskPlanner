@@ -41,7 +41,9 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
         {title: "mock3", description: "fake response 3", _id: 3}],
       collections: [{collectionTitle: "mockCollection1 user4", collectionDescription: "fake collection response 1",
         collectionStatus: "Incomplete", _id: 1, tasks: []},
-        {collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2", collectionStatus: "Incomplete", _id: 2, tasks: []}]
+        {collectionTitle: "mockCollection2 user4", collectionDescription: "fake collection response 2", collectionStatus: "Incomplete", _id: 2, tasks: []}],
+        groups: {invites: ["testInvite", "testInvite2"], joined: [{groupTitle: "mockGroup1", groupDescription: "fake group response 1", 
+          groupStatus: "Incomplete", _id: 1, collections: [], permissions: "Admin"}]}
     }]
 
 export const handlers = [
@@ -299,7 +301,7 @@ export const handlers = [
     rest.post('http://localhost:8080/groups/:groupID/invite/action', async (req, res, ctx) => {
       const data = await req.json()
       const userCheck = data.userID;
-      const inviteCheck = params.groupID;
+      const inviteCheck = req.params.groupID;
       const action = data.action;
       const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
       if(userIndex[0].user_id == 0)
@@ -307,7 +309,17 @@ export const handlers = [
       else{
         const inviteIndex = userIndex[0].groups.invites.findIndex((invite) => invite === inviteCheck)
         if(action === "accept"){
-          userIndex[0].groups.joined.push(inviteCheck)
+
+          const mockInviteGroup = {
+            groupTitle: inviteCheck, 
+            groupDescription: "Fake invite group", 
+            groupStatus: "Incomplete", 
+            _id: 10,
+            collections: [],
+            permissions: "Member"
+          }
+
+          userIndex[0].groups.joined.push(mockInviteGroup)
           userIndex[0].groups.invites.splice(inviteIndex, 1)
           return res(ctx.json(userIndex[0].groups))
         } else if(action === "decline"){
