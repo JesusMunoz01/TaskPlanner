@@ -79,6 +79,7 @@ export const Group = () => {
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>
+            <button id="editGroup">Edit Group</button>
             <button id="delGroup">Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
             <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
