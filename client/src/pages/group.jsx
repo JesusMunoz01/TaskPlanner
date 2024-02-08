@@ -7,8 +7,11 @@ import { useContext, useState } from "react";
 import { useCookies } from "react-cookie";
 import { CollectionsCard } from "../components/collectionsCard";
 import { UserContext } from "../App";
+import ConfirmationPopup from "../components/confirmationPopup";
+import useGroupData from "../hooks/useGroupData";
 
 export const Group = () => {
+    const { deleteGroup } = useGroupData();
     const [verification, ] = useCookies(["access_token"]);
     const { groupData, setGroupData } = useContext(UserContext)
     const location = useLocation()
@@ -80,8 +83,8 @@ export const Group = () => {
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>
-            <button id="editGroup" onClick={setEditMode(!editMode)}>Edit Group</button>
-            <button id="delGroup">Delete Group</button>
+            <button id="editGroup">Edit Group</button>
+            <button id="delGroup" onClick={() => setEditMode(!editMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
             <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
             <div className="checkUsers">
@@ -106,6 +109,8 @@ export const Group = () => {
                                 index={index} returnCollection={getCollection} section="groupsCollection" route={`/groups/${from._id}`}/>
                             ))}
                         </div>
+                        {editMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={deleteGroup} 
+                            hidePrompt={() => setEditMode(!editMode)}/> : null}
                     </div>
                 :
                 <span id="noGroupCollections">No Collections</span>

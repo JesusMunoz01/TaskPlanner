@@ -1,4 +1,4 @@
-export default function confirmationPopup({ actionTitle, actionBody, action, hidePrompt }) {
+export default function ConfirmationPopup({ actionTitle, actionBody, action, hidePrompt }) {
     return (
         <div className="confirmationPopup" id="confirmationPopup">
             <div className="confirmationBox" id="confirmationBox">
