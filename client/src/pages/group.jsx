@@ -76,6 +76,17 @@ export const Group = () => {
                 addBox.style.display = "none";
         }
 
+    function displayPopup(e, variable){
+        let newState = !variable;
+        if(newState){
+            document.getElementById("groupCollections").style.filter = "blur(5px)";
+        }
+        else{
+            document.getElementById("groupCollections").style.filter = "none";
+        }
+        setEditMode(newState)
+    }
+
 
 
     return <div className="group" id="group">
@@ -84,7 +95,7 @@ export const Group = () => {
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>
             <button id="editGroup">Edit Group</button>
-            <button id="delGroup" onClick={() => setEditMode(!editMode)}>Delete Group</button>
+            <button id="delGroup" onClick={(e) => displayPopup(e, editMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
             <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
             <div className="checkUsers">
@@ -109,13 +120,13 @@ export const Group = () => {
                                 index={index} returnCollection={getCollection} section="groupsCollection" route={`/groups/${from._id}`}/>
                             ))}
                         </div>
-                        {editMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={deleteGroup} 
-                            hidePrompt={() => setEditMode(!editMode)}/> : null}
                     </div>
                 :
                 <span id="noGroupCollections">No Collections</span>
-                }
+            }
             </div>
+            {editMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={deleteGroup} 
+                hidePrompt={(e) => displayPopup(e, editMode)}/> : null}
             <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="GroupCollection" isLogged={true}
                 labelData={{usePremade: true, title: "Collection", lower: "collection", action: `groups/${groupID}/createCollection`}}/>
         </div>
