@@ -17,6 +17,7 @@ export const Group = () => {
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
+    const [editMode, setEditMode] = useState(false)
     
     function getCollection(params){
         console.log(params)
@@ -79,7 +80,7 @@ export const Group = () => {
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>
-            <button id="editGroup">Edit Group</button>
+            <button id="editGroup" onClick={setEditMode(!editMode)}>Edit Group</button>
             <button id="delGroup">Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
             <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
@@ -88,7 +89,7 @@ export const Group = () => {
             </div>
             </>
             :
-            null}/>
+            <button id="leaveGroup">Leave Group</button>}/>
             <div className="inviteUser" id="inviteUser" style={{display: "none"}}>
                 <label>Username:</label>
                 <input value={invUsername} onChange={(e) => setUsername(e.target.value)}></input>
