@@ -159,6 +159,36 @@ groupRouter.post("/groups/:groupID/invite/action", verification, async (req, res
 
 // Delete Routes --------------------------------------------------
 
+groupRouter.delete('/groups/:groupID/deleteGroup/:userID', verification, async (req, res) => {
+    const group = req.params.groupID;
+    const user = req.params.userID;
+    const userDB = await UserModel.findOne({_id: user});
+    const groupDB = await GroupModel.findOne({_id: group});
+    if(groupDB && groupDB.groupAdmin.find(admin => admin === user)){
+        try{
+            const deletedGroup = await GroupModel.deleteOne({_id: group})
+            const updatedGroups = userDB.groups.joined.filter((group) => group !== groupID)
+            userDB.groups.joined = updatedGroups;
+            await groupDB.save()
+            await userDB.save()
+            res.json(updatedGroups)
+        }catch(error){
+            res.json({error: error, message: "Couldnt delete group"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
+    // try{
+
+    //     const delCollection = await GroupModel.findOneAndUpdate({"_id": group, }, 
+    //     {$pull: {collections: {_id: collectionID}}})
+    //     const filteredCollection = delCollection.collections.filter((collection) => collection._id != collectionID)
+    //     res.json(filteredCollection)
+    // }catch(error){
+    //     res.json({error: error, message: "Couldnt delete collection"})
+    // }
+})
+
 groupRouter.delete('/groups/:groupID/deleteCollection/:collectionID', verification, async (req, res) => {
     const group = req.params.groupID;
     const collectionID = req.params.collectionID;
