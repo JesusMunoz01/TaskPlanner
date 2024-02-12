@@ -55,6 +55,18 @@ export const Group = () => {
         }
     }
 
+    async function deleteAction(id){
+        await deleteGroup(id)
+        const updatedGroups = groupData.joined.filter((group) => group._id !== id)
+        setGroupData((prev) => {
+            return {
+                invites: prev.invites,
+                joined: updatedGroups
+            }
+        })
+        navigate("/groups")
+    }
+
     function hidePrompt(e, name){
         let addBox = document.getElementById(`addGroup${name}`);
         if(e === undefined){
@@ -126,9 +138,9 @@ export const Group = () => {
                 <span id="noGroupCollections">No Collections</span>
             }
             </div>
-            {deleteMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={deleteGroup}
+            {deleteMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={deleteAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, deleteMode, setDeleteMode)}/> : null}
-            {editMode ? <ConfirmationPopup actionTitle="Edit Group" actionBody="Edit this group" action={editGroup}
+            {editMode ? <ConfirmationPopup actionTitle="Edit Group" actionBody="Edit this group" action={deleteAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, editMode)}/> : null}
             <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="GroupCollection" isLogged={true}
                 labelData={{usePremade: true, title: "Collection", lower: "collection", action: `groups/${groupID}/createCollection`}}/>
