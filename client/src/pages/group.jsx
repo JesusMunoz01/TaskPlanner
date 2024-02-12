@@ -138,7 +138,7 @@ export const Group = () => {
                 <span id="noGroupCollections">No Collections</span>
             }
             </div>
-            {deleteMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={deleteAction(from._id)}
+            {deleteMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={(e) => deleteAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, deleteMode, setDeleteMode)}/> : null}
             {editMode ? <ConfirmationPopup actionTitle="Edit Group" actionBody="Edit this group" action={deleteAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, editMode)}/> : null}

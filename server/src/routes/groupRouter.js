@@ -16,14 +16,18 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
     const userDB = await UserModel.findOne({_id: userObj});
     let groups = [];
     if(userDB.groups.joined.length > 0){
-        groups = userDB.groups.joined.map(async (group) => {
-            let data = await GroupModel.findOne({_id: group})
-            let userPerm = "Member"
-            if(data.groupAdmin.find((item) => item === user))
-                userPerm = "Admin"
-            return {groupName: data.groupName, groupDescription: data.groupDescription, 
-                collections: data.collections, _id: data._id, permissions: userPerm};
-        })
+        try{
+            groups = userDB.groups.joined.map(async (group) => {
+                let data = await GroupModel.findOne({_id: group})
+                let userPerm = "Member"
+                if(data.groupAdmin.find((item) => item === user))
+                    userPerm = "Admin"
+                return {groupName: data.groupName, groupDescription: data.groupDescription, 
+                    collections: data.collections, _id: data._id, permissions: userPerm};
+            })
+        }catch(error){
+            res.json({error: error, message: "Couldnt fetch groups"})
+        }
     }
     res.json({invites: userDB.groups.invites, joined: await Promise.all(groups)})
 })
@@ -167,6 +171,7 @@ groupRouter.delete('/groups/:groupID/deleteGroup/:userID', verification, async (
     if(groupDB && groupDB.groupAdmin.find(admin => admin === user)){
         try{
             const deletedGroup = await GroupModel.deleteOne({_id: group})
+            // FIX: Remove group from userDB
             const updatedGroups = userDB.groups.joined.filter((group) => group !== groupID)
             userDB.groups.joined = updatedGroups;
             await groupDB.save()

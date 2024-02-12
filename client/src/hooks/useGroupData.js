@@ -8,9 +8,8 @@ export default function useGroupData() {
     }
 
     const deleteGroup = async (groupID) => {
-            const userID = window.localStorage.getItem("userId");
+        const userID = window.localStorage.getItem("userId");
         if(userID){
-            const groupID = groupID;
             await fetch(`${__API__}/groups/${groupID}/deleteGroup/${userID}`, {
                 method: "DELETE", headers: {auth: verify.access_token}, 
             });
