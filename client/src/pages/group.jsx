@@ -1,6 +1,6 @@
 import "../css/group.css"
 import { BsFillPersonLinesFill } from "react-icons/bs";
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
 import { Header } from "../components/header";
 import { SubmitForm } from "../components/submitForm";
 import { useContext, useState } from "react";
@@ -24,7 +24,6 @@ export const Group = () => {
     const [deleteMode, setDeleteMode] = useState(false)
     
     function getCollection(params){
-        console.log(params)
         setCollections(params)
         groupData.joined[index].collections = params;
         setGroupData(groupData)
@@ -63,8 +62,8 @@ export const Group = () => {
                 invites: prev.invites,
                 joined: updatedGroups
             }
-        })
-        navigate("/groups")
+        });
+        navigate("/groups");
     }
 
     function hidePrompt(e, name){

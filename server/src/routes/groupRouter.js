@@ -19,7 +19,6 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
         try{
             groups = userDB.groups.joined.map(async (group) => {
                 let data = await GroupModel.findOne({_id: group})
-
                 // Remove group if it no longer exists
                 if(data === null){
                     userDB.groups.joined = userDB.groups.joined.filter((uGroup) => uGroup !== group)
@@ -37,7 +36,9 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
             res.json({error: error, message: "Couldnt fetch groups"})
         }
     }
-    res.json({invites: userDB.groups.invites, joined: await Promise.all(groups)})
+    const allGroups = await Promise.all(groups)
+    const filteredNull = allGroups.filter((group) => group !== undefined)
+    res.json({invites: userDB.groups.invites, joined: filteredNull})
 })
 
 // Create Routes --------------------------------------------------
