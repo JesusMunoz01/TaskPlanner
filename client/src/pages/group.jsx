@@ -21,6 +21,7 @@ export const Group = () => {
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
     const [editMode, setEditMode] = useState(false)
+    const [deleteMode, setDeleteMode] = useState(false)
     
     function getCollection(params){
         console.log(params)
@@ -76,7 +77,7 @@ export const Group = () => {
                 addBox.style.display = "none";
         }
 
-    function displayPopup(e, variable){
+    function displayPopup(e, variable, updateFunction){
         let newState = !variable;
         if(newState){
             document.getElementById("groupCollections").style.filter = "blur(5px)";
@@ -84,7 +85,7 @@ export const Group = () => {
         else{
             document.getElementById("groupCollections").style.filter = "none";
         }
-        setEditMode(newState)
+        updateFunction(newState)
     }
 
 
@@ -95,7 +96,7 @@ export const Group = () => {
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>
             <button id="editGroup">Edit Group</button>
-            <button id="delGroup" onClick={(e) => displayPopup(e, editMode)}>Delete Group</button>
+            <button id="delGroup" onClick={(e) => displayPopup(e, deleteMode, setDeleteMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
             <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
             <div className="checkUsers">
@@ -125,7 +126,9 @@ export const Group = () => {
                 <span id="noGroupCollections">No Collections</span>
             }
             </div>
-            {editMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={deleteGroup} 
+            {deleteMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={deleteGroup}
+                hidePrompt={(e) => displayPopup(e, deleteMode, setDeleteMode)}/> : null}
+            {editMode ? <ConfirmationPopup actionTitle="Edit Group" actionBody="Edit this group" action={editGroup}
                 hidePrompt={(e) => displayPopup(e, editMode)}/> : null}
             <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="GroupCollection" isLogged={true}
                 labelData={{usePremade: true, title: "Collection", lower: "collection", action: `groups/${groupID}/createCollection`}}/>
