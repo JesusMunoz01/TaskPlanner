@@ -1,27 +1,26 @@
 import "../css/group.css"
 import { BsFillPersonLinesFill } from "react-icons/bs";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Header } from "../components/header";
 import { SubmitForm } from "../components/submitForm";
 import { useContext, useState } from "react";
-import { useCookies } from "react-cookie";
 import { CollectionsCard } from "../components/collectionsCard";
 import { UserContext } from "../App";
 import ConfirmationPopup from "../components/confirmationPopup";
 import useGroupData from "../hooks/useGroupData";
 
 export const Group = () => {
-    const { deleteGroup, sendInvite } = useGroupData();
-    const [verification, ] = useCookies(["access_token"]);
-    const { groupData, setGroupData } = useContext(UserContext)
     const location = useLocation()
     const navigate = useNavigate()
+    const { deleteGroup, sendInvite, leaveGroup } = useGroupData();
+    const { groupData, setGroupData } = useContext(UserContext)
     const { from, index } = location.state
     const { groupID } = useParams();
     const [invUsername, setUsername] = useState("")
     const [collections, setCollections] = useState(from.collections)
     const [editMode, setEditMode] = useState(false)
     const [deleteMode, setDeleteMode] = useState(false)
+    const [leaveMode, setLeaveMode] = useState(false)
     
     function getCollection(params){
         setCollections(params)
@@ -104,7 +103,7 @@ export const Group = () => {
             </div>
             </>
             :
-            <button id="leaveGroup">Leave Group</button>}/>
+            <button id="leaveGroup" onClick={(e) => displayPopup(e, leaveMode, setLeaveMode)}>Leave Group</button>}/>
             <div className="inviteUser" id="inviteUser" style={{display: "none"}}>
                 <label>Username:</label>
                 <input value={invUsername} onChange={(e) => setUsername(e.target.value)}></input>
@@ -126,9 +125,11 @@ export const Group = () => {
                 <span id="noGroupCollections">No Collections</span>
             }
             </div>
-            {deleteMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="delete this group" action={(e) => deleteAction(from._id)}
+            {deleteMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="Delete this group?" action={() => deleteAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, deleteMode, setDeleteMode)}/> : null}
             {editMode ? <ConfirmationPopup actionTitle="Edit Group" actionBody="Edit this group" action={deleteAction(from._id)}
+                hidePrompt={(e) => displayPopup(e, editMode)}/> : null}
+            {leaveMode ? <ConfirmationPopup actionTitle="Leave Group" actionBody="Leave this group?" action={() => leaveAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, editMode)}/> : null}
             <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="GroupCollection" isLogged={true}
                 labelData={{usePremade: true, title: "Collection", lower: "collection", action: `groups/${groupID}/createCollection`}}/>
