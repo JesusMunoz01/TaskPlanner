@@ -11,7 +11,7 @@ import ConfirmationPopup from "../components/confirmationPopup";
 import useGroupData from "../hooks/useGroupData";
 
 export const Group = () => {
-    const { deleteGroup } = useGroupData();
+    const { deleteGroup, sendInvite } = useGroupData();
     const [verification, ] = useCookies(["access_token"]);
     const { groupData, setGroupData } = useContext(UserContext)
     const location = useLocation()
@@ -31,31 +31,20 @@ export const Group = () => {
         navigate(".", {state: {from: location.state.from, index: index}});
     }
 
-    async function sendInvite(){
-        try{
-            const userID = localStorage.getItem("userId");
-            const response = await fetch(`${__API__}/groups/${from._id}/invite`, {
-                method: "POST", 
-                headers: {
-                    "Content-Type": "application/json",
-                    auth: verification.access_token
-                },
-                body: JSON.stringify({
-                    userID,
-                    invUsername
-                })
-            })
-
-            const data = await response.json();
-            console.log(data)
-
-        }catch(error){
-
-        }
-    }
-
     async function deleteAction(id){
         await deleteGroup(id)
+        const updatedGroups = groupData.joined.filter((group) => group._id !== id)
+        setGroupData((prev) => {
+            return {
+                invites: prev.invites,
+                joined: updatedGroups
+            }
+        });
+        navigate("/groups");
+    }
+
+    async function leaveAction(id){
+        await leaveGroup(id)
         const updatedGroups = groupData.joined.filter((group) => group._id !== id)
         setGroupData((prev) => {
             return {

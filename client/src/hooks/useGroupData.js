@@ -19,9 +19,40 @@ export default function useGroupData() {
         }
     }
 
-    const leaveGroup = () => {
-        console.log("leaveGroup")
+    const leaveGroup = async () => {
+        const userID = window.localStorage.getItem("userId");
+        if(userID){
+            await fetch(`${__API__}/groups/${groupID}/leaveGroup/${userID}`, {
+                method: "DELETE", headers: {auth: verify.access_token}, 
+            });
+        }
+        else{
+            alert("You need to be logged in to perform this action")
+        }
     }
 
-    return {editGroup, deleteGroup, leaveGroup}
+    const sendInvite = async () => {
+        try{
+            const userID = localStorage.getItem("userId");
+            const response = await fetch(`${__API__}/groups/${from._id}/invite`, {
+                method: "POST", 
+                headers: {
+                    "Content-Type": "application/json",
+                    auth: verification.access_token
+                },
+                body: JSON.stringify({
+                    userID,
+                    invUsername
+                })
+            })
+
+            const data = await response.json();
+            console.log(data)
+
+        }catch(error){
+
+        }
+    }
+
+    return {editGroup, deleteGroup, leaveGroup, sendInvite}
 };
