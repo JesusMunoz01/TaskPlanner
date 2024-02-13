@@ -3,8 +3,26 @@ import { useCookies } from "react-cookie";
 export default function useGroupData() {
     const [verify, ] = useCookies(["access_token"])
 
-    const editGroup = () => {
-        console.log("editGroup")
+    const editGroup = async (groupID, groupName, groupDescription) => {
+        try{
+            const userID = localStorage.getItem("userId");
+            const response = await fetch(`${__API__}/groups/${groupID}/updateGroup/${userID}`, {
+                method: "POST", 
+                headers: {
+                    "Content-Type": "application/json",
+                    auth: verification.access_token
+                },
+                body: JSON.stringify({
+                    groupName,
+                    groupDescription
+                })
+            })
+
+            const data = await response.json();
+            return data;
+        }catch(error){
+
+        }
     }
 
     const deleteGroup = async (groupID) => {

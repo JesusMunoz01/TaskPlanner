@@ -13,7 +13,7 @@ import EditGroupForm from "../components/editGroupForm";
 export const Group = () => {
     const location = useLocation()
     const navigate = useNavigate()
-    const { deleteGroup, sendInvite, leaveGroup } = useGroupData();
+    const { deleteGroup, sendInvite, leaveGroup, editGroup } = useGroupData();
     const { groupData, setGroupData } = useContext(UserContext)
     const { from, index } = location.state
     const { groupID } = useParams();
@@ -56,7 +56,13 @@ export const Group = () => {
     }
 
     async function editAction(){
-    
+        const result = await editGroup()
+        setGroupData((prev) => {
+            return {
+                invites: prev.invites,
+                joined: result.joined
+            }
+        });
     }
 
     function hidePrompt(e, name){
