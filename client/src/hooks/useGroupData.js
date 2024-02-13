@@ -10,7 +10,7 @@ export default function useGroupData() {
                 method: "POST", 
                 headers: {
                     "Content-Type": "application/json",
-                    auth: verification.access_token
+                    auth: verify.access_token
                 },
                 body: JSON.stringify({
                     groupName,
