@@ -8,6 +8,7 @@ import { CollectionsCard } from "../components/collectionsCard";
 import { UserContext } from "../App";
 import ConfirmationPopup from "../components/confirmationPopup";
 import useGroupData from "../hooks/useGroupData";
+import EditGroupForm from "../components/editGroupForm";
 
 export const Group = () => {
     const location = useLocation()
@@ -54,6 +55,10 @@ export const Group = () => {
         navigate("/groups");
     }
 
+    async function editAction(){
+    
+    }
+
     function hidePrompt(e, name){
         let addBox = document.getElementById(`addGroup${name}`);
         if(e === undefined){
@@ -94,7 +99,7 @@ export const Group = () => {
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>
-            <button id="editGroup">Edit Group</button>
+            <button id="editGroup" onClick={(e) => setEditMode(!editMode)}>Edit Group</button>
             <button id="delGroup" onClick={(e) => displayPopup(e, deleteMode, setDeleteMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
             <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
@@ -116,8 +121,10 @@ export const Group = () => {
                     <div className="groupCollection" id="groupCollections">
                         <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                             {collections.map((collection, index)=> (
-                                <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={true}
-                                index={index} returnCollection={getCollection} section="groupsCollection" route={`/groups/${from._id}`}/>
+                                <div>
+                                    <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={true}
+                                    index={index} returnCollection={getCollection} section="groupsCollection" route={`/groups/${from._id}`}/>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -127,10 +134,10 @@ export const Group = () => {
             </div>
             {deleteMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="Delete this group?" action={() => deleteAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, deleteMode, setDeleteMode)}/> : null}
-            {editMode ? <ConfirmationPopup actionTitle="Edit Group" actionBody="Edit this group" action={deleteAction(from._id)}
-                hidePrompt={(e) => displayPopup(e, editMode)}/> : null}
             {leaveMode ? <ConfirmationPopup actionTitle="Leave Group" actionBody="Leave this group?" action={() => leaveAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, editMode)}/> : null}
+            {editMode ? <EditGroupForm groupName={from.groupName} groupDescription={from.groupDescription} 
+                closeEdit={() => setEditMode(!editMode)} confirmChanges={editAction}/> : null}
             <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="GroupCollection" isLogged={true}
                 labelData={{usePremade: true, title: "Collection", lower: "collection", action: `groups/${groupID}/createCollection`}}/>
         </div>
