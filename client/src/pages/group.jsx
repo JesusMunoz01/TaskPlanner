@@ -13,7 +13,7 @@ import EditGroupForm from "../components/editGroupForm";
 export const Group = () => {
     const location = useLocation()
     const navigate = useNavigate()
-    const { deleteGroup, sendInvite, leaveGroup } = useGroupData();
+    const { deleteGroup, sendInvite, leaveGroup, editGroup } = useGroupData();
     const { groupData, setGroupData } = useContext(UserContext)
     const { from, index } = location.state
     const { groupID } = useParams();
@@ -55,8 +55,22 @@ export const Group = () => {
         navigate("/groups");
     }
 
-    async function editAction(){
-    
+    async function editAction(id, title, desc){
+        await editGroup(id, title, desc)
+        const updatedGroups = groupData.joined.map((group) => {
+            if(group._id === id){
+                group.groupName = title;
+                group.groupDescription = desc;
+            }
+            return group;
+        })
+        setGroupData((prev) => {
+            return {
+                invites: prev.invites,
+                joined: updatedGroups
+            }
+        });
+        navigate(".", {state: {from: {...location.state.from, groupName: title, groupDescription: desc}, index: index}})
     }
 
     function hidePrompt(e, name){
@@ -137,7 +151,7 @@ export const Group = () => {
             {leaveMode ? <ConfirmationPopup actionTitle="Leave Group" actionBody="Leave this group?" action={() => leaveAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, editMode)}/> : null}
             {editMode ? <EditGroupForm groupName={from.groupName} groupDescription={from.groupDescription} 
-                closeEdit={() => setEditMode(!editMode)} confirmChanges={editAction}/> : null}
+                closeEdit={() => setEditMode(!editMode)} confirmChanges={editAction} groupID={from._id}/> : null}
             <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="GroupCollection" isLogged={true}
                 labelData={{usePremade: true, title: "Collection", lower: "collection", action: `groups/${groupID}/createCollection`}}/>
         </div>

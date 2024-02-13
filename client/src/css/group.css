@@ -123,20 +123,6 @@
     font-size: 32px;
 }
 
-/* .groupCollections{
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(3, 1fr);
-    margin: 10px;
-}
-
-.groupCollection{
-    display: flex;
-    justify-content: center;
-    height: 500px;
-    background-color: var(--card-color);
-} */
-
 .groupCollections{
     display: flex;
     width: 100%;
@@ -254,6 +240,26 @@
     width: 50%;
     height: 500px;
     filter: none;
+}
+
+#leaveGroup{
+    background-color: red;
+    border-color: var(--primary-color);
+    border-style: none;
+    border-radius: 10px;
+    height: 60%;
+    margin: 0px 5px 0px 5px;
+    cursor: pointer;
+}
+
+#editGroup{
+    background-color: #848588;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    border-style: none;
+    height: 60%;
+    margin: 0px 5px 0px 5px;
 }
 
 .editGroupFormBackground{
