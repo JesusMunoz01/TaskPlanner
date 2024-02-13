@@ -191,6 +191,27 @@ groupRouter.delete('/groups/:groupID/deleteGroup/:userID', verification, async (
         res.send("Not enough permissions")
 })
 
+groupRouter.delete('/groups/:groupID/leaveGroup/:userID', verification, async (req, res) => {
+    const group = req.params.groupID;
+    const user = req.params.userID;
+    const userDB = await UserModel.findOne({_id: user});
+    const groupDB = await GroupModel.findOne({_id: group});
+    if(groupDB && groupDB.groupMembers.find(member => member === user) && !groupDB.groupAdmin.find(admin => admin === user)){
+        try{
+            const delMember = await GroupModel.findOneAndUpdate({"_id": group, "groupMembers": user}, 
+                {$pull: {groupMembers: user}})
+            const filteredMembers = delMember.groupMembers.filter((member) => member !== user)
+            await UserModel.findOneAndUpdate({_id: user, "groups.joined": group},
+                {$pull: {"groups.joined": group}})
+            res.json(filteredMembers)
+        }catch(error){
+            res.json({error: error, message: "Couldnt delete group"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
+})
+
 groupRouter.delete('/groups/:groupID/deleteCollection/:collectionID', verification, async (req, res) => {
     const group = req.params.groupID;
     const collectionID = req.params.collectionID;
