@@ -255,3 +255,70 @@
     height: 500px;
     filter: none;
 }
+
+.editGroupFormBackground{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    backdrop-filter: blur(30px);
+}
+
+.editGroupFormContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 80%;
+    height: 80%;
+    background-color: var(--card-color);
+    border: 1px solid var(--secondary-color);
+}
+
+.editGroupForm{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 70%;
+    height: 70%;
+    gap: 10px;
+    font-size: 1.4rem;
+}
+
+.editGroupForm input{
+    padding: 2px;
+    font-size: 1.2rem;
+    margin-left: 10px;
+    margin-bottom: 50px;
+}
+
+.editGroupForm textarea{
+    padding: 2px;
+    font-size: 1.2rem;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    resize: none;
+}
+
+.editGroupFormActions{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+    background-color: #282c34;
+}
+
+.editGroupFormActions button{
+    padding: 15px;
+    font-size: 1.2rem;
+    background-color: var(--primary-color);
+    border-style: none;
+    border-radius: 10px;
+    cursor: pointer;
+}

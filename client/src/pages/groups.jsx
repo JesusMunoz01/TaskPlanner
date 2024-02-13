@@ -15,6 +15,11 @@ export const Groups = ({userData, isLogged}) => {
     const [auth,] = useCookies(["access_token"])
 
     useEffect(() => {
+        if(groupData.invites && groupData.joined)
+            setGroups(groupData)
+    }, [])
+
+    useEffect(() => {
         if(groups.invites){
             let inviteIcon = document.getElementById("groupInvitesIcon");
 

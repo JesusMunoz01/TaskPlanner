@@ -19,6 +19,13 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
         try{
             groups = userDB.groups.joined.map(async (group) => {
                 let data = await GroupModel.findOne({_id: group})
+                // Remove group if it no longer exists
+                if(data === null){
+                    userDB.groups.joined = userDB.groups.joined.filter((uGroup) => uGroup !== group)
+                    await userDB.save()
+                    return
+                }
+
                 let userPerm = "Member"
                 if(data.groupAdmin.find((item) => item === user))
                     userPerm = "Admin"
@@ -29,7 +36,9 @@ groupRouter.get("/groups/fetchGroups/:userID", verification, async (req, res) =>
             res.json({error: error, message: "Couldnt fetch groups"})
         }
     }
-    res.json({invites: userDB.groups.invites, joined: await Promise.all(groups)})
+    const allGroups = await Promise.all(groups)
+    const filteredNull = allGroups.filter((group) => group !== undefined)
+    res.json({invites: userDB.groups.invites, joined: filteredNull})
 })
 
 // Create Routes --------------------------------------------------
@@ -170,12 +179,9 @@ groupRouter.delete('/groups/:groupID/deleteGroup/:userID', verification, async (
     const groupDB = await GroupModel.findOne({_id: group});
     if(groupDB && groupDB.groupAdmin.find(admin => admin === user)){
         try{
-            const deletedGroup = await GroupModel.deleteOne({_id: group})
-            // FIX: Remove group from userDB
+            await GroupModel.deleteOne({_id: group})
             const updatedGroups = userDB.groups.joined.filter((group) => group !== groupID)
-            userDB.groups.joined = updatedGroups;
             await groupDB.save()
-            await userDB.save()
             res.json(updatedGroups)
         }catch(error){
             res.json({error: error, message: "Couldnt delete group"})
@@ -183,15 +189,27 @@ groupRouter.delete('/groups/:groupID/deleteGroup/:userID', verification, async (
     }
     else
         res.send("Not enough permissions")
-    // try{
+})
 
-    //     const delCollection = await GroupModel.findOneAndUpdate({"_id": group, }, 
-    //     {$pull: {collections: {_id: collectionID}}})
-    //     const filteredCollection = delCollection.collections.filter((collection) => collection._id != collectionID)
-    //     res.json(filteredCollection)
-    // }catch(error){
-    //     res.json({error: error, message: "Couldnt delete collection"})
-    // }
+groupRouter.delete('/groups/:groupID/leaveGroup/:userID', verification, async (req, res) => {
+    const group = req.params.groupID;
+    const user = req.params.userID;
+    const userDB = await UserModel.findOne({_id: user});
+    const groupDB = await GroupModel.findOne({_id: group});
+    if(groupDB && groupDB.groupMembers.find(member => member === user) && !groupDB.groupAdmin.find(admin => admin === user)){
+        try{
+            const delMember = await GroupModel.findOneAndUpdate({"_id": group, "groupMembers": user}, 
+                {$pull: {groupMembers: user}})
+            const filteredMembers = delMember.groupMembers.filter((member) => member !== user)
+            await UserModel.findOneAndUpdate({_id: user, "groups.joined": group},
+                {$pull: {"groups.joined": group}})
+            res.json(filteredMembers)
+        }catch(error){
+            res.json({error: error, message: "Couldnt delete group"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
 })
 
 groupRouter.delete('/groups/:groupID/deleteCollection/:collectionID', verification, async (req, res) => {
