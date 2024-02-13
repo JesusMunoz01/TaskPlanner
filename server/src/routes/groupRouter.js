@@ -135,6 +135,17 @@ groupRouter.post("/groups/:groupID/updateCollection", verification, async (req, 
     }
 })
 
+groupRouter.post("/groups/:groupID/updateGroup", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    try{
+        const update = await GroupModel.findOneAndUpdate({"_id": groupID}, 
+        {$set: { "groupName": `${req.body.groupName}`, "groupDescription": `${req.body.groupDescription}`}})
+        res.json(update.collections)
+    }catch(error){
+        res.json({error: error, message: "Couldnt update information"})
+    }
+})
+
 groupRouter.post("/groups/:groupID/invite/action", verification, async (req, res) =>{
     const groupID = req.params.groupID;
     const user = req.body.userID;
