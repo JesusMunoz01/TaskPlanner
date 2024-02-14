@@ -5,38 +5,72 @@ import user from '@testing-library/user-event'
 import { Group } from '../pages/group'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { UserContext } from '../App'
+import { Groups } from '../pages/groups'
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'), // use actual for all non-hook parts
+    useLocation: () => ({
+        state: {from: {collections: []}, index: 0}
+    }),
+  }));
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'), // use actual for all non-hook parts
+    useNavigate: () => jest.fn(),
+}));
 
 describe('Tests for the groups Page', () => {
 
-    test.skip('Testing user not logged', () => {
+    test('Testing user not logged', () => {
+        const useLocationMock = jest.spyOn(require('react-router-dom'), 'useLocation');
+        useLocationMock.mockReturnValue({state: {from: {collections: []}, index: 0}})
+
         const renderedGroup = render(
         <UserContext.Provider value={{groupData: [], setGroupData: () => {}}}>
-            <Group/>
+            <Groups/>
         </UserContext.Provider>)
 
         const text = renderedGroup.getByText('You are currently not logged, to access this feature log in')
 
         expect(text).toBeInTheDocument()
+        useLocationMock.mockRestore()
     })
 
-    test.skip('Testing for admin features (Delete, Edit, and invite buttons)', () => {
-        const mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin'},
-        {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member'}]}
+    test('Testing for admin features (Delete, Edit, and invite buttons)', async () => {
+        const mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+        collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
+        const setGroupData = newData => {mockData = newData};
+
+        const useLocationMock = jest.spyOn(require('react-router-dom'), 'useLocation');
+        useLocationMock.mockReturnValue({state: {from: mockData.joined[0], index: 0}})
+
         const renderedGroup = render(
-            <UserContext.Provider value={{groupData: mockData, setGroupData: () => {}}}>
+            <UserContext.Provider value={{groupData: mockData, setGroupData}}>
                 <MemoryRouter>
                     <Groups userData={mockData} isLogged={true}/>
                     <Routes>
                         <Route path='/' element={null}/>    
-                        <Route path="/groups/:groupId" element={<div>Group Page</div>}/>
+                        <Route path="/groups/:groupId" element={<Group />}/>
                     </Routes>
                 </MemoryRouter>
             </UserContext.Provider>)
+
+            const linkBtn = renderedGroup.getByLabelText('group1')
+
+            await act(async () => {
+                await user.click(linkBtn)
+            })
     
-            const groupText = renderedGroup.getByLabelText('groupTitle1')
+            const groupText = renderedGroup.getByLabelText('Test Group-Header')
+            const createCollectionBtn = renderedGroup.getByLabelText('createGroup')
+            const editGroupBtn = renderedGroup.getByLabelText('editGroup')
+            const deleteGroupBtn = renderedGroup.getByLabelText('delGroup')
             const invText = renderedGroup.getByLabelText('inviteTitletestGroup')
     
             expect(groupText).toBeInTheDocument()
+            expect(createCollectionBtn).toBeInTheDocument()
+            expect(editGroupBtn).toBeInTheDocument()
+            expect(deleteGroupBtn).toBeInTheDocument()
             expect(invText).toBeInTheDocument()
     })
 

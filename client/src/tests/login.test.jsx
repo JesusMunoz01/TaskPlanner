@@ -1,12 +1,11 @@
 import React from 'react'
-import { render, screen, cleanup, act } from '@testing-library/react'
+import { render, cleanup, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
-import App from '../App'
 import { Login } from '../pages/login'
 import Cookies from 'js-cookie'
 import { Navbar } from '../components/navbar'
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
 
 const mockUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
