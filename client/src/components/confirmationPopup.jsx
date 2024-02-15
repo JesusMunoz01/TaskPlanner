@@ -3,14 +3,14 @@ export default function ConfirmationPopup({ actionTitle, actionBody, action, hid
         <div className="confirmationPopup" id="confirmationPopup">
             <div className="confirmationBox" id="confirmationBox">
                 <div className="confirmationHeader">
-                    <h1>{actionTitle}</h1>
+                    <h1 aria-label="delActionTitle">{actionTitle}</h1>
                 </div>
                 <div className="confirmationBody">
                     <p>Are you sure you want to {actionBody}?</p>
                 </div>
                 <div className="confirmationFooter">
-                    <button onClick={action}>Delete</button>
-                    <button onClick={hidePrompt}>Cancel</button>
+                    <button aria-label="delActionConfirm" onClick={action}>Delete</button>
+                    <button aria-label="delActionCancel" onClick={hidePrompt}>Cancel</button>
                 </div>
             </div>
         </div>

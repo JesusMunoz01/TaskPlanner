@@ -5,6 +5,8 @@ export default function EditGroupForm(params) {
     const [newGroupDescription, setNewGroupDescription] = useState("")
 
     const acceptChanges = async (e, groupID, groupName, groupDescription) => {
+        setNewGroupName("")
+        setNewGroupDescription("")
         e.preventDefault()
         await params.confirmChanges(groupID, groupName, groupDescription)
         params.closeEdit()
@@ -13,23 +15,23 @@ export default function EditGroupForm(params) {
     return (
         <div className="editGroupFormBackground">
             <div className="editGroupFormContainer">
-                <h1>Edit Group</h1>
+                <h1 aria-label="editForm">Edit Group</h1>
                 <form className="editGroupForm">
                     <label htmlFor="groupName">Old Group Name: {params.groupName}</label>
                     <div style={{display: "flex", flexDirection: "row", fontSize: "1.2rem"}}>
                         <label htmlFor="newGroupName">Group Name:</label>
-                        <input type="text" id="newGroupName" value={newGroupName} 
+                        <input type="text" id="updtGroupName" aria-label="updtGroupName" value={newGroupName} 
                             onChange={(e) => setNewGroupName(e.target.value)}></input>
                     </div>
                     <label htmlFor="groupDescription">Old Group Description: {params.groupDescription}</label>
                     <div style={{display: "flex", flexDirection: "row", fontSize: "1.2rem"}}>
                         <label htmlFor="newGroupDescription">Group Description:</label>
-                        <textarea id="newGroupDescription" value={newGroupDescription} 
+                        <textarea id="newGroupDescription" aria-label="updtGroupDesc" value={newGroupDescription} 
                             onChange={(e) => setNewGroupDescription(e.target.value)}></textarea>
                     </div>
                     <div className="editGroupFormActions">
-                        <button id="saveGroup" onClick={(e) => acceptChanges(e, params.groupID, newGroupName, newGroupDescription)}>Confirm</button>
-                        <button id="deleteGroup" onClick={params.closeEdit}>Cancel</button>
+                        <button id="saveGroup" aria-label="saveGroup" onClick={(e) => acceptChanges(e, params.groupID, newGroupName, newGroupDescription)}>Confirm</button>
+                        <button id="deleteGroup" aria-label="cancelEdit" onClick={params.closeEdit}>Cancel</button>
                     </div>
                 </form>
             </div>

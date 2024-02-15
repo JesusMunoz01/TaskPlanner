@@ -290,36 +290,6 @@ describe('Tests for the groups Page', () => {
 
         expect(groupTitleCheck).toBeInTheDocument()
     })
-    
-    test.skip('Test leaving a group', () => {
-        
-    })
-
-    test.skip('Test updating a group', () => {
-
-    })
-    
-    test.skip('Testing admin user extra features (Delete and invite options)', () => {
-        const mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin'},
-        {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member'}]}
-        const renderedGroup = render(
-            <UserContext.Provider value={{groupData: mockData, setGroupData: () => {}}}>
-                <MemoryRouter>
-                    <Groups userData={mockData} isLogged={true}/>
-                    <Routes>
-                        <Route path='/' element={null}/>    
-                        <Route path="/groups/:groupId" element={<div>Group Page</div>}/>
-                    </Routes>
-                </MemoryRouter>
-            </UserContext.Provider>)
-    
-            const groupText = renderedGroup.getByLabelText('groupTitle1')
-            const invText = renderedGroup.getByLabelText('inviteTitletestGroup')
-    
-            expect(groupText).toBeInTheDocument()
-            expect(invText).toBeInTheDocument()
-    })
-
 
 })
 
