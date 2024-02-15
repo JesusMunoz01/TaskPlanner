@@ -74,8 +74,67 @@ describe('Tests for the groups Page', () => {
             expect(invText).toBeInTheDocument()
     })
 
-    test.skip('Test editing a group', () => {
-        
+    test('Test editing a group', async () => {
+        let mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+        collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
+        const setGroupData = newData => {mockData = newData};
+
+        const useLocationMock = jest.spyOn(require('react-router-dom'), 'useLocation');
+        useLocationMock.mockReturnValue({state: {from: mockData.joined[0], index: 0}})
+
+        const renderedGroup = render(
+            <UserContext.Provider value={{groupData: mockData, setGroupData}}>
+                <MemoryRouter>
+                    <Groups userData={mockData} isLogged={true}/>
+                    <Routes>
+                        <Route path='/' element={null}/>    
+                        <Route path="/groups/:groupId" element={<Group />}/>
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>)
+
+            const linkBtn = renderedGroup.getByLabelText('group1')
+
+            await act(async () => {
+                await user.click(linkBtn)
+            })
+    
+            const groupText = renderedGroup.getByLabelText('Test Group-Header')
+            const createCollectionBtn = renderedGroup.getByLabelText('createGroup')
+            const editGroupBtn = renderedGroup.getByLabelText('editGroup')
+            const deleteGroupBtn = renderedGroup.getByLabelText('delGroup')
+            const invText = renderedGroup.getByLabelText('inviteTitletestGroup')
+
+            await act(async () => {
+                await user.click(editGroupBtn)
+            })
+
+            const editGroupForm = renderedGroup.getByLabelText('editForm')
+            expect(editGroupForm).toBeInTheDocument()
+
+            const groupName = renderedGroup.getByLabelText('updtGroupName')
+            const groupDesc = renderedGroup.getByLabelText('updtGroupDesc')
+            const saveBtn = renderedGroup.getByLabelText('saveGroup')
+            const cancelBtn = renderedGroup.getByLabelText('cancelEdit')
+
+            await act(async () => {
+                await user.type(groupName, 'Test Group Updated')
+                await user.type(groupDesc, 'Test Description Updated')
+                await user.click(saveBtn)
+                await user.click(linkBtn)
+            })
+
+            const updtGroupText = renderedGroup.getByLabelText('Test Group Updated-Header')
+
+            expect(groupText).toBeInTheDocument()
+            expect(createCollectionBtn).toBeInTheDocument()
+            expect(editGroupBtn).toBeInTheDocument()
+            expect(deleteGroupBtn).toBeInTheDocument()
+            expect(invText).toBeInTheDocument()
+            expect(groupName.value).toEqual("")
+            expect(groupDesc.value).toEqual("")
+            expect(updtGroupText).toHaveTextContent('Test Group Updated')
+
     })
 
     test.skip('Test deleting a group', () => {
