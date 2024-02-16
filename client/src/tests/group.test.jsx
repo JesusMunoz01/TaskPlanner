@@ -227,8 +227,49 @@ describe('Tests for the groups Page', () => {
 
     })
 
-    test.skip('Test leaving a group', () => {
-        
+    test('Test leaving a group', async () => {
+        let mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Member',
+        collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
+        const setGroupData = newData => {mockData = newData};
+
+        const useLocationMock = jest.spyOn(require('react-router-dom'), 'useLocation');
+        useLocationMock.mockReturnValue({state: {from: mockData.joined[0], index: 0}})
+
+        const useNavigateMock = jest.spyOn(require('react-router-dom'), 'useNavigate');
+        useNavigateMock.mockReturnValue(jest.fn());
+
+        const renderedGroup = render(
+            <UserContext.Provider value={{groupData: mockData, setGroupData}}>
+                <MemoryRouter>
+                    <Groups userData={mockData} isLogged={true}/>
+                    <Routes>
+                        <Route path='/' element={null}/>    
+                        <Route path="/groups/:groupId" element={<Group />}/>
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>)
+
+            const linkBtn = renderedGroup.getByLabelText('group1')
+
+            await act(async () => {
+                await user.click(linkBtn)
+            })
+    
+            const leaveGroupBtn = renderedGroup.getByLabelText('leaveGroup')
+
+            await act(async () => {
+                await user.click(leaveGroupBtn)
+            })
+
+            const confirmBtn = renderedGroup.getByLabelText('delActionConfirm')
+
+            await act(async () => {
+                await user.click(confirmBtn)
+            })
+
+            expect(useNavigateMock).toHaveBeenCalled()
+
+            useLocationMock.mockRestore()
     })
 
     test.skip('Test inviting a user to a group', () => {
