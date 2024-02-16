@@ -127,9 +127,11 @@ describe('Tests for the groups Page', () => {
     })
 
     test('Test editing a group', async () => {
+        const { editGroup } = useGroupData();
         let mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
         collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
         const setGroupData = newData => {mockData = newData};
+        localStorage.setItem('userId', 2)
 
         const useLocationMock = jest.spyOn(require('react-router-dom'), 'useLocation');
         useLocationMock.mockReturnValue({state: {from: mockData.joined[0], index: 0}})
@@ -176,6 +178,8 @@ describe('Tests for the groups Page', () => {
                 await user.click(linkBtn)
             })
 
+            expect(editGroup).toHaveBeenCalled()
+
             const updtGroupText = renderedGroup.getByLabelText('Test Group Updated-Header')
 
             expect(groupText).toBeInTheDocument()
@@ -187,10 +191,10 @@ describe('Tests for the groups Page', () => {
             expect(groupDesc.value).toEqual("")
             expect(updtGroupText).toHaveTextContent('Test Group Updated')
             useLocationMock.mockRestore()
-
     })
 
     test('Test deleting a group', async () => {
+        const { deleteGroup } = useGroupData();
         let mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
         collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
         const setGroupData = newData => {mockData = newData};
@@ -232,6 +236,8 @@ describe('Tests for the groups Page', () => {
             await act(async () => {
                 await user.click(confirmBtn)
             })
+
+            expect(deleteGroup).toHaveBeenCalled()
 
             expect(useNavigateMock).toHaveBeenCalled()
 
@@ -322,7 +328,7 @@ describe('Tests for the groups Page', () => {
     })
 
     test.skip('Test creating a group collection', () => {
-            
+        
     })
 
     test.skip('Test creating a group collection', () => {
