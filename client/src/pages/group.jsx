@@ -6,6 +6,7 @@ import { SubmitForm } from "../components/submitForm";
 import { useContext, useState } from "react";
 import { CollectionsCard } from "../components/collectionsCard";
 import { UserContext } from "../App";
+import { sendInvite } from "../hooks/useGroupData";
 import ConfirmationPopup from "../components/confirmationPopup";
 import useGroupData from "../hooks/useGroupData";
 import EditGroupForm from "../components/editGroupForm";
@@ -125,8 +126,8 @@ export const Group = () => {
             <button id="leaveGroup" aria-label="leaveGroup" onClick={(e) => displayPopup(e, leaveMode, setLeaveMode)}>Leave Group</button>}/>
             <div className="inviteUser" id="inviteUser" style={{display: "none"}}>
                 <label>Username:</label>
-                <input value={invUsername} onChange={(e) => setUsername(e.target.value)}></input>
-                <button id="inviteBtn" onClick={sendInvite}>Invite</button>
+                <input aria-label="invUser" value={invUsername} onChange={(e) => setUsername(e.target.value)}></input>
+                <button id="inviteBtn" aria-label="invUserBtn" onClick={sendInvite}>Invite</button>
             </div>
         </div>
         <div className="groupContent">
