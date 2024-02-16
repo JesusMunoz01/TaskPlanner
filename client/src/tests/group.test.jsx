@@ -75,6 +75,47 @@ describe('Tests for the groups Page', () => {
             useLocationMock.mockRestore()
     })
 
+    test('Testing for member features (Leave button)', async () => {
+        const mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Member',
+        collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
+        const setGroupData = newData => {mockData = newData};
+
+        const useLocationMock = jest.spyOn(require('react-router-dom'), 'useLocation');
+        useLocationMock.mockReturnValue({state: {from: mockData.joined[0], index: 0}})
+
+        const renderedGroup = render(
+            <UserContext.Provider value={{groupData: mockData, setGroupData}}>
+                <MemoryRouter>
+                    <Groups userData={mockData} isLogged={true}/>
+                    <Routes>
+                        <Route path='/' element={null}/>    
+                        <Route path="/groups/:groupId" element={<Group />}/>
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>)
+
+            const linkBtn = renderedGroup.getByLabelText('group1')
+
+            await act(async () => {
+                await user.click(linkBtn)
+            })
+    
+            const groupText = renderedGroup.getByLabelText('Test Group-Header')
+            const createCollectionBtn = renderedGroup.getByLabelText('createGroup')
+            const editGroupBtn = renderedGroup.queryByLabelText('editGroup')
+            const deleteGroupBtn = renderedGroup.queryByLabelText('delGroup')
+            const leaveGroupBtn = renderedGroup.getByLabelText('leaveGroup')
+            const invText = renderedGroup.getByLabelText('inviteTitletestGroup')
+    
+            expect(groupText).toBeInTheDocument()
+            expect(createCollectionBtn).toBeInTheDocument()
+            expect(editGroupBtn).not.toBeInTheDocument()
+            expect(deleteGroupBtn).not.toBeInTheDocument()
+            expect(leaveGroupBtn).toBeInTheDocument()
+            expect(invText).toBeInTheDocument()
+            useLocationMock.mockRestore()
+    })
+
     test('Test editing a group', async () => {
         let mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
         collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
@@ -188,10 +229,6 @@ describe('Tests for the groups Page', () => {
 
     test.skip('Test leaving a group', () => {
         
-    })
-
-    test.skip('Test updating a group', () => {
-
     })
 
     test.skip('Test inviting a user to a group', () => {
