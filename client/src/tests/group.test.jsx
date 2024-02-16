@@ -560,8 +560,23 @@ describe('Tests for the groups Page', () => {
 
 describe('Tests for the group Page API ', () => {
             
-    test.skip('Test API for editing a group', () => {
-        
+    test('Test API for editing a group', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/updateGroup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+            userID: 4,
+            groupName: 'New Group Name',
+            groupDescription: 'New Group Description',
+            }),
+        });
+
+        const data = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(data).toEqual({ "invites": ["testInvite", "testInvite2"], "joined": [
+            { "_id": 1, "groupName": "New Group Name", "groupDescription": "New Group Description", 
+            "permissions": "Admin", "collections": [], "groupStatus": "Incomplete", "groupTitle": "mockGroup1" }] });
     })
 
     test.skip('Test API for deleting a group', () => {
