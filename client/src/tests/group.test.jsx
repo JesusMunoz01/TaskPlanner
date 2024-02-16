@@ -6,6 +6,7 @@ import { Group } from '../pages/group'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { UserContext } from '../App'
 import { Groups } from '../pages/groups'
+import useGroupData  from '../hooks/useGroupData'
 
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'), // use actual for all non-hook parts
@@ -18,6 +19,15 @@ jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'), // use actual for all non-hook parts
     useNavigate: () => jest.fn(),
 }));
+
+jest.mock('../hooks/useGroupData', () => {
+    return jest.fn().mockReturnValue({
+      deleteGroup: jest.fn(),
+      sendInvite: jest.fn(),
+      leaveGroup: jest.fn(),
+      editGroup: jest.fn(),
+    });
+  });
 
 describe('Tests for the groups Page', () => {
 
@@ -272,8 +282,43 @@ describe('Tests for the groups Page', () => {
             useLocationMock.mockRestore()
     })
 
-    test.skip('Test inviting a user to a group', () => {
-            
+    test('Test inviting a user to a group', async () => {
+        const { sendInvite } = useGroupData();
+        const mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+        collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
+        const setGroupData = newData => {mockData = newData};
+
+        const useLocationMock = jest.spyOn(require('react-router-dom'), 'useLocation');
+        useLocationMock.mockReturnValue({state: {from: mockData.joined[0], index: 0}})
+
+        const renderedGroup = render(
+            <UserContext.Provider value={{groupData: mockData, setGroupData}}>
+                <MemoryRouter>
+                    <Groups userData={mockData} isLogged={true}/>
+                    <Routes>
+                        <Route path='/' element={null}/>    
+                        <Route path="/groups/:groupId" element={<Group />}/>
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>)
+
+            const linkBtn = renderedGroup.getByLabelText('group1')
+
+            await act(async () => {
+                await user.click(linkBtn)
+            })
+    
+            const invText = renderedGroup.getByLabelText('invUser')
+            const invBtn = renderedGroup.getByLabelText('invUserBtn')
+
+            await act(async () => {
+                await user.type(invText, 'testUser')
+                await user.click(invBtn)
+            })
+    
+            expect(sendInvite).toHaveBeenCalled()
+
+            useLocationMock.mockRestore()
     })
 
     test.skip('Test creating a group collection', () => {
