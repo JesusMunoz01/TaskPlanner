@@ -6,7 +6,6 @@ import { SubmitForm } from "../components/submitForm";
 import { useContext, useState } from "react";
 import { CollectionsCard } from "../components/collectionsCard";
 import { UserContext } from "../App";
-import { sendInvite } from "../hooks/useGroupData";
 import ConfirmationPopup from "../components/confirmationPopup";
 import useGroupData from "../hooks/useGroupData";
 import EditGroupForm from "../components/editGroupForm";
@@ -132,7 +131,7 @@ export const Group = () => {
         </div>
         <div className="groupContent">
             <div className="groupCollections" id="groupCollections" onMouseDown={(e) => hidePrompt(e, "Collection")}>
-                {collections.length !== 0 ?
+                {collections && (collections.length !== 0) ?
                     <div className="groupCollection" id="groupCollections">
                         <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                             {collections.map((collection, index)=> (

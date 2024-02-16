@@ -29,6 +29,13 @@ jest.mock('../hooks/useGroupData', () => {
     });
   });
 
+  jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useParams: () => ({
+      groupID: 1,
+    }),
+  }));
+
 describe('Tests for the groups Page', () => {
 
     test('Testing user not logged', () => {
@@ -327,8 +334,60 @@ describe('Tests for the groups Page', () => {
             useLocationMock.mockRestore()
     })
 
-    test.skip('Test creating a group collection', () => {
+    test('Test creating a group collection', async () => {
+        const mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+        collections: []}, {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
+        const setGroupData = newData => {mockData = newData};
+        localStorage.setItem('userId', 2)
+
+        const useLocationMock = jest.spyOn(require('react-router-dom'), 'useLocation');
+        useLocationMock.mockReturnValue({state: {from: mockData.joined[0], index: 0}})
+
+        const fetchCopy = global.fetch;
+        global.__API__ = 'http://localhost:8000'
+        global.fetch = jest.fn()
+        global.fetch.mockImplementationOnce(() => Promise.resolve({ json: () => Promise.resolve(
+            [{_id: 1, collectionTitle: 'Test Collection', collectionDesc: 'Test Collection Description', tasks: []}])}));
+
+        const renderedGroup = render(
+            <UserContext.Provider value={{groupData: mockData, setGroupData}}>
+                <MemoryRouter>
+                    <Groups userData={mockData} isLogged={true}/>
+                    <Routes>
+                        <Route path='/' element={null}/>
+                        <Route path="/groups/:groupId" element={<Group />}/>
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>)
+    
+        const linkBtn = renderedGroup.getByLabelText('group1')
+
+        await act(async () => {
+            await user.click(linkBtn)
+        })
+
+        const createCollectionBtn = renderedGroup.getByLabelText('createGroup')
+        const titleInput = renderedGroup.getByLabelText('addGroupCollectionTitle')
+        const descInput = renderedGroup.getByLabelText('addGroupCollectionDesc')
+        const createBtn = renderedGroup.getByLabelText('createNewGroupCollection')
+
+        await act(async () => {
+            await user.click(createCollectionBtn)
+            await user.type(titleInput, 'Test Collection')
+            await user.type(descInput, 'Test Collection Description')
+            await user.click(createBtn)
+        })
+
+        expect(global.fetch).toHaveBeenCalledWith('http://localhost:8000/groups/1/createCollection', 
+            {"body": "{\"userID\":\"2\",\"title\":\"Test Collection\",\"desc\":\"Test Collection Description\"}",
+            "headers": {"Content-Type": "application/json", "auth": undefined}, "method": "POST"})
+
+        const collectionTitle = renderedGroup.getByLabelText('groupsCollectionTitle1')
         
+        expect(collectionTitle.innerHTML).toEqual("Test Collection")
+
+        useLocationMock.mockRestore()
+        global.fetch = fetchCopy
     })
 
     test.skip('Test creating a group collection', () => {
