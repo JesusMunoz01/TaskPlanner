@@ -129,7 +129,6 @@ export const CollectionsCard = (data) => {
         updateCollectionDesc("")
 
         const currentMode = document.getElementById(`colSetting${id}`).className
-        console.log(currentMode)
         var list = document.getElementsByClassName(`${data.section}Edit active`)
 
         Array.prototype.forEach.call(list, (item) => {
@@ -159,7 +158,8 @@ export const CollectionsCard = (data) => {
                                         <span>Status: {collection.collectionStatus}</span>
                                     </div>
                                     <input id={collection._id} style={{display:"none"}} type="checkbox" onClick={() => displayEdit(collection._id)}/>
-                                    <label id={`${data.section}SettingsIcon`} htmlFor={collection._id}><BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
+                                    <label id={`${data.section}SettingsIcon`} aria-label={`${data.section}SettingsIcon`} htmlFor={collection._id}>
+                                        <BsGearFill style={{cursor:'pointer'}}></BsGearFill></label>
                                     <button aria-label={`del${data.section}${collection._id}`} onClick={() => delCollection(collection._id)}>X</button>
                                 </div>
                             </li>

@@ -446,8 +446,61 @@ describe('Tests for the groups Page', () => {
         global.fetch = fetchCopy
     })
 
-    test.skip('Test editing a group collection', () => {
-            
+    test('Test editing a group collection', async () => {
+        let mockData = {invites: ["testGroup"], joined: [{_id: 1, groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+            collections: [{_id: 1, collectionTitle: 'Test Collection', collectionDesc: 'Test Collection Description', tasks: []}]}, 
+        {_id: 2, groupName: 'Test Group 2', groupDescription: 'Test Description 2', permissions: 'Member', collections: []}]}
+        const setGroupData = newData => {mockData = newData};
+        localStorage.setItem('userId', 2)
+
+        const useLocationMock = jest.spyOn(require('react-router-dom'), 'useLocation');
+        useLocationMock.mockReturnValue({state: {from: mockData.joined[0], index: 0}})
+
+        const fetchCopy = global.fetch;
+        global.__API__ = 'http://localhost:8000'
+        global.fetch = jest.fn()
+        global.fetch.mockImplementationOnce(() => Promise.resolve({ json: () => Promise.resolve(
+            [{_id: 1, collectionTitle: 'Test Collection Update', collectionDesc: 'Test Collection Description Update', tasks: []}])}));
+
+        const renderedGroup = render(
+            <UserContext.Provider value={{groupData: mockData, setGroupData}}>
+                <MemoryRouter>
+                    <Groups userData={mockData} isLogged={true}/>
+                    <Routes>
+                        <Route path='/' element={null}/>
+                        <Route path="/groups/:groupId" element={<Group />}/>
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>)
+    
+        const linkBtn = renderedGroup.getByLabelText('group1')
+
+        await act(async () => {
+            await user.click(linkBtn)
+        })
+
+        const displayEditBtn = renderedGroup.getByLabelText('groupsCollectionSettingsIcon')
+        const updtTitle = renderedGroup.getByLabelText('editgroupsCollectionTitle1')
+        const updtDesc = renderedGroup.getByLabelText('editgroupsCollectionDesc1')
+        const updtBtn = renderedGroup.getByLabelText('confirmgroupsCollectionEdit1')
+
+        await act(async () => {
+            await user.click(displayEditBtn)
+            await user.type(updtTitle, 'Test Collection Update')
+            await user.type(updtDesc, 'Test Collection Description Update')
+            await user.click(updtBtn)
+        })
+
+        expect(global.fetch).toHaveBeenCalledWith('http://localhost:8000/groups/1/updateCollection', 
+            {"body": "{\"userID\":\"2\",\"collectionID\":1,\"newColTitle\":\"Test Collection Update\",\"newColDesc\":\"Test Collection Description Update\"}",
+            "headers": {"Content-Type": "application/json", "auth": undefined}, "method": "POST"})
+
+        const collectionTitle = renderedGroup.getByLabelText('groupsCollectionTitle1')
+
+        expect(collectionTitle.innerHTML).toEqual("Test Collection Update")
+
+        useLocationMock.mockRestore()
+        global.fetch = fetchCopy    
     })
 
     test.skip('Test deleting a group collection', () => {
