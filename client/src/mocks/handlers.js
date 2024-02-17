@@ -49,7 +49,7 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
     const mockGroup = [{groupName: "TestGroup1", groupDescription: "Test Group 1", groupStatus: "Incomplete", _id: 1, groupAdmin: ["TUser1"],
       groupMembers: ["TUser2"], collections: []},
     {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", _id: 2, groupAdmin: ["TUser2"], 
-      groupMembers: ["TUser1"], collections: []},]
+      groupMembers: ["TUser1", "TUser3"], collections: []},]
 
 export const handlers = [
   // -------------------------------------- Home Page Handlers --------------------------------------------------------
@@ -347,6 +347,22 @@ export const handlers = [
         userIndex[0].groups.joined[groupIndex].groupName = data.groupName
         userIndex[0].groups.joined[groupIndex].groupDescription = data.groupDescription
         return res(ctx.json(userIndex[0].groups))
+      }
+    }),
+
+    rest.delete('http://localhost:8080/groups/:groupID/leaveGroup/:userID', async (req, res, ctx) => {
+      const groupCheck = parseInt(req.params.groupID)
+      const userCheck = parseInt(req.params.userID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        if(mockGroup[groupIndex].groupMembers.includes(userIndex[0].username)){
+          const leaveGroup = mockGroup[groupIndex].groupMembers.filter((member) => member != userIndex[0].username)
+          return res(ctx.json(leaveGroup))
+        } else
+          return res(ctx.status(400), ctx.json("You are not a member of this group"))
       }
     }),
 

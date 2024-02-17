@@ -588,7 +588,7 @@ describe('Tests for the group Page API ', () => {
         const data = await response.json();
         expect(response.status).toBe(200);
         expect(data).toEqual([{groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", _id: 2, groupAdmin: ["TUser2"], 
-        groupMembers: ["TUser1"], collections: []}]);
+        groupMembers: ["TUser1", "TUser3"], collections: []}]);
     })
 
     test('Test API for deleting a group as group member', async () => {
@@ -602,12 +602,16 @@ describe('Tests for the group Page API ', () => {
         expect(data).toEqual("You do not have permission to delete this group");
     })
 
-    test.skip('Test API for leaving a group', () => {
+    test('Test API for leaving a group', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/leaveGroup/1', {
+            method: 'DELETE',
+            headers: { 'auth': 'testToken' },
+        });
+
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual(["TUser3"]);
         
-    })
-
-    test.skip('Test API for updating a group', () => {
-
     })
 
     test.skip('Test API for inviting a user to a group', () => {
