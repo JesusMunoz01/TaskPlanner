@@ -46,6 +46,11 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
           groupStatus: "Incomplete", _id: 1, collections: [], permissions: "Admin"}]}
     }]
 
+    const mockGroup = [{groupName: "TestGroup1", groupDescription: "Test Group 1", groupStatus: "Incomplete", _id: 1, groupAdmin: ["TUser1"],
+      groupMembers: ["TUser2"], collections: []},
+    {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", _id: 2, groupAdmin: ["TUser2"], 
+      groupMembers: ["TUser1", "TUser3"], collections: []},]
+
 export const handlers = [
   // -------------------------------------- Home Page Handlers --------------------------------------------------------
     rest.get('http://localhost:8080/fetchTasks/:userID', (req, res, ctx) => {
@@ -274,7 +279,7 @@ export const handlers = [
       }
     }),
 
-    // Groups Page Handlers
+    // -------------------------------------- Groups Page Handlers ----------------------------------------------------
     rest.post('http://localhost:8080/groups/createGroup', async (req, res, ctx) => {
       const data = await req.json()
       const userCheck = data.userID;
@@ -326,6 +331,54 @@ export const handlers = [
           userIndex[0].groups.invites.splice(inviteIndex, 1)
           return res(ctx.json(userIndex[0].groups))
         }
+      }
+    }),
+
+    // -------------------------------------- Group Page Handlers ----------------------------------------------------
+    rest.post('http://localhost:8080/groups/:groupID/updateGroup', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const groupCheck = parseInt(req.params.groupID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const groupIndex = userIndex[0].groups.joined.findIndex((group) => group._id === groupCheck)
+        userIndex[0].groups.joined[groupIndex].groupName = data.groupName
+        userIndex[0].groups.joined[groupIndex].groupDescription = data.groupDescription
+        return res(ctx.json(userIndex[0].groups))
+      }
+    }),
+
+    rest.delete('http://localhost:8080/groups/:groupID/leaveGroup/:userID', async (req, res, ctx) => {
+      const groupCheck = parseInt(req.params.groupID)
+      const userCheck = parseInt(req.params.userID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        if(mockGroup[groupIndex].groupMembers.includes(userIndex[0].username)){
+          const leaveGroup = mockGroup[groupIndex].groupMembers.filter((member) => member != userIndex[0].username)
+          return res(ctx.json(leaveGroup))
+        } else
+          return res(ctx.status(400), ctx.json("You are not a member of this group"))
+      }
+    }),
+
+    rest.delete('http://localhost:8080/groups/:groupID/deleteGroup/:userID', async (req, res, ctx) => {
+      const groupCheck = parseInt(req.params.groupID)
+      const userCheck = parseInt(req.params.userID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        if(mockGroup[groupIndex].groupAdmin.includes(userIndex[0].username)){
+          const deleteGroup = mockGroup.filter((group) => group._id != groupCheck)
+          return res(ctx.json(deleteGroup))
+        } else
+          return res(ctx.status(400), ctx.json("You do not have permission to delete this group"))
       }
     }),
 ]

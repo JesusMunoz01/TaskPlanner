@@ -6,13 +6,14 @@ export default function useGroupData() {
     const editGroup = async (groupID, groupName, groupDescription) => {
         try{
             const userID = localStorage.getItem("userId");
-            const response = await fetch(`${__API__}/groups/${groupID}/updateGroup/${userID}`, {
+            const response = await fetch(`${__API__}/groups/${groupID}/updateGroup`, {
                 method: "POST", 
                 headers: {
                     "Content-Type": "application/json",
                     auth: verify.access_token
                 },
                 body: JSON.stringify({
+                    userID,
                     groupName,
                     groupDescription
                 })
