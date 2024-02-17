@@ -135,9 +135,9 @@ groupRouter.post("/groups/:groupID/updateCollection", verification, async (req, 
     }
 })
 
-groupRouter.post("/groups/:groupID/updateGroup/:userID", verification, async (req, res) =>{
+groupRouter.post("/groups/:groupID/updateGroup", verification, async (req, res) =>{
     const groupID = req.params.groupID;
-    const user = req.params.userID;
+    const user = req.body.userID;
     const groupDB = await GroupModel.findOne({_id: groupID});
     if(groupDB && groupDB.groupAdmin.find(admin => admin === user)){
         try{

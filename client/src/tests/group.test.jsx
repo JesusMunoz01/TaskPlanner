@@ -579,8 +579,27 @@ describe('Tests for the group Page API ', () => {
             "permissions": "Admin", "collections": [], "groupStatus": "Incomplete", "groupTitle": "mockGroup1" }] });
     })
 
-    test.skip('Test API for deleting a group', () => {
-        
+    test('Test API for deleting a group as group admin', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/deleteGroup/1', {
+            method: 'DELETE',
+            headers: { 'auth': 'testToken' },
+        });
+
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual([{groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", _id: 2, groupAdmin: ["TUser2"], 
+        groupMembers: ["TUser1"], collections: []}]);
+    })
+
+    test('Test API for deleting a group as group member', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/deleteGroup/2', {
+            method: 'DELETE',
+            headers: { 'auth': 'testToken' },
+        });
+
+        const data = await response.json();
+        expect(response.status).toBe(400);
+        expect(data).toEqual("You do not have permission to delete this group");
     })
 
     test.skip('Test API for leaving a group', () => {
