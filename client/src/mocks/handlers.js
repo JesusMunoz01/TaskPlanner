@@ -431,6 +431,23 @@ export const handlers = [
       }
     }),
 
+    rest.delete('http://localhost:8080/groups/:groupID/deleteCollection/:collectionID/:userID', async (req, res, ctx) => {
+      const collectionCheck = parseInt(req.params.collectionID)
+      const groupCheck = parseInt(req.params.groupID)
+      const userCheck = parseInt(req.params.userID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+      if(userIndex[0]._id == 0)
+       return res(ctx.status(400))
+      else{
+        if(mockGroup[groupIndex].groupMembers.includes(userIndex[0].username) || mockGroup[groupIndex].groupAdmin.includes(userIndex[0].username)){
+          const deleteCollection = mockGroup[groupIndex].collections.filter((collection) => collection._id != collectionCheck)
+          return res(ctx.json(deleteCollection))
+        } else
+          return res(ctx.status(400), ctx.json("You do not have permission to delete this collection"))
+      }
+    }),
+
     rest.delete('http://localhost:8080/groups/:groupID/deleteGroup/:userID', async (req, res, ctx) => {
       const groupCheck = parseInt(req.params.groupID)
       const userCheck = parseInt(req.params.userID)

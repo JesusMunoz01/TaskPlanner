@@ -714,8 +714,15 @@ describe('Tests for the group Page API ', () => {
             
     })
 
-    test.skip('Test API for deleting a group collection', () => {
-            
+    test('Test API for deleting a group collection', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/deleteCollection/1/1', {
+            method: 'DELETE',
+            headers: { 'auth': 'testToken' },
+        });
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual([{"_id": 2, "collectionDescription": "Test Collection Description2", "collectionStatus": "Incomplete",
+            "collectionTitle": "Test Collection Creation2", "tasks": []}]);
     })
 
 })
