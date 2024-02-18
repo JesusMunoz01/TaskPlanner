@@ -38,7 +38,7 @@ export default function useGroupData() {
         }
     }
 
-    const leaveGroup = async () => {
+    const leaveGroup = async (groupID) => {
         const userID = window.localStorage.getItem("userId");
         if(userID){
             await fetch(`${__API__}/groups/${groupID}/leaveGroup/${userID}`, {
@@ -50,10 +50,10 @@ export default function useGroupData() {
         }
     }
 
-    const sendInvite = async () => {
+    const sendInvite = async (groupID, invUsername) => {
         try{
             const userID = localStorage.getItem("userId");
-            const response = await fetch(`${__API__}/groups/${from._id}/invite`, {
+            const response = await fetch(`${__API__}/groups/${groupID}/invite`, {
                 method: "POST", 
                 headers: {
                     "Content-Type": "application/json",

@@ -366,6 +366,88 @@ export const handlers = [
       }
     }),
 
+    rest.post('http://localhost:8080/groups/:groupID/invite', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const groupCheck = parseInt(req.params.groupID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+        if(mockGroup[groupIndex].groupAdmin.includes(userIndex[0].username) || mockGroup[groupIndex].groupMembers.includes(userIndex[0].username)){
+          const inviteUser = mockDBGroups.filter((user) => user.username === data.invUsername)
+          if(inviteUser.length === 0){
+            return res(ctx.status(400), ctx.json("User does not exist"))
+          } else{
+            inviteUser[0].groups.invites.push(mockGroup[groupIndex].groupName)
+            return res(ctx.json(inviteUser[0].groups))
+          }
+        } else
+          return res(ctx.status(400), ctx.json("You do not have permission to invite to this group"))
+      }
+    }),
+
+    rest.post('http://localhost:8080/groups/:groupID/createCollection', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const groupCheck = parseInt(req.params.groupID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        let lastID = 0;
+        const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+        if(mockGroup[groupIndex].collections && mockGroup[groupIndex].collections.length !== 0){
+          const lastCollection = mockGroup[groupIndex].collections.length - 1
+          lastID = mockGroup[groupIndex].collections[lastCollection]._id
+        }
+        if(mockGroup[groupIndex].groupMembers.includes(userIndex[0].username) || mockGroup[groupIndex].groupAdmin.includes(userIndex[0].username)){
+          const newCollection = {collectionTitle: data.title, collectionDescription: data.desc, 
+            collectionStatus: "Incomplete", _id: lastID + 1, tasks: []}
+          mockGroup[groupIndex].collections.push(newCollection)
+          return res(ctx.json(mockGroup[groupIndex].collections))
+        } else
+          return res(ctx.status(400), ctx.json("You do not have permission to create a collection in this group"))
+      }
+    }),
+
+    rest.post('http://localhost:8080/groups/:groupID/updateCollection', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const groupCheck = parseInt(req.params.groupID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+        if(mockGroup[groupIndex].groupMembers.includes(userIndex[0].username) || mockGroup[groupIndex].groupAdmin.includes(userIndex[0].username)){
+          const collectionIndex = mockGroup[groupIndex].collections.findIndex((collection) => collection._id === data.collectionID)
+          mockGroup[groupIndex].collections[collectionIndex].collectionTitle = data.newColTitle
+          mockGroup[groupIndex].collections[collectionIndex].collectionDescription = data.newColDesc
+          return res(ctx.json(mockGroup[groupIndex].collections))
+        } else
+          return res(ctx.status(400), ctx.json("You do not have permission to update this collection"))
+      }
+    }),
+
+    rest.delete('http://localhost:8080/groups/:groupID/deleteCollection/:collectionID/:userID', async (req, res, ctx) => {
+      const collectionCheck = parseInt(req.params.collectionID)
+      const groupCheck = parseInt(req.params.groupID)
+      const userCheck = parseInt(req.params.userID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+      if(userIndex[0]._id == 0)
+       return res(ctx.status(400))
+      else{
+        if(mockGroup[groupIndex].groupMembers.includes(userIndex[0].username) || mockGroup[groupIndex].groupAdmin.includes(userIndex[0].username)){
+          const deleteCollection = mockGroup[groupIndex].collections.filter((collection) => collection._id != collectionCheck)
+          return res(ctx.json(deleteCollection))
+        } else
+          return res(ctx.status(400), ctx.json("You do not have permission to delete this collection"))
+      }
+    }),
+
     rest.delete('http://localhost:8080/groups/:groupID/deleteGroup/:userID', async (req, res, ctx) => {
       const groupCheck = parseInt(req.params.groupID)
       const userCheck = parseInt(req.params.userID)

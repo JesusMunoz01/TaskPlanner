@@ -614,24 +614,115 @@ describe('Tests for the group Page API ', () => {
         
     })
 
-    test.skip('Test API for inviting a user to a group', () => {
+    test('Test API for inviting a user to a group', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/invite', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'auth': 'testToken' },
+            body: JSON.stringify({
+                userID: 1,
+                invUsername: 'TUser3',
+            }),
+        });
+
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual({"invites": ["testInvite", "testInvite2", "TestGroup1"], "joined": []}); 
+    })
+
+    test('Test API for inviting a user to a group', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/invite', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'auth': 'testToken' },
+            body: JSON.stringify({
+                userID: 1,
+                invUsername: 'TUser5',
+            }),
+        });
+
+        const data = await response.json();
+        expect(response.status).toBe(400);
+        expect(data).toEqual("User does not exist"); 
+    })
+
+    test('Test API for creating a group collection as admin', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/createCollection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'auth': 'testToken' },
+            body: JSON.stringify({
+                userID: 1,
+                title: 'Test Collection Creation',
+                desc: 'Test Collection Description',
+            }),
+        });
+
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual([{_id: 1, collectionTitle: 'Test Collection Creation', collectionStatus: "Incomplete",
+            collectionDescription: 'Test Collection Description', tasks: []}]);
             
     })
 
-    test.skip('Test API for creating a group collection', () => {
+    test('Test API for creating a group collection as member', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/createCollection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'auth': 'testToken' },
+            body: JSON.stringify({
+                userID: 2,
+                title: 'Test Collection Creation2',
+                desc: 'Test Collection Description2',
+            }),
+        });
+
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual([{"_id": 1, "collectionDescription": "Test Collection Description", "collectionStatus": "Incomplete", 
+            "collectionTitle": "Test Collection Creation", "tasks": []}, {"_id": 2, "collectionDescription": "Test Collection Description2", 
+            "collectionStatus": "Incomplete", "collectionTitle": "Test Collection Creation2", "tasks": []}]);
+    })
+
+    test('Test API for creating a group collection as neither a member or admin', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/createCollection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'auth': 'testToken' },
+            body: JSON.stringify({
+                userID: 3,
+                title: 'Test Collection Creation',
+                desc: 'Test Collection Description',
+            }),
+        });
+
+        const data = await response.json();
+        expect(response.status).toBe(400);
+    })
+
+    test('Test API for editing a group collection', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/updateCollection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'auth': 'testToken' },
+            body: JSON.stringify({
+                userID: 1,
+                collectionID: 1,
+                newColTitle: 'Test Collection Update',
+                newColDesc: 'Test Collection Description Update',
+            }),
+        });
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual([{"_id": 1, "collectionDescription": "Test Collection Description Update", "collectionStatus": "Incomplete", 
+        "collectionTitle": "Test Collection Update", "tasks": []}, {"_id": 2, "collectionDescription": "Test Collection Description2", 
+        "collectionStatus": "Incomplete", "collectionTitle": "Test Collection Creation2", "tasks": []}]);
             
     })
 
-    test.skip('Test API for creating a group collection', () => {
-            
-    })
-
-    test.skip('Test API for editing a group collection', () => {
-            
-    })
-
-    test.skip('Test API for deleting a group collection', () => {
-            
+    test('Test API for deleting a group collection', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/deleteCollection/1/1', {
+            method: 'DELETE',
+            headers: { 'auth': 'testToken' },
+        });
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual([{"_id": 2, "collectionDescription": "Test Collection Description2", "collectionStatus": "Incomplete",
+            "collectionTitle": "Test Collection Creation2", "tasks": []}]);
     })
 
 })

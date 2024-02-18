@@ -126,7 +126,7 @@ export const Group = () => {
             <div className="inviteUser" id="inviteUser" style={{display: "none"}}>
                 <label>Username:</label>
                 <input aria-label="invUser" value={invUsername} onChange={(e) => setUsername(e.target.value)}></input>
-                <button id="inviteBtn" aria-label="invUserBtn" onClick={sendInvite}>Invite</button>
+                <button id="inviteBtn" aria-label="invUserBtn" onClick={() => sendInvite(from._id, invUsername)}>Invite</button>
             </div>
         </div>
         <div className="groupContent">

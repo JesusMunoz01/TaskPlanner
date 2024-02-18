@@ -1,9 +1,9 @@
 import React, { useState as useStateReal} from 'react'
-import { render, screen, cleanup, act, getByText, queryByLabelText } from '@testing-library/react'
+import { render, act} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
 import { Groups } from '../pages/groups'
-import { Link, MemoryRouter, Route, Routes } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { UserContext } from '../App'
 import { Group } from '../pages/group'
 
