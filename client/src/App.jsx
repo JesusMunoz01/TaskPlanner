@@ -11,6 +11,7 @@ import { CollectionTasks } from './pages/collectionsTasks';
 import { Landing } from './pages/landing';
 import { Groups } from './pages/groups';
 import { Group } from './pages/group';
+import { GroupCollectionTasks } from './pages/groupCollectionTasks';
 
 export const UserContext = React.createContext();
 
@@ -121,7 +122,7 @@ function App() {
             <Route path="/groups" element={<Groups />}/>
             }
             <Route path="/groups/:groupID" element={<Group />}/>
-            <Route path="groups/:groupID/collections/:collectionID" element={<CollectionTasks data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>}/>
+            <Route path="/groups/:groupID/tasks" element={<GroupCollectionTasks />}/>
           </Routes>
           </div>
         </div>
