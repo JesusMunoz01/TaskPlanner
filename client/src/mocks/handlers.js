@@ -388,6 +388,25 @@ export const handlers = [
       }
     }),
 
+    rest.post('http://localhost:8080/groups/:groupID/createCollection', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const groupCheck = parseInt(req.params.groupID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+        if(mockGroup[groupIndex].groupMembers.includes(userIndex[0].username) || mockGroup[groupIndex].groupAdmin.includes(userIndex[0].username)){
+          const newCollection = {collectionTitle: data.title, collectionDescription: data.desc, 
+            collectionStatus: "Incomplete", _id: 10, tasks: []}
+          mockGroup[groupIndex].collections.push(newCollection)
+          return res(ctx.json(mockGroup[groupIndex].collections))
+        } else
+          return res(ctx.status(400), ctx.json("You do not have permission to create a collection in this group"))
+      }
+    }),
+
     rest.delete('http://localhost:8080/groups/:groupID/deleteGroup/:userID', async (req, res, ctx) => {
       const groupCheck = parseInt(req.params.groupID)
       const userCheck = parseInt(req.params.userID)

@@ -644,7 +644,21 @@ describe('Tests for the group Page API ', () => {
         expect(data).toEqual("User does not exist"); 
     })
 
-    test.skip('Test API for creating a group collection', () => {
+    test('Test API for creating a group collection as admin', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/createCollection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'auth': 'testToken' },
+            body: JSON.stringify({
+                userID: 1,
+                title: 'Test Collection Creation',
+                desc: 'Test Collection Description',
+            }),
+        });
+
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual([{_id: 10, collectionTitle: 'Test Collection Creation', collectionStatus: "Incomplete",
+            collectionDescription: 'Test Collection Description', tasks: []}]);
             
     })
 
