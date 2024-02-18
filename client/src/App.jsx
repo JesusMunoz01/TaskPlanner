@@ -121,6 +121,7 @@ function App() {
             <Route path="/groups" element={<Groups />}/>
             }
             <Route path="/groups/:groupID" element={<Group />}/>
+            <Route path="groups/:groupID/collections/:collectionID" element={<CollectionTasks data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>}/>
           </Routes>
           </div>
         </div>
