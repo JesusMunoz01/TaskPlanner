@@ -412,6 +412,25 @@ export const handlers = [
       }
     }),
 
+    rest.post('http://localhost:8080/groups/:groupID/updateCollection', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const groupCheck = parseInt(req.params.groupID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+        if(mockGroup[groupIndex].groupMembers.includes(userIndex[0].username) || mockGroup[groupIndex].groupAdmin.includes(userIndex[0].username)){
+          const collectionIndex = mockGroup[groupIndex].collections.findIndex((collection) => collection._id === data.collectionID)
+          mockGroup[groupIndex].collections[collectionIndex].collectionTitle = data.newColTitle
+          mockGroup[groupIndex].collections[collectionIndex].collectionDescription = data.newColDesc
+          return res(ctx.json(mockGroup[groupIndex].collections))
+        } else
+          return res(ctx.status(400), ctx.json("You do not have permission to update this collection"))
+      }
+    }),
+
     rest.delete('http://localhost:8080/groups/:groupID/deleteGroup/:userID', async (req, res, ctx) => {
       const groupCheck = parseInt(req.params.groupID)
       const userCheck = parseInt(req.params.userID)

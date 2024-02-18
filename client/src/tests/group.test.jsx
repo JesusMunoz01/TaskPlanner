@@ -695,7 +695,22 @@ describe('Tests for the group Page API ', () => {
         expect(response.status).toBe(400);
     })
 
-    test.skip('Test API for editing a group collection', () => {
+    test('Test API for editing a group collection', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/updateCollection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'auth': 'testToken' },
+            body: JSON.stringify({
+                userID: 1,
+                collectionID: 1,
+                newColTitle: 'Test Collection Update',
+                newColDesc: 'Test Collection Description Update',
+            }),
+        });
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data).toEqual([{"_id": 1, "collectionDescription": "Test Collection Description Update", "collectionStatus": "Incomplete", 
+        "collectionTitle": "Test Collection Update", "tasks": []}, {"_id": 2, "collectionDescription": "Test Collection Description2", 
+        "collectionStatus": "Incomplete", "collectionTitle": "Test Collection Creation2", "tasks": []}]);
             
     })
 
