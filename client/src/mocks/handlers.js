@@ -396,10 +396,15 @@ export const handlers = [
       if(userIndex[0].user_id == 0)
        return res(ctx.status(400))
       else{
+        let lastID = 0;
         const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+        if(mockGroup[groupIndex].collections && mockGroup[groupIndex].collections.length !== 0){
+          const lastCollection = mockGroup[groupIndex].collections.length - 1
+          lastID = mockGroup[groupIndex].collections[lastCollection]._id
+        }
         if(mockGroup[groupIndex].groupMembers.includes(userIndex[0].username) || mockGroup[groupIndex].groupAdmin.includes(userIndex[0].username)){
           const newCollection = {collectionTitle: data.title, collectionDescription: data.desc, 
-            collectionStatus: "Incomplete", _id: 10, tasks: []}
+            collectionStatus: "Incomplete", _id: lastID + 1, tasks: []}
           mockGroup[groupIndex].collections.push(newCollection)
           return res(ctx.json(mockGroup[groupIndex].collections))
         } else
