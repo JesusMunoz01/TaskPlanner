@@ -1,7 +1,7 @@
 import "../css/collectionsTasks.css"
 import { useContext, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"
-import { BsGearFill } from "react-icons/bs";
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { BsArrowLeft, BsGearFill } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import { UserContext } from "../App";
 
@@ -21,6 +21,20 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
     const [check] = useCookies(["access_token"]);
     const navigate = useNavigate()
 
+    function getThisGroupIndex(){
+        if(isUserLogged){
+            const groupIndex = groupData.joined.findIndex((group) => group._id === groupID)
+            return groupIndex;
+        }
+    }
+
+    function getThisGroup(){
+        if(isUserLogged){
+            const groupIndex = getThisGroupIndex()
+            return groupData.joined[groupIndex]
+        }
+    }
+
     function getThisCollectionIndex(){
         if(isUserLogged){
             const collectionIndex = allCollectionTasks.findIndex((collection) => collection._id === collectionID)
@@ -30,7 +44,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
 
     function fetchCollections(){
         if(isUserLogged){
-            const groupIndex = groupData.joined.findIndex((group) => group._id === groupID)
+            const groupIndex = getThisGroupIndex();
             return groupData.joined[groupIndex].collections;
         }
     }
@@ -225,8 +239,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             document.getElementById(`colTaskSetting${id}`).className = "editColTask active"
     }
     
-    return <div className="colTaskPage">
-                <h1>{currentCollection.collectionTitle}</h1>
+    return <div className="colTaskPage" style={{width: "100%"}}>
+                <div className="groupsBox-header" style={{width: "100%"}}>
+                    <div className="groupsBox-headerLeft">
+                        <Link id="goBack" to={`/groups/${groupID}`} state={{from: getThisGroup(), index: getThisGroupIndex()}}><BsArrowLeft /></Link>
+                        <h1 aria-label={`${currentCollection.collectionTitle}-Header`}>{currentCollection.collectionTitle}</h1>
+                    </div>
+                </div>
                 <span className="filterClass">
                     <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id, collectionTasks)}>All Tasks</button>
                     <button id="filter2" onClick={(e) => filterTask(e.target.id, collectionTasks)}>Completed</button>
