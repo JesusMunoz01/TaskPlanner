@@ -1,10 +1,9 @@
 import "../css/collectionsTasks.css"
 import { useContext, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { BsGearFill } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import { UserContext } from "../App";
-
 
 export const GroupCollectionTasks = ({isUserLogged}) => {
     const {groupData, setGroupData} = useContext(UserContext)
@@ -20,6 +19,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
     const [updtColTaskTitle, updateColTaskTitle] = useState("")
     const [updtColTaskDesc, updateColTaskDesc] = useState("")
     const [check] = useCookies(["access_token"]);
+    const navigate = useNavigate()
 
     function getThisCollectionIndex(){
         if(isUserLogged){
@@ -69,29 +69,8 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             }
         }
         else{
-            let collectionsData = fetchCollections();
-            let nextId = 1;
-            let lastCollectionTaskID = [];
-            let hasPrevTasks = fetchCollections()[currentCollectionIndex].tasks;
-            // If there is a task, get last one, its id, and add 1
-            if(hasPrevTasks.length !== 0)
-                lastCollectionTaskID = hasPrevTasks.pop();
-            if(lastCollectionTaskID.length !== 0)
-                nextId = lastCollectionTaskID._id + 1;
-
-            const newCollectionTask = {
-                title: collectionTaskTitle, 
-                description: collectionTaskDesc,
-                _id: nextId, 
-                status:"Incomplete"
-            }
-            
-            collectionsData[currentCollectionIndex].tasks.push(newCollectionTask)
-            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
-            setCurrentCollection(collectionsData[currentCollectionIndex])
-            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
-            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            collections.updateCollection(collectionsData)
+            alert("Please login to add a task, redirecting to login page...")
+            setTimeout(() => navigate("/login"), 3000)
         }
 
         setCollectionTaskTitle('');
@@ -115,16 +94,10 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             collections.updateCollection(collectionsData)
         }
         else{
-            let collectionsData = fetchCollections();
-            const newList = collectionsData[currentCollectionIndex].tasks.filter((task) => task._id !== taskID)
-            collectionsData[currentCollectionIndex].tasks = newList;
-            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
-            setCurrentCollection(collectionsData[currentCollectionIndex])
-            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
-            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            collections.updateCollection(collectionsData)
-            }
+            alert("Please login to delete a task, redirecting to login page...")
+            setTimeout(() => navigate("/login"), 3000)
         }
+    }
     
     async function changeInfo(taskID, oldTitle, oldDesc){
         let newTitle, newDesc = "";
@@ -170,15 +143,8 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 console.log(error)
             }
         else{
-            let collectionsData = fetchCollections();
-            const index = collectionsData[currentCollectionIndex].tasks.findIndex((task => task._id === taskID))
-            collectionsData[currentCollectionIndex].tasks[index].title = `${newTitle}`
-            collectionsData[currentCollectionIndex].tasks[index].description = `${newDesc}`
-            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
-            setCurrentCollection(collectionsData[currentCollectionIndex]);
-            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
-            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            //data.updateTask(getUpdatedLocal);
+            alert("Please login to edit a task, redirecting to login page...")
+            setTimeout(() => navigate("/login"), 3000)
         }
 
         updateColTaskTitle("");
@@ -217,31 +183,8 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 console.log(error)
             }
         else{
-            let collectionsData = fetchCollections();
-            const index = currentCollection.tasks.findIndex((task => task._id === taskID))
-            collectionsData[currentCollectionIndex].tasks[index].status = `${taskStatus}`
-            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
-            setCurrentCollection(collectionsData[currentCollectionIndex])
-            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
-            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            //data.updateTask(getUpdatedLocal);
-            if(taskStatus == "Complete"){
-                let completedTasks = 1;
-                collectionTasks.map((task) => {
-                    if(task.status === "Complete")
-                        completedTasks++;
-                })
-                if(completedTasks === currentCollection.tasks.length){
-                    collectionsData[currentCollectionIndex].status = "Complete";
-                    window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData));
-                }
-            }
-            else{
-                if(collectionsData[currentCollectionIndex].status === "Complete"){
-                    collectionsData[currentCollectionIndex].status = "Incomplete";
-                    window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData));
-                }
-            }
+            alert("Please login to change a task status, redirecting to login page...")
+            setTimeout(() => navigate("/login"), 3000)
         }
     }
 
