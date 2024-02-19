@@ -1,8 +1,8 @@
 import "../css/collections.css"
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { BsGearFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { UserContext } from "../App";
 
 export const CollectionsCard = (data) => {
@@ -10,6 +10,7 @@ export const CollectionsCard = (data) => {
     const [collections, setCollections] = useState(data.data);
     const [collection, setCollection] = useState(data.collection);
     const [index, ] = useState(data.index);
+    const { groupID } = useParams();
     const [isUserLogged, ] = useState(data.isLogged)
     const [updtCollectionTitle, updateCollectionTitle] = useState("");
     const [updtCollectionDescription, updateCollectionDesc] = useState("");
@@ -146,10 +147,10 @@ export const CollectionsCard = (data) => {
                             <li key={collection._id}>
                                 {isUserLogged ?
                                     <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
-                                    to={`/groups/${collection.id}/tasks`}>{collection.collectionTitle}</Link>
+                                    to={`/groups/${groupID}/${collection._id}/tasks`}>{collection.collectionTitle}</Link>
                                 :
                                     <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
-                                    to={`/collections/${collection._id}`}>{collection.collectionTitle}</Link>}
+                                    to={`/groups/${groupID}/${collection._id}/tasks`}>{collection.collectionTitle}</Link>}
                                 <div className="descBox">
                                     <p id="collectionDisplayDesc" aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>

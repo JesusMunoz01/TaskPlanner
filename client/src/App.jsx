@@ -122,7 +122,7 @@ function App() {
             <Route path="/groups" element={<Groups />}/>
             }
             <Route path="/groups/:groupID" element={<Group />}/>
-            <Route path="/groups/:groupID/tasks" element={<GroupCollectionTasks />}/>
+            <Route path="/groups/:groupID/:collectionID/tasks" element={<GroupCollectionTasks isUserLogged={userLogin}/>}/>
           </Routes>
           </div>
         </div>
