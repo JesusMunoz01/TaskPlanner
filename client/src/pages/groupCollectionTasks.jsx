@@ -1,15 +1,14 @@
 import "../css/collectionsTasks.css"
-import { useState } from "react"
-import { useParams } from "react-router-dom"
-import { BsGearFill } from "react-icons/bs";
+import { useContext, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { BsArrowLeft, BsGearFill } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
+import { UserContext } from "../App";
 
-export const GroupCollectionTasks = () => {
+export const GroupCollectionTasks = ({isUserLogged}) => {
     const {groupData, setGroupData} = useContext(UserContext)
-    let { collectionID } = useParams()
-    let [intCollectionID] = useState(parseInt(collectionID))
-    const [isUserLogged] = useState(collections.isLogged)
-    const [allCollectionTasks] = useState(collections.data);
+    let { groupID, collectionID } = useParams()
+    const [allCollectionTasks] = useState(fetchCollections());
     const [currentCollectionIndex] = useState(getThisCollectionIndex())
     const [currentCollection, setCurrentCollection] = useState(fetchCollections()[currentCollectionIndex])
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
@@ -20,23 +19,33 @@ export const GroupCollectionTasks = () => {
     const [updtColTaskTitle, updateColTaskTitle] = useState("")
     const [updtColTaskDesc, updateColTaskDesc] = useState("")
     const [check] = useCookies(["access_token"]);
+    const navigate = useNavigate()
+
+    function getThisGroupIndex(){
+        if(isUserLogged){
+            const groupIndex = groupData.joined.findIndex((group) => group._id === groupID)
+            return groupIndex;
+        }
+    }
+
+    function getThisGroup(){
+        if(isUserLogged){
+            const groupIndex = getThisGroupIndex()
+            return groupData.joined[groupIndex]
+        }
+    }
 
     function getThisCollectionIndex(){
         if(isUserLogged){
-            return intCollectionID;
-        }
-        else{
-            const thisCollectionIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID);
-            return thisCollectionIndex;
-        }        
+            const collectionIndex = allCollectionTasks.findIndex((collection) => collection._id === collectionID)
+            return collectionIndex;
+        }   
     }
 
     function fetchCollections(){
         if(isUserLogged){
-            return allCollectionTasks;
-        }
-        else{
-            return JSON.parse(window.localStorage.getItem("localCollectionData"))
+            const groupIndex = getThisGroupIndex();
+            return groupData.joined[groupIndex].collections;
         }
     }
 
@@ -74,29 +83,8 @@ export const GroupCollectionTasks = () => {
             }
         }
         else{
-            let collectionsData = fetchCollections();
-            let nextId = 1;
-            let lastCollectionTaskID = [];
-            let hasPrevTasks = fetchCollections()[currentCollectionIndex].tasks;
-            // If there is a task, get last one, its id, and add 1
-            if(hasPrevTasks.length !== 0)
-                lastCollectionTaskID = hasPrevTasks.pop();
-            if(lastCollectionTaskID.length !== 0)
-                nextId = lastCollectionTaskID._id + 1;
-
-            const newCollectionTask = {
-                title: collectionTaskTitle, 
-                description: collectionTaskDesc,
-                _id: nextId, 
-                status:"Incomplete"
-            }
-            
-            collectionsData[currentCollectionIndex].tasks.push(newCollectionTask)
-            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
-            setCurrentCollection(collectionsData[currentCollectionIndex])
-            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
-            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            collections.updateCollection(collectionsData)
+            alert("Please login to add a task, redirecting to login page...")
+            setTimeout(() => navigate("/login"), 3000)
         }
 
         setCollectionTaskTitle('');
@@ -120,16 +108,10 @@ export const GroupCollectionTasks = () => {
             collections.updateCollection(collectionsData)
         }
         else{
-            let collectionsData = fetchCollections();
-            const newList = collectionsData[currentCollectionIndex].tasks.filter((task) => task._id !== taskID)
-            collectionsData[currentCollectionIndex].tasks = newList;
-            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
-            setCurrentCollection(collectionsData[currentCollectionIndex])
-            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
-            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            collections.updateCollection(collectionsData)
-            }
+            alert("Please login to delete a task, redirecting to login page...")
+            setTimeout(() => navigate("/login"), 3000)
         }
+    }
     
     async function changeInfo(taskID, oldTitle, oldDesc){
         let newTitle, newDesc = "";
@@ -175,15 +157,8 @@ export const GroupCollectionTasks = () => {
                 console.log(error)
             }
         else{
-            let collectionsData = fetchCollections();
-            const index = collectionsData[currentCollectionIndex].tasks.findIndex((task => task._id === taskID))
-            collectionsData[currentCollectionIndex].tasks[index].title = `${newTitle}`
-            collectionsData[currentCollectionIndex].tasks[index].description = `${newDesc}`
-            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
-            setCurrentCollection(collectionsData[currentCollectionIndex]);
-            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
-            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            //data.updateTask(getUpdatedLocal);
+            alert("Please login to edit a task, redirecting to login page...")
+            setTimeout(() => navigate("/login"), 3000)
         }
 
         updateColTaskTitle("");
@@ -222,31 +197,8 @@ export const GroupCollectionTasks = () => {
                 console.log(error)
             }
         else{
-            let collectionsData = fetchCollections();
-            const index = currentCollection.tasks.findIndex((task => task._id === taskID))
-            collectionsData[currentCollectionIndex].tasks[index].status = `${taskStatus}`
-            window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData))
-            setCurrentCollection(collectionsData[currentCollectionIndex])
-            setCollectionTasks(collectionsData[currentCollectionIndex].tasks);
-            filterTask(filterType, collectionsData[currentCollectionIndex].tasks)
-            //data.updateTask(getUpdatedLocal);
-            if(taskStatus == "Complete"){
-                let completedTasks = 1;
-                collectionTasks.map((task) => {
-                    if(task.status === "Complete")
-                        completedTasks++;
-                })
-                if(completedTasks === currentCollection.tasks.length){
-                    collectionsData[currentCollectionIndex].status = "Complete";
-                    window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData));
-                }
-            }
-            else{
-                if(collectionsData[currentCollectionIndex].status === "Complete"){
-                    collectionsData[currentCollectionIndex].status = "Incomplete";
-                    window.localStorage.setItem("localCollectionData", JSON.stringify(collectionsData));
-                }
-            }
+            alert("Please login to change a task status, redirecting to login page...")
+            setTimeout(() => navigate("/login"), 3000)
         }
     }
 
@@ -287,8 +239,13 @@ export const GroupCollectionTasks = () => {
             document.getElementById(`colTaskSetting${id}`).className = "editColTask active"
     }
     
-    return <div className="colTaskPage">
-                <h1>{currentCollection.collectionTitle}</h1>
+    return <div className="colTaskPage" style={{width: "100%"}}>
+                <div className="groupsBox-header" style={{width: "100%"}}>
+                    <div className="groupsBox-headerLeft">
+                        <Link id="goBack" to={`/groups/${groupID}`} state={{from: getThisGroup(), index: getThisGroupIndex()}}><BsArrowLeft /></Link>
+                        <h1 aria-label={`${currentCollection.collectionTitle}-Header`}>{currentCollection.collectionTitle}</h1>
+                    </div>
+                </div>
                 <span className="filterClass">
                     <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id, collectionTasks)}>All Tasks</button>
                     <button id="filter2" onClick={(e) => filterTask(e.target.id, collectionTasks)}>Completed</button>
