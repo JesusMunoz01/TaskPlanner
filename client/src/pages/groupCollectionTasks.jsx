@@ -129,14 +129,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             try{
                 const userID = window.localStorage.getItem("userId");
                 const collectionID = currentCollection._id;
-                const res = await fetch(`${__API__}/updateCollection/task/data`, {
+                const res = await fetch(`${__API__}/groups/${groupID}/updateCollection/task/data`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: check.access_token
                     },
                     body: JSON.stringify({
                         userID,
-                        intCollectionID,
                         collectionID,
                         taskID,
                         newTitle,
