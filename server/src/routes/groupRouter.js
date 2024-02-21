@@ -195,6 +195,26 @@ groupRouter.post("/groups/:groupID/updateCollection/task/data", verification, as
         res.send("Not enough permissions")
 })
 
+groupRouter.post("/groups/:groupID/updateCollection/task/status", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const collectionID = req.body.collectionID;
+    const taskID = req.body.taskID;
+    const user = req.body.userID;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
+        try{
+            const update = await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionID, "collections.tasks._id": taskID}, 
+            {$set: { "collections.$.tasks.$[elem].taskStatus": `${req.body.newStatus}`},},
+            {arrayFilters: [{"elem._id": taskID}]})
+            res.json(update.collections)
+        }catch(error){
+            res.json({error: error, message: "Couldnt update information"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
+})
+
 groupRouter.post("/groups/:groupID/invite/action", verification, async (req, res) =>{
     const groupID = req.params.groupID;
     const user = req.body.userID;
