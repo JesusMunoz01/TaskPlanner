@@ -265,4 +265,23 @@ groupRouter.delete('/groups/:groupID/deleteCollection/:collectionID', verificati
     }
 })
 
+groupRouter.delete('/groups/:groupID/deleteCollection/deleteTask/:userID/:collectionID/:taskID', verification, async (req, res) => {
+    const group = req.params.groupID;
+    const user = req.params.userID;
+    const collectionID = req.params.collectionID;
+    const taskID = req.params.taskID;
+    const groupDB = await GroupModel.findOne({_id: group});
+    if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
+        try{
+            const delTask = await GroupModel.findOneAndUpdate({"_id": group, "collections._id": collectionID}, 
+            {$pull: {"collections.$.tasks": {_id: taskID}}})
+            res.json(delTask.collections)
+        }catch(error){
+            res.json({error: error, message: "Couldnt delete task"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
+})
+
 module.exports = groupRouter

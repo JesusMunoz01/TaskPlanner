@@ -95,7 +95,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
             const collectionID = currentCollection._id;
-            await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}/tasks/${taskID}`, {
+            await fetch(`${__API__}/groups/${groupID}/deleteCollection/deleteTask/${userID}/${collectionID}/${taskID}`, {
                 method: "DELETE", headers: {auth: check.access_token}, 
             });
             const deletedItem = collectionTasks.filter((task) => task._id !== taskID);
