@@ -54,7 +54,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
         if(isUserLogged){
             try{
                 const userID = window.localStorage.getItem("userId");
-                const res = await fetch(`${__API__}/addCollection/newTask`, {
+                const res = await fetch(`${__API__}/groups/${groupID}/addCollection/newTask`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: check.access_token
@@ -95,7 +95,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
         if(isUserLogged){
             const userID = window.localStorage.getItem("userId");
             const collectionID = currentCollection._id;
-            await fetch(`${__API__}/deleteCollection/${userID}/${collectionID}/tasks/${taskID}`, {
+            await fetch(`${__API__}/groups/${groupID}/deleteCollection/deleteTask/${userID}/${collectionID}/${taskID}`, {
                 method: "DELETE", headers: {auth: check.access_token}, 
             });
             const deletedItem = collectionTasks.filter((task) => task._id !== taskID);
@@ -129,14 +129,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             try{
                 const userID = window.localStorage.getItem("userId");
                 const collectionID = currentCollection._id;
-                const res = await fetch(`${__API__}/updateCollection/task/data`, {
+                const res = await fetch(`${__API__}/groups/${groupID}/updateCollection/task/data`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: check.access_token
                     },
                     body: JSON.stringify({
                         userID,
-                        intCollectionID,
                         collectionID,
                         taskID,
                         newTitle,
@@ -171,7 +170,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             try{
                 const userID = window.localStorage.getItem("userId");
                 const collectionID = currentCollection._id;
-                const res = await fetch(`${__API__}/updateCollection/task/status`, {
+                const res = await fetch(`${__API__}/groups/${groupID}/updateCollection/task/status`, {
                     method: "POST", headers: {
                         'Content-Type': 'application/json',
                         auth: check.access_token

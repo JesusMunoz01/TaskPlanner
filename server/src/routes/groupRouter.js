@@ -94,6 +94,29 @@ groupRouter.post("/groups/:groupID/createCollection", verification, async (req, 
         res.send("Couldnt perform action")
 })
 
+groupRouter.post("/groups/:groupID/addCollection/addTask", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const collectionID = req.body.currentCollectionIndex;
+    const user = req.body.userID;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
+        const newTask = {
+            taskTitle: req.body.collectionTaskTitle,
+            taskDescription: req.body.collectionTaskDesc,
+            taskStatus: "Incomplete"
+        };
+        try{
+            const update = await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionID}, 
+            {$push: { "collections.$.tasks": newTask}})
+            res.json(update.collections)
+        }catch(error){
+            res.json({error: error, message: "Couldnt add task"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
+})
+
 groupRouter.post("/groups/:groupID/invite", verification, async (req, res) =>{
     const groupID = req.params.groupID;
     const user = req.body.userID;
@@ -144,6 +167,46 @@ groupRouter.post("/groups/:groupID/updateGroup", verification, async (req, res) 
             const update = await GroupModel.findOneAndUpdate({"_id": groupID}, 
             {$set: { "groupName": `${req.body.groupName}`, "groupDescription": `${req.body.groupDescription}`}})
             res.json(update)
+        }catch(error){
+            res.json({error: error, message: "Couldnt update information"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
+})
+
+groupRouter.post("/groups/:groupID/updateCollection/task/data", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const collectionID = req.body.collectionID;
+    const taskID = req.body.taskID;
+    const user = req.body.userID;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
+        try{
+            const update = await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionID, "collections.tasks._id": taskID}, 
+            {$set: { "collections.$.tasks.$[elem].taskTitle": `${req.body.newTitle}`, "collections.$.tasks.$[elem].taskDescription": `${req.body.newDesc}`}},
+            {arrayFilters: [{"elem._id": taskID}]})
+            res.json(update.collections)
+        }catch(error){
+            res.json({error: error, message: "Couldnt update information"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
+})
+
+groupRouter.post("/groups/:groupID/updateCollection/task/status", verification, async (req, res) =>{
+    const groupID = req.params.groupID;
+    const collectionID = req.body.collectionID;
+    const taskID = req.body.taskID;
+    const user = req.body.userID;
+    const groupDB = await GroupModel.findOne({_id: groupID});
+    if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
+        try{
+            const update = await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionID, "collections.tasks._id": taskID}, 
+            {$set: { "collections.$.tasks.$[elem].taskStatus": `${req.body.newStatus}`},},
+            {arrayFilters: [{"elem._id": taskID}]})
+            res.json(update.collections)
         }catch(error){
             res.json({error: error, message: "Couldnt update information"})
         }
@@ -240,6 +303,25 @@ groupRouter.delete('/groups/:groupID/deleteCollection/:collectionID', verificati
     }catch(error){
         res.json({error: error, message: "Couldnt delete collection"})
     }
+})
+
+groupRouter.delete('/groups/:groupID/deleteCollection/deleteTask/:userID/:collectionID/:taskID', verification, async (req, res) => {
+    const group = req.params.groupID;
+    const user = req.params.userID;
+    const collectionID = req.params.collectionID;
+    const taskID = req.params.taskID;
+    const groupDB = await GroupModel.findOne({_id: group});
+    if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
+        try{
+            const delTask = await GroupModel.findOneAndUpdate({"_id": group, "collections._id": collectionID}, 
+            {$pull: {"collections.$.tasks": {_id: taskID}}})
+            res.json(delTask.collections)
+        }catch(error){
+            res.json({error: error, message: "Couldnt delete task"})
+        }
+    }
+    else
+        res.send("Not enough permissions")
 })
 
 module.exports = groupRouter
