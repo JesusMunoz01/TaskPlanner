@@ -73,12 +73,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 else{
                     let collectionsData = fetchCollections();
                     collectionsData[currentCollectionIndex] = collection;
+                    groupData.joined[currentCollectionIndex].collections = collectionsData;
                     setCurrentCollection(collection);
                     setCollectionTasks(collection.tasks)
                     setGroupData((prev) => {
                         return {
                             invites: prev.invites,
-                            joined: collectionsData
+                            joined: groupData.joined
                         }
                     })
                     filterTask(filterType, collection.tasks)
