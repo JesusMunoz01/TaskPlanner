@@ -82,7 +82,6 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                         }
                     })
                     filterTask(filterType, collection.tasks)
-                    collections.updateCollection(collectionsData)
                 }
             }catch(error){
                 console.log(error)
@@ -109,9 +108,14 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             collectionsData[currentCollectionIndex].tasks = deletedItem;
             setCollectionTasks(deletedItem)
             currentCollection.tasks = deletedItem;
+            setGroupData((prev) => {
+                return {
+                    invites: prev.invites,
+                    joined: collectionsData
+                }
+            })
             setCurrentCollection(currentCollection);
             filterTask(filterType, deletedItem);
-            collections.updateCollection(collectionsData)
         }
         else{
             alert("Please login to delete a task, redirecting to login page...")
