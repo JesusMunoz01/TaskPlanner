@@ -107,12 +107,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             const deletedItem = collectionTasks.filter((task) => task._id !== taskID);
             let collectionsData = fetchCollections();
             collectionsData[currentCollectionIndex].tasks = deletedItem;
+            groupData.joined[currentCollectionIndex].collections = collectionsData;
             setCollectionTasks(deletedItem)
             currentCollection.tasks = deletedItem;
             setGroupData((prev) => {
                 return {
                     invites: prev.invites,
-                    joined: collectionsData
+                    joined: groupData.joined
                 }
             })
             setCurrentCollection(currentCollection);
@@ -148,6 +149,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                     body: JSON.stringify({
                         userID,
                         collectionID,
+                        collectionIndex: currentCollectionIndex,
                         taskID,
                         newTitle,
                         newDesc
@@ -159,12 +161,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 updatedValues.tasks[index].title = `${newTitle}`
                 updatedValues.tasks[index].description = `${newDesc}`
                 collectionsData[currentCollectionIndex] = updatedValues;
+                groupData.joined[currentCollectionIndex].collections = collectionsData;
                 setCollectionTasks(updatedValues.tasks)
                 setCurrentCollection(updatedValues);
                 setGroupData((prev) => {
                     return {
                         invites: prev.invites,
-                        joined: collectionsData
+                        joined: groupData.joined
                     }
                 })
                 filterTask(filterType, updatedValues.tasks)
@@ -266,7 +269,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                         <h1 aria-label={`${currentCollection.collectionTitle}-Header`}>{currentCollection.collectionTitle}</h1>
                     </div>
                 </div>
-                <span className="filterClass">
+                <span className="filterClass" style={{width: "60vw", marginTop: "20px"}}>
                     <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id, collectionTasks)}>All Tasks</button>
                     <button id="filter2" onClick={(e) => filterTask(e.target.id, collectionTasks)}>Completed</button>
                     <button id="filter3" onClick={(e) => filterTask(e.target.id, collectionTasks)}>Incomplete</button>

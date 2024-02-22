@@ -184,9 +184,10 @@ groupRouter.post("/groups/:groupID/updateCollection/task/data", verification, as
     if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
         try{
             const update = await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionID, "collections.tasks._id": taskID}, 
-            {$set: { "collections.$.tasks.$[elem].taskTitle": `${req.body.newTitle}`, "collections.$.tasks.$[elem].taskDescription": `${req.body.newDesc}`}},
-            {arrayFilters: [{"elem._id": taskID}]})
-            res.json(update.collections)
+            {$set: { "collections.$[colID].tasks.$[taskID].title": `${req.body.newTitle}`, 
+                "collections.$[colID].tasks.$[taskID].description": `${req.body.newDesc}`}},
+            {arrayFilters: [{"colID._id": collectionID}, {"taskID._id": taskID}]})
+            res.json(update.collections[req.body.collectionIndex])
         }catch(error){
             res.json({error: error, message: "Couldnt update information"})
         }
