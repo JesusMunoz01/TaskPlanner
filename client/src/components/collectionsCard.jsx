@@ -147,10 +147,10 @@ export const CollectionsCard = (data) => {
                             <li key={collection._id}>
                                 {isUserLogged ?
                                     <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
-                                    to={`/groups/${groupID}/${collection._id}/tasks`}>{collection.collectionTitle}</Link>
+                                    to={data.link}>{collection.collectionTitle}</Link>
                                 :
                                     <Link id="collectionDisplayTitle" aria-label={`${data.section}Title${collection._id}`} 
-                                    to={`/groups/${groupID}/${collection._id}/tasks`}>{collection.collectionTitle}</Link>}
+                                    to={data.link}>{collection.collectionTitle}</Link>}
                                 <div className="descBox">
                                     <p id="collectionDisplayDesc" aria-label={`${data.section}Desc${collection._id}`}>{collection.collectionDescription}</p>
                                 </div>

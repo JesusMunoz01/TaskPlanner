@@ -137,7 +137,8 @@ export const Group = () => {
                             {collections.map((collection, index)=> (
                                 <div>
                                     <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={true}
-                                    index={index} returnCollection={getCollection} section="groupsCollection" route={`/groups/${from._id}`}/>
+                                    index={index} returnCollection={getCollection} section="groupsCollection" route={`/groups/${from._id}`}
+                                    link={`/groups/${groupID}/${collection._id}/tasks`}/>
                                 </div>
                             ))}
                         </div>

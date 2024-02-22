@@ -22,7 +22,8 @@ export const CollectionTasks = (collections) => {
 
     function getThisCollectionIndex(){
         if(isUserLogged){
-            return intCollectionID;
+            const thisCollectionIndex = collections.data.findIndex((col) => col._id === collectionID);
+            return thisCollectionIndex;
         }
         else{
             const thisCollectionIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID);
