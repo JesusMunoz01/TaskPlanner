@@ -9,6 +9,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
     const {groupData, setGroupData} = useContext(UserContext)
     let { groupID, collectionID } = useParams()
     const [allCollectionTasks] = useState(fetchCollections());
+    const [currentGroupIndex] = useState(getThisGroupIndex())
     const [currentCollectionIndex] = useState(getThisCollectionIndex())
     const [currentCollection, setCurrentCollection] = useState(fetchCollections()[currentCollectionIndex])
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
@@ -73,7 +74,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 else{
                     let collectionsData = fetchCollections();
                     collectionsData[currentCollectionIndex] = collection;
-                    groupData.joined[currentCollectionIndex].collections = collectionsData;
+                    groupData.joined[currentGroupIndex].collections = collectionsData;
                     setCurrentCollection(collection);
                     setCollectionTasks(collection.tasks)
                     setGroupData((prev) => {
@@ -107,7 +108,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             const deletedItem = collectionTasks.filter((task) => task._id !== taskID);
             let collectionsData = fetchCollections();
             collectionsData[currentCollectionIndex].tasks = deletedItem;
-            groupData.joined[currentCollectionIndex].collections = collectionsData;
+            groupData.joined[currentGroupIndex].collections = collectionsData;
             setCollectionTasks(deletedItem)
             currentCollection.tasks = deletedItem;
             setGroupData((prev) => {
@@ -161,7 +162,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 updatedValues.tasks[index].title = `${newTitle}`
                 updatedValues.tasks[index].description = `${newDesc}`
                 collectionsData[currentCollectionIndex] = updatedValues;
-                groupData.joined[currentCollectionIndex].collections = collectionsData;
+                groupData.joined[currentGroupIndex].collections = collectionsData;
                 setCollectionTasks(updatedValues.tasks)
                 setCurrentCollection(updatedValues);
                 setGroupData((prev) => {
@@ -207,7 +208,15 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 const index = updatedValues.tasks.findIndex((task => task._id === taskID))
                 updatedValues.tasks[index].status = `${taskStatus}`
                 collectionsData[currentCollectionIndex] = updatedValues;
-                groupData.joined[currentCollectionIndex].collections = collectionsData;
+                groupData.joined[currentGroupIndex].collections = collectionsData;
+                
+                const statusCheck = updatedValues.tasks.filter((task) => task.status === "Complete")
+                // Verify if all tasks are complete
+                if(statusCheck.length === updatedValues.tasks.length)
+                    groupData.joined[currentGroupIndex].collections[currentCollectionIndex].status = "Complete"
+                else
+                    groupData.joined[currentGroupIndex].collections[currentCollectionIndex].status = "Incomplete"
+
                 setCollectionTasks(updatedValues.tasks)
                 setCurrentCollection(updatedValues);
                 setGroupData((prev) => {
