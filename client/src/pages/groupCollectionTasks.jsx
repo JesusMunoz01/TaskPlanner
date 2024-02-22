@@ -160,8 +160,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 collectionsData[currentCollectionIndex] = updatedValues;
                 setCollectionTasks(updatedValues.tasks)
                 setCurrentCollection(updatedValues);
+                setGroupData((prev) => {
+                    return {
+                        invites: prev.invites,
+                        joined: collectionsData
+                    }
+                })
                 filterTask(filterType, updatedValues.tasks)
-                collections.updateCollection(collectionsData);
             }catch(error){
                 console.log(error)
             }
