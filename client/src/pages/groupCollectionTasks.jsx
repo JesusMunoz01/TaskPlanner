@@ -197,7 +197,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                     body: JSON.stringify({
                         userID,
                         collectionID,
-                        intCollectionID,
+                        collectionIndex: currentCollectionIndex,
                         taskID,
                         taskStatus
                         })
@@ -207,12 +207,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 const index = updatedValues.tasks.findIndex((task => task._id === taskID))
                 updatedValues.tasks[index].status = `${taskStatus}`
                 collectionsData[currentCollectionIndex] = updatedValues;
+                groupData.joined[currentCollectionIndex].collections = collectionsData;
                 setCollectionTasks(updatedValues.tasks)
                 setCurrentCollection(updatedValues);
                 setGroupData((prev) => {
                     return {
                         invites: prev.invites,
-                        joined: collectionsData
+                        joined: groupData.joined
                     }
                 })
                 filterTask(filterType, updatedValues.tasks)

@@ -204,10 +204,21 @@ groupRouter.post("/groups/:groupID/updateCollection/task/status", verification, 
     const groupDB = await GroupModel.findOne({_id: groupID});
     if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
         try{
+            // Update task status
             const update = await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionID, "collections.tasks._id": taskID}, 
-            {$set: { "collections.$.tasks.$[elem].taskStatus": `${req.body.newStatus}`},},
+            {$set: { "collections.$.tasks.$[elem].status": `${req.body.taskStatus}`},},
             {arrayFilters: [{"elem._id": taskID}]})
-            res.json(update.collections)
+
+            // Update collection status if all tasks are complete
+            const statusFilter = update.collections[req.body.collectionIndex].tasks.filter((task) => task.status === "Complete")
+            if(statusFilter.length + 1 === update.collections[req.body.collectionIndex].tasks.length)
+                await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionID, "collections.tasks._id": taskID},
+                {$set: { "collections.$.collectionStatus": "Complete"}})
+            else if(update.collections[req.body.collectionIndex].collectionStatus === "Complete")
+                await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionID, "collections.tasks._id": taskID},
+                {$set: { "collections.$.collectionStatus": "Incomplete"}})
+
+            res.json(update.collections[req.body.collectionIndex])
         }catch(error){
             res.json({error: error, message: "Couldnt update information"})
         }
