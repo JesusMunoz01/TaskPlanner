@@ -94,21 +94,21 @@ groupRouter.post("/groups/:groupID/createCollection", verification, async (req, 
         res.send("Couldnt perform action")
 })
 
-groupRouter.post("/groups/:groupID/addCollection/addTask", verification, async (req, res) =>{
+groupRouter.post("/groups/:groupID/addCollection/newTask", verification, async (req, res) =>{
     const groupID = req.params.groupID;
     const collectionID = req.body.currentCollectionIndex;
     const user = req.body.userID;
     const groupDB = await GroupModel.findOne({_id: groupID});
     if((groupDB && groupDB.groupMembers.find(member => member === user)) || (groupDB && groupDB.groupAdmin.find(admin => admin === user))){
         const newTask = {
-            taskTitle: req.body.collectionTaskTitle,
-            taskDescription: req.body.collectionTaskDesc,
-            taskStatus: "Incomplete"
+            title: req.body.collectionTaskTitle,
+            description: req.body.collectionTaskDesc,
+            status: "Incomplete"
         };
         try{
-            const update = await GroupModel.findOneAndUpdate({"_id": groupID, "collections._id": collectionID}, 
-            {$push: { "collections.$.tasks": newTask}})
-            res.json(update.collections)
+            groupDB.collections[collectionID].tasks.push(newTask)
+            groupDB.save()
+            res.json(groupDB.collections[collectionID])
         }catch(error){
             res.json({error: error, message: "Couldnt add task"})
         }
