@@ -1,8 +1,10 @@
 import React from 'react'
 import { render, cleanup, act} from '@testing-library/react'
-import { Home } from '../pages/home'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
+import { GroupCollectionTasks } from '../pages/groupCollectionTasks'
+import { UserContext } from '../App'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 
 const user = userEvent.setup();
 
@@ -11,8 +13,24 @@ const user = userEvent.setup();
 
 describe('Testing group tasks', () => {
     
-    test.skip('Testing no data', async () => {
+    test('Testing no data', async () => {
+        let groupData = {invites: ["testGroup"], joined: [{_id: "1", groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+            collections: [{_id: "1", collectionTitle: 'Test Collection', collectionDesc: 'Test Collection Description', tasks: []}]}, ]}
+        const setGroupData = newData => {groupData = newData};
 
+        const renderedGroupTasks = render(
+            <UserContext.Provider value={{groupData, setGroupData}}>
+                <MemoryRouter initialEntries={[`/groups/${1}/${1}/tasks`]}>
+                    <Routes>
+                        <Route path="/groups/:groupID/:collectionID/tasks" 
+                            element={<GroupCollectionTasks isUserLogged={true}/>} />
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>
+        )
+
+        const noData = renderedGroupTasks.getByText('Currently no tasks in this collection')
+        expect(noData).toBeInTheDocument()
     })
 
     test.skip('Adds a new task', async () => {
