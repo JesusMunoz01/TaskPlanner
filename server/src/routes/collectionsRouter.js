@@ -88,33 +88,21 @@ collectionRouter.post("/updateCollection/task/status", verification, async (req,
     const user = req.body.userID;
     const collectionID = req.body.collectionID;
     const collectionTaskUpdate = req.body.taskID;
-    const index = req.body.intCollectionID;
     try{
-        const userData = await UserModel.findOne({_id: user });
         const updtTaskStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, "collections.tasks._id": collectionTaskUpdate}, 
         {$set: {"collections.$[colID].tasks.$[taskID].status": `${req.body.taskStatus}`}}, 
         {"arrayFilters": [{"colID._id": collectionID}, {"taskID._id": collectionTaskUpdate}]})
-        if(req.body.taskStatus === "Complete"){
-            let completedTasks = 1;
-            userData.collections[index].tasks.map((task) => {
-                if(task.status === "Complete")
-                    completedTasks++;
-            })
-            if(completedTasks === userData.collections[index].tasks.length){
-                const updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
-                {$set: { "collections.$[colID].collectionStatus": `${req.body.taskStatus}`}}, {"arrayFilters": [{"colID._id": collectionID}]})
-                return res.json(updtStatus.collections[index])
-            }
-        }
-        else{
-            if(userData.collections[index].collectionStatus === "Complete"){
-                const updtStatus = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, }, 
-                {$set: { "collections.$[colID].collectionStatus": `${req.body.taskStatus}`}}, {"arrayFilters": [{"colID._id": collectionID}]})
-                return res.json(updtStatus.collections[index])
-            }
-        }
+
+        const index = updtTaskStatus.collections.findIndex((collection) => collection._id.toString() === collectionID)
+        const statusFilter = updtTaskStatus.collections[index].tasks.filter((task) => task.status === "Complete")
+        if(statusFilter.length + 1 === updtTaskStatus.collections[index].tasks.length)
+            await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, "collections.tasks._id": collectionTaskUpdate}, 
+            {$set: {"collections.$[colID].collectionStatus": "Complete"}}, {"arrayFilters": [{"colID._id": collectionID}]})
+        else if(updtTaskStatus.collections[index].collectionStatus === "Complete")
+            await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, "collections.tasks._id": collectionTaskUpdate}, 
+            {$set: {"collections.$[colID].collectionStatus": "Incomplete"}}, {"arrayFilters": [{"colID._id": collectionID}]})
+
         res.json(updtTaskStatus.collections[index])
-        
     }catch(error){
         res.json({error: error, message: "Couldnt update Status"})
     }
@@ -123,13 +111,13 @@ collectionRouter.post("/updateCollection/task/status", verification, async (req,
 collectionRouter.post("/updateCollection/task/data", verification, async (req, res) =>{
     const user = req.body.userID;
     const collectionID = req.body.collectionID;
-    const collectionIndex = req.body.intCollectionID;
-    const collectionTaskUpdate = req.body.taskID;
+    const collectionTaskUpdate = req.body.taskID;;
     try{
         const updtTaskData = await UserModel.findOneAndUpdate({"_id": user, "collections._id": collectionID, "collections.tasks._id": collectionTaskUpdate}, 
         {$set: {"collections.$[colID].tasks.$[taskID].title": `${req.body.newTitle}`, 
                 "collections.$[colID].tasks.$[taskID].description": `${req.body.newDesc}`}}, 
         {"arrayFilters": [{"colID._id": collectionID}, {"taskID._id": collectionTaskUpdate}]})
+        const collectionIndex = updtTaskData.collections.findIndex((collection) => collection._id.toString() === collectionID)
         res.json(updtTaskData.collections[collectionIndex])
     }catch(error){
         res.json({error: error, message: "Couldnt update information"})

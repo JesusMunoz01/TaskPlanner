@@ -1,10 +1,12 @@
 import "../css/collectionsTasks.css"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useParams } from "react-router-dom"
 import { BsGearFill } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
+import { UserContext } from "../App";
 
 export const CollectionTasks = (collections) => {
+    const { collectionData, setCollectionData } = useContext(UserContext)
     let { collectionID } = useParams()
     let [intCollectionID] = useState(parseInt(collectionID))
     const [isUserLogged] = useState(collections.isLogged)
@@ -22,7 +24,8 @@ export const CollectionTasks = (collections) => {
 
     function getThisCollectionIndex(){
         if(isUserLogged){
-            return intCollectionID;
+            const thisCollectionIndex = collections.data.findIndex((col) => col._id === collectionID);
+            return thisCollectionIndex;
         }
         else{
             const thisCollectionIndex = JSON.parse(window.localStorage.getItem("localCollectionData")).findIndex((col) => col._id === intCollectionID);
@@ -213,6 +216,15 @@ export const CollectionTasks = (collections) => {
                 const index = updatedValues.tasks.findIndex((task => task._id === taskID))
                 updatedValues.tasks[index].status = `${taskStatus}`
                 collectionsData[currentCollectionIndex] = updatedValues;
+
+                const statusCheck = updatedValues.tasks.filter((task) => task.status === "Complete")
+                // Verify if all tasks are complete
+                if(statusCheck.length + 1 === updatedValues.tasks.length)
+                    collectionsData[currentCollectionIndex].collectionStatus = "Incomplete"
+                else
+                    collectionsData[currentCollectionIndex].collectionStatus = "Complete"
+                
+                setCollectionData(collectionsData)
                 setCollectionTasks(updatedValues.tasks)
                 setCurrentCollection(updatedValues);
                 filterTask(filterType, updatedValues.tasks)

@@ -9,6 +9,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
     const {groupData, setGroupData} = useContext(UserContext)
     let { groupID, collectionID } = useParams()
     const [allCollectionTasks] = useState(fetchCollections());
+    const [currentGroupIndex] = useState(getThisGroupIndex())
     const [currentCollectionIndex] = useState(getThisCollectionIndex())
     const [currentCollection, setCurrentCollection] = useState(fetchCollections()[currentCollectionIndex])
     const [collectionTasks, setCollectionTasks] = useState(currentCollection.tasks);
@@ -73,12 +74,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 else{
                     let collectionsData = fetchCollections();
                     collectionsData[currentCollectionIndex] = collection;
+                    groupData.joined[currentGroupIndex].collections = collectionsData;
                     setCurrentCollection(collection);
                     setCollectionTasks(collection.tasks)
                     setGroupData((prev) => {
                         return {
                             invites: prev.invites,
-                            joined: collectionsData
+                            joined: groupData.joined
                         }
                     })
                     filterTask(filterType, collection.tasks)
@@ -106,12 +108,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
             const deletedItem = collectionTasks.filter((task) => task._id !== taskID);
             let collectionsData = fetchCollections();
             collectionsData[currentCollectionIndex].tasks = deletedItem;
+            groupData.joined[currentGroupIndex].collections = collectionsData;
             setCollectionTasks(deletedItem)
             currentCollection.tasks = deletedItem;
             setGroupData((prev) => {
                 return {
                     invites: prev.invites,
-                    joined: collectionsData
+                    joined: groupData.joined
                 }
             })
             setCurrentCollection(currentCollection);
@@ -147,6 +150,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                     body: JSON.stringify({
                         userID,
                         collectionID,
+                        collectionIndex: currentCollectionIndex,
                         taskID,
                         newTitle,
                         newDesc
@@ -158,12 +162,13 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 updatedValues.tasks[index].title = `${newTitle}`
                 updatedValues.tasks[index].description = `${newDesc}`
                 collectionsData[currentCollectionIndex] = updatedValues;
+                groupData.joined[currentGroupIndex].collections = collectionsData;
                 setCollectionTasks(updatedValues.tasks)
                 setCurrentCollection(updatedValues);
                 setGroupData((prev) => {
                     return {
                         invites: prev.invites,
-                        joined: collectionsData
+                        joined: groupData.joined
                     }
                 })
                 filterTask(filterType, updatedValues.tasks)
@@ -193,7 +198,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                     body: JSON.stringify({
                         userID,
                         collectionID,
-                        intCollectionID,
+                        collectionIndex: currentCollectionIndex,
                         taskID,
                         taskStatus
                         })
@@ -203,12 +208,21 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                 const index = updatedValues.tasks.findIndex((task => task._id === taskID))
                 updatedValues.tasks[index].status = `${taskStatus}`
                 collectionsData[currentCollectionIndex] = updatedValues;
+                groupData.joined[currentGroupIndex].collections = collectionsData;
+                
+                const statusCheck = updatedValues.tasks.filter((task) => task.status === "Complete")
+                // Verify if all tasks are complete
+                if(statusCheck.length === updatedValues.tasks.length)
+                    groupData.joined[currentGroupIndex].collections[currentCollectionIndex].status = "Complete"
+                else
+                    groupData.joined[currentGroupIndex].collections[currentCollectionIndex].status = "Incomplete"
+
                 setCollectionTasks(updatedValues.tasks)
                 setCurrentCollection(updatedValues);
                 setGroupData((prev) => {
                     return {
                         invites: prev.invites,
-                        joined: collectionsData
+                        joined: groupData.joined
                     }
                 })
                 filterTask(filterType, updatedValues.tasks)
@@ -265,7 +279,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                         <h1 aria-label={`${currentCollection.collectionTitle}-Header`}>{currentCollection.collectionTitle}</h1>
                     </div>
                 </div>
-                <span className="filterClass">
+                <span className="filterClass" style={{width: "60vw", marginTop: "20px"}}>
                     <button id="filter1" style={{color: "green" }} onClick={(e) => filterTask(e.target.id, collectionTasks)}>All Tasks</button>
                     <button id="filter2" onClick={(e) => filterTask(e.target.id, collectionTasks)}>Completed</button>
                     <button id="filter3" onClick={(e) => filterTask(e.target.id, collectionTasks)}>Incomplete</button>
