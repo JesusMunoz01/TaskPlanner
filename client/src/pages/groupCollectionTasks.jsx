@@ -69,6 +69,7 @@ export const GroupCollectionTasks = ({isUserLogged}) => {
                         })
                     });
                 const collection = await res.json()
+                console.log(collection)
                 if(collection == null)
                     console.log("Failed to create collection")
                 else{
