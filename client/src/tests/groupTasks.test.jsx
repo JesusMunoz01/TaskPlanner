@@ -137,8 +137,38 @@ describe('Testing group tasks', () => {
     })
 
 
-    test.skip('Test task deletion', async () => {
+    test('Test task deletion', async () => {
+        let groupData = {invites: ["testGroup"], joined: [{_id: "1", groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+        collections: [{_id: "1", collectionTitle: 'Test Collection', collectionDesc: 'Test Collection Description', 
+        tasks: [{_id: "1", title: 'Test Task', description: 'Test Task Description', status: 'Incomplete'}]}]}]}
+        const setGroupData = newData => {groupData = newData};
 
+        const fetchCopy = global.fetch;
+        global.__API__ = 'http://localhost:8000'
+        global.fetch = jest.fn()
+        global.fetch.mockImplementationOnce(() => Promise.resolve({ json: () => Promise.resolve()}))
+
+        const renderedGroupTasks = render(
+            <UserContext.Provider value={{groupData, setGroupData}}>
+                <MemoryRouter initialEntries={[`/groups/${1}/${1}/tasks`]}>
+                    <Routes>
+                        <Route path="/groups/:groupID/:collectionID/tasks" 
+                            element={<GroupCollectionTasks isUserLogged={true}/>} />
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>
+        )
+
+        const delBtn = renderedGroupTasks.getByLabelText('delColTaskBtn1')
+
+        await act(async () =>{
+            await user.click(delBtn)
+        })
+
+        expect(global.fetch).toHaveBeenCalledWith("http://localhost:8000/groups/1/deleteCollection/deleteTask/2/1/1",
+            {"headers": {"auth": undefined},"method": "DELETE"})
+        expect(global.fetch).toHaveBeenCalledTimes(1)
+        global.fetch = fetchCopy
     })
 
     test.skip('Test task update data', async () => {
