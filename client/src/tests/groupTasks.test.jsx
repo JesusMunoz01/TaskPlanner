@@ -33,6 +33,27 @@ describe('Testing group tasks', () => {
         expect(noData).toBeInTheDocument()
     })
 
+    test('Test task display with fake data', async () => {
+        let groupData = {invites: ["testGroup"], joined: [{_id: "1", groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+            collections: [{_id: "1", collectionTitle: 'Test Collection', collectionDesc: 'Test Collection Description', 
+            tasks: [{_id: "1", title: 'Test Task', description: 'Test Task Description', status: 'Incomplete'}]}]}]}
+        const setGroupData = newData => {groupData = newData};
+
+        const renderedGroupTasks = render(
+            <UserContext.Provider value={{groupData, setGroupData}}>
+                <MemoryRouter initialEntries={[`/groups/${1}/${1}/tasks`]}>
+                    <Routes>
+                        <Route path="/groups/:groupID/:collectionID/tasks" 
+                            element={<GroupCollectionTasks isUserLogged={true}/>} />
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>
+        )
+
+        const taskTitle = renderedGroupTasks.getByText('Test Task')
+        expect(taskTitle).toBeInTheDocument()
+    })
+
     test.skip('Adds a new task', async () => {
 
     })
@@ -41,9 +62,6 @@ describe('Testing group tasks', () => {
 
     })
 
-    test.skip('Test task display with fake data', async () => {
-
-    })
 
     test.skip('Test task deletion', async () => {
 
