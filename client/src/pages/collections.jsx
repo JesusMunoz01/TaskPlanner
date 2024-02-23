@@ -151,7 +151,7 @@ export const Collections = (data) => {
                         // Section for: Not logged user with collections -------------------------------------------
                         JSON.parse(collections).map((collection, index)=> (
                             <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={false}
-                            index={index} returnCollection={getCollection} section="collections"/>
+                            index={index} returnCollection={getCollection} section="collections" link={`/collections/${collection._id}`}/>
                         )) : 
                             // Section for: Not logged user without collections -------------------------------------------
                         <span id="collectionEmptyPrompt">Currently no Collections</span>
