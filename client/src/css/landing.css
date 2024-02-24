@@ -16,6 +16,13 @@
     justify-content: center;
 }
 
+.groupsBox-header{
+    grid-column: span 2;
+}
+
+.landingPage .groupsBox-header button{
+    display: none;
+  }
 
 .landingPage-Card::before{
     display: none;
@@ -79,7 +86,7 @@
     }
     .landingPage-Card{
         min-height: 500px;
-        min-width: 400px;
+        min-width: 380px;
         max-width: 400px;
         border: 1px solid;
         border-color: var(--secondary-color);
@@ -140,6 +147,10 @@
         align-items: center;
         justify-content: space-around;
         flex-direction: row;
+    }
+
+    .groupsBox-header{
+        grid-column: span 1;
     }
 
     #img1{
