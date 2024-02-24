@@ -171,8 +171,44 @@ describe('Testing group tasks', () => {
         global.fetch = fetchCopy
     })
 
-    test.skip('Test task update data', async () => {
-            
+    test('Test task update data', async () => {
+        let groupData = {invites: ["testGroup"], joined: [{_id: "1", groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+            collections: [{_id: "1", collectionTitle: 'Test Collection', collectionDesc: 'Test Collection Description', 
+            tasks: [{_id: "1", title: 'Test Task', description: 'Test Task Description', status: 'Incomplete'}]}]}]}
+        const setGroupData = newData => {groupData = newData};
+        localStorage.setItem('userId', 2)
+
+        const fetchCopy = global.fetch;
+        global.__API__ = 'http://localhost:8000'
+        global.fetch = jest.fn()
+        global.fetch.mockImplementationOnce(() => Promise.resolve({ json: () => Promise.resolve()}))
+
+        const renderedGroupTasks = render(
+            <UserContext.Provider value={{groupData, setGroupData}}>
+                <MemoryRouter initialEntries={[`/groups/${1}/${1}/tasks`]}>
+                    <Routes>
+                        <Route path="/groups/:groupID/:collectionID/tasks" 
+                            element={<GroupCollectionTasks isUserLogged={true}/>} />
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>
+        )
+
+        const addTaskTitle = renderedGroupTasks.getByLabelText('editColTaskTitle1')
+        const addTaskDesc = renderedGroupTasks.getByLabelText('editColTaskDesc1')
+        const confirmAdd = renderedGroupTasks.getByLabelText('confirmColTaskEdit1')
+
+        await act(async () => {
+            await user.type(addTaskTitle, 'Edited Task')
+            await user.type(addTaskDesc, 'Edited Task Description')
+            await user.click(confirmAdd)
+        })
+
+        expect(global.fetch).toHaveBeenCalledWith("http://localhost:8000/groups/1/updateCollection/task/data", 
+            {"body": "{\"userID\":\"2\",\"collectionID\":\"1\",\"collectionIndex\":0,\"taskID\":\"1\",\"newTitle\":\"Edited Task\",\"newDesc\":\"Edited Task Description\"}",
+            "headers": {"Content-Type": "application/json", "auth": undefined}, "method": "POST"})
+        expect(global.fetch).toHaveBeenCalledTimes(1)
+        global.fetch = fetchCopy
     })
 
     test.skip('Test task update status', async () => {
