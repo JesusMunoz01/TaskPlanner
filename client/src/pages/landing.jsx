@@ -2,8 +2,11 @@ import { useState } from "react";
 import "../css/landing.css"
 //import checkList from "../assets/checkList.png"
 import { Link } from "react-router-dom"
-const pages = [{route: "/", name: "Basic Task Planner", img: "src/assets/checkList.png", imgSmall: "src/assets/checkListSmall.png", description: "Basic task planner"}, 
-    {route: "/collections", name: "Task Collections", img: "src/assets/collections.png", imgSmall: "src/assets/collectionsSmall.png", description: "Collection of Tasks"}, 
+import { Header } from "../components/header";
+const pages = [
+    {route: "/", name: "Basic Task Planner", img: "src/assets/checkList.png", imgSmall: "src/assets/checkListSmall.png", description: "Basic task planner"}, 
+    {route: "/collections", name: "Task Collections", img: "src/assets/collections.png", imgSmall: "src/assets/collectionsSmall.png", description: "Collection of Tasks"},
+    {route: "/groups", name: "Groups", img: "src/assets/groups.png", imgSmall: "src/assets/groups.png", description: "For team tasks"},
     /*{route: "/", name: "Groups"}, {route: "/", name: "home"}*/]
 
 export const Landing = () => {
@@ -12,7 +15,7 @@ export const Landing = () => {
     size.addEventListener("change", (e) => {setSize(e.matches)})
     
     return <div className="landingPage">
-        <h1 id="landingPage-Title">Task Planner</h1>
+        <Header title="Task Planner"/>
         {pages.map((page, index) => (
             <Link to={page.route} className="landingPage-Link">
                 <div className="landingPage-Card">

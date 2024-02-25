@@ -228,7 +228,9 @@
 @media(max-width: 570px) {
     .collections{
         grid-template-columns: repeat(1, 1fr);
-        width: 250px;
+        min-width: 250px;
+        width: 90vw;
+        max-width: 90vw;
         height: 535px;
         gap: 10px;
     }
