@@ -211,8 +211,41 @@ describe('Testing group tasks', () => {
         global.fetch = fetchCopy
     })
 
-    test.skip('Test task update status', async () => {
+    test('Test task update status', async () => {
+        let groupData = {invites: ["testGroup"], joined: [{_id: "1", groupName: 'Test Group', groupDescription: 'Test Description', permissions: 'Admin',
+        collections: [{_id: "1", collectionTitle: 'Test Collection', collectionDesc: 'Test Collection Description', 
+        tasks: [{_id: "1", title: 'Test Task', description: 'Test Task Description', status: 'Incomplete'}]}]}]}
+        const setGroupData = newData => {groupData = newData};
+        localStorage.setItem('userId', 2)
 
+        const fetchCopy = global.fetch;
+        global.__API__ = 'http://localhost:8000'
+        global.fetch = jest.fn()
+        global.fetch.mockImplementationOnce(() => Promise.resolve({ json: () => Promise.resolve()}))
+
+        const renderedGroupTasks = render(
+            <UserContext.Provider value={{groupData, setGroupData}}>
+                <MemoryRouter initialEntries={[`/groups/${1}/${1}/tasks`]}>
+                    <Routes>
+                        <Route path="/groups/:groupID/:collectionID/tasks" 
+                            element={<GroupCollectionTasks isUserLogged={true}/>} />
+                    </Routes>
+                </MemoryRouter>
+            </UserContext.Provider>
+        )
+
+        const statusSelector = renderedGroupTasks.getByLabelText('colTaskStatus')
+        const completeStatus = renderedGroupTasks.getByLabelText('completeColTaskStatus')
+
+        await act(async () => {
+            await user.selectOptions(statusSelector, completeStatus)
+        })
+
+        expect(global.fetch).toHaveBeenCalledWith("http://localhost:8000/groups/1/updateCollection/task/status", 
+            {"body": "{\"userID\":\"2\",\"collectionID\":\"1\",\"collectionIndex\":0,\"taskID\":\"1\",\"taskStatus\":\"Complete\"}",
+            "headers": {"Content-Type": "application/json", "auth": undefined}, "method": "POST"})
+        expect(global.fetch).toHaveBeenCalledTimes(1)
+        global.fetch = fetchCopy
     })
 
 })
