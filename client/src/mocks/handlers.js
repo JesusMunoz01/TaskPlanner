@@ -463,4 +463,34 @@ export const handlers = [
           return res(ctx.status(400), ctx.json("You do not have permission to delete this group"))
       }
     }),
+
+    // -------------------------------------- Group Collection Tasks Page Handlers ----------------------------------------------------
+
+    rest.post('http://localhost:8080/groups/:groupID/addCollection/newTask', async (req, res, ctx) => {
+      const data = await req.json()
+      const userCheck = data.userID;
+      const groupCheck = req.params.groupID
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
+        const collectionIndex = mockGroup[groupIndex].collections.findIndex((collection) => collection._id === data.collectionID)
+        let nextId = 1;
+        let lastTask = [];
+        try{
+        const dbCollection = mockGroup[groupIndex].collections[collectionIndex]
+        let localCopy = JSON.parse(JSON.stringify(dbCollection))
+        if(localCopy.tasks)
+            lastTask = localCopy.tasks.pop();
+        if(lastTask.length !== 0)
+            nextId = lastTask._id + 1;}
+        catch(error){}
+        const newTask = {title: data.title, description: data.desc, 
+          status: data.status, _id: nextId}
+
+          mockGroup[groupIndex].collections[collectionIndex].tasks.push(newTask)
+          return res(ctx.json(mockGroup[groupIndex].collections[collectionIndex]))
+        }
+    }),
 ]
