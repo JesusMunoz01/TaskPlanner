@@ -483,23 +483,26 @@ export const handlers = [
       if(userIndex[0].user_id == 0)
        return res(ctx.status(400))
       else{
-        const groupIndex = mockGroupTasks.findIndex((group) => group._id === groupCheck)
-        const collectionIndex = mockGroupTasks[groupIndex].collections.findIndex((collection) => collection._id === data.collectionID)
-        let nextId = 1;
-        let lastTask = [];
-        try{
-        const dbCollection = mockGroupTasks[groupIndex].collections[collectionIndex]
-        let localCopy = JSON.parse(JSON.stringify(dbCollection))
-        if(localCopy.tasks)
-            lastTask = localCopy.tasks.pop();
-        if(lastTask.length !== 0)
-            nextId = lastTask._id + 1;}
-        catch(error){}
-        const newTask = {title: data.title, description: data.desc, 
-          status: data.status, _id: nextId}
+          const groupIndex = mockGroupTasks.findIndex((group) => group._id === groupCheck)
+          const collectionIndex = mockGroupTasks[groupIndex].collections.findIndex((collection) => collection._id === data.collectionID)
+          let nextId = 1;
+          let lastTask = [];
+          try{
+          const dbCollection = mockGroupTasks[groupIndex].collections[collectionIndex]
+          let localCopy = JSON.parse(JSON.stringify(dbCollection))
+          if(localCopy.tasks)
+              lastTask = localCopy.tasks.pop();
+          if(lastTask.length !== 0)
+              nextId = lastTask._id + 1;}
+          catch(error){}
+          const newTask = {title: data.title, description: data.desc, 
+            status: data.status, _id: nextId}
 
-          mockGroupTasks[groupIndex].collections[collectionIndex].tasks.push(newTask)
-          return res(ctx.json(mockGroupTasks[groupIndex].collections[collectionIndex]))
+          if(mockGroupTasks[groupIndex].groupMembers.includes(userIndex[0].username) || mockGroupTasks[groupIndex].groupAdmin.includes(userIndex[0].username)){
+            mockGroupTasks[groupIndex].collections[collectionIndex].tasks.push(newTask)
+            return res(ctx.json(mockGroupTasks[groupIndex].collections[collectionIndex]))
+          } else
+            return res(ctx.status(400), ctx.json("You do not have permission to add a task to this collection"))
         }
     }),
 ]

@@ -291,6 +291,23 @@ describe('Testing mock API calls for group tasks page', () => {
             description: 'Created Task Description', status: 'Incomplete'}]})
     })
 
+    test('Test to add a task on group 2 with a user not in group', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/addCollection/newTask', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 4, 
+                collectionID: 1, 
+                title: 'Created Task', 
+                desc: 'Created Task Description', 
+                status: 'Incomplete'
+            })
+        })
+
+        const data = await response.json()
+        expect(data).toEqual("You do not have permission to add a task to this collection")
+    })
+
     test.skip('Test delete a task ', async () => {
 
     })
