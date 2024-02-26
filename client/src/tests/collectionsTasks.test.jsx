@@ -1,9 +1,9 @@
 import React from 'react'
-import { render, screen, cleanup, act } from '@testing-library/react'
+import { render, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
 import { Collections } from '../pages/collections'
-import { Link, MemoryRouter, Route, Routes } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { CollectionTasks } from '../pages/collectionsTasks'
 import { UserContext } from '../App'
 
@@ -11,7 +11,6 @@ describe('Tests for collections Page', () => {
 
     const userLogin = false;
     const updateCollection = () => {}
-    //const mockData = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []}]
 
     test('Testing empty tasks in collection', async () => {
         const mockData1 = [{collectionTitle: "Mock Collection", collectionDescription: "Fake description", _id: 1, tasks: []},

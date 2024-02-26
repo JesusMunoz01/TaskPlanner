@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, cleanup, act} from '@testing-library/react'
+import { render, act} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { GroupCollectionTasks } from '../pages/groupCollectionTasks'
@@ -7,9 +7,6 @@ import { UserContext } from '../App'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 
 const user = userEvent.setup();
-
-// addTaskTitle, addTaskDesc, confirmAdd, taskTitle1, taskDesc1, editTaskTitle1, editTaskDesc1, confirmEdit1, delBtn1
-// /^task/
 
 describe('Testing group tasks', () => {
     

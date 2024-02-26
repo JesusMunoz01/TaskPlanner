@@ -28,8 +28,7 @@ export const Login = ({loginStatus}) => {
                         })
                     });
                 alert("Registration Completed")
-                const data = await res.json()
-                console.log(data)
+                //const data = await res.json()
             }catch(error){
                 console.log(error)
             }

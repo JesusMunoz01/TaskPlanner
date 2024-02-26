@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, cleanup, act} from '@testing-library/react'
+import { render, act} from '@testing-library/react'
 import { Home } from '../pages/home'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 
 const user = userEvent.setup();
 
-const updateTask = (data) => {}
+const updateTask = () => {}
 
 describe('Testing basic home page', () => {
     

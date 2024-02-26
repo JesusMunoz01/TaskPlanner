@@ -1,9 +1,9 @@
 import React from 'react'
-import { render, screen, cleanup, act } from '@testing-library/react'
+import { render, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import user from '@testing-library/user-event'
 import { Collections } from '../pages/collections'
-import { Link, MemoryRouter, Route, Routes } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { CollectionTasks } from '../pages/collectionsTasks'
 import { UserContext } from '../App'
 

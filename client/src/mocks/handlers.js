@@ -1,6 +1,7 @@
 import { rest } from 'msw'
 
-const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!", 
+  // Mock User Database
+  const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!", 
                   tasks: [{title: "mock1", description: "fake response 1", _id: 1},
                           {title: "mock2", description: "fake response 2", _id: 2},
                           {title: "mock3", description: "fake response 3", _id: 3}],
@@ -32,6 +33,7 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
                               collectionStatus: "Incomplete", _id: 2, tasks: []}]
               },]
 
+  // Mock User DB with Groups
   const mockDBGroups = [{_id: 1, username: "TUser1", password: "TPassword1!", tasks: [], collections: [],
     groups: {invites: [], joined: {groupTitle: "mockGroup1", groupDescription: "fake group response 1", groupStatus: "Incomplete", _id: 1, tasks: []}}},
     {_id: 2, username: "TUser2", password: "TPassword2!", tasks: [], collections: [], groups: {invites: [], joined: []}},
@@ -46,11 +48,13 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
           groupStatus: "Incomplete", _id: 1, collections: [], permissions: "Admin"}]}
     }]
 
+    // Mock Group DB
     const mockGroup = [{groupName: "TestGroup1", groupDescription: "Test Group 1", groupStatus: "Incomplete", _id: 1, groupAdmin: ["TUser1"],
       groupMembers: ["TUser2"], collections: []},
     {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", _id: 2, groupAdmin: ["TUser2"], 
       groupMembers: ["TUser1", "TUser3"], collections: []},]
 
+    // Mock Group DB with Tasks
     const mockGroupTasks = [
     {groupName: "TestGroup1", groupDescription: "Test Group 1", groupStatus: "Incomplete", _id: 1, groupAdmin: ["TUser1"],
       groupMembers: ["TUser2"], collections: [{collectionTitle: "mockCollection1 group1", collectionDescription: "fake collection response 1",
@@ -61,7 +65,11 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
       status: "Incomplete"}]}]},]
 
 export const handlers = [
+
+  // ------------------------------------------------------------------------------------------------------------------
   // -------------------------------------- Home Page Handlers --------------------------------------------------------
+  // ------------------------------------------------------------------------------------------------------------------
+
     rest.get('http://localhost:8080/fetchTasks/:userID', (req, res, ctx) => {
         const userCheck = parseInt(req.params.userID)
 
@@ -124,7 +132,13 @@ export const handlers = [
           return res(ctx.json(userIndex[0].tasks))
         }
       }),
+
+  // -------------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
   // -------------------------------------- Login Page Handlers --------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
+
       rest.post('http://localhost:8080/addUser', async (req, res, ctx) => {
         const data = await req.json()
         const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*?[0-9])(?=.*\W).{8,24}$/;
@@ -156,7 +170,13 @@ export const handlers = [
       } else
         return res(ctx.json("Incorrect username or password"), ctx.status(400))
     }),
+
+  // --------------------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------
   // -------------------------------------- Collection Page Handlers ----------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------
+
     rest.get('http://localhost:8080/collections/:userID', (req, res, ctx) => {
       const userCheck = parseInt(req.params.userID)
 
@@ -220,7 +240,13 @@ export const handlers = [
         return res(ctx.json(userIndex[0].collections))
       }
     }),
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------- Collection Tasks Page Handlers ----------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------
+
     rest.get('http://localhost:8080/collections/:collectionID', (req, res, ctx) => {
       const userCheck = parseInt(req.params.userID)
 
@@ -288,7 +314,12 @@ export const handlers = [
       }
     }),
 
+    // ----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------------------
     // -------------------------------------- Groups Page Handlers ----------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------------------
+
     rest.post('http://localhost:8080/groups/createGroup', async (req, res, ctx) => {
       const data = await req.json()
       const userCheck = data.userID;
@@ -343,7 +374,12 @@ export const handlers = [
       }
     }),
 
+    // ---------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------
     // -------------------------------------- Group Page Handlers ----------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------
+
     rest.post('http://localhost:8080/groups/:groupID/updateGroup', async (req, res, ctx) => {
       const data = await req.json()
       const userCheck = data.userID;
@@ -473,7 +509,11 @@ export const handlers = [
       }
     }),
 
+    // --------------------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------- Group Collection Tasks Page Handlers ----------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------------
 
     rest.post('http://localhost:8080/groups/:groupID/addCollection/newTask', async (req, res, ctx) => {
       const data = await req.json()
