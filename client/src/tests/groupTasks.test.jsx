@@ -346,6 +346,23 @@ describe('Testing mock API calls for group tasks page', () => {
             {_id: 2, title: 'Edited Task', description: 'Edited Task Description', status: 'Incomplete'}])
     })
 
+    test('Test to update a task with an invalid user', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/updateCollection/task/data', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 4, 
+                collectionID: 1, 
+                taskID: 2, 
+                newTitle: 'Edited Task', 
+                newDesc: 'Edited Task Description'
+            })
+        })
+
+        const data = await response.json()
+        expect(data).toEqual("You do not have permission to update this task")
+    })
+
     test.skip('Test to update a task status', async () => {
 
     })
