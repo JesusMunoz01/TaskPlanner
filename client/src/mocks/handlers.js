@@ -505,4 +505,23 @@ export const handlers = [
             return res(ctx.status(400), ctx.json("You do not have permission to add a task to this collection"))
         }
     }),
+
+    rest.delete('http://localhost:8080/groups/:groupID/deleteCollection/deleteTask/:userID/:collectionID/:taskID', async (req, res, ctx) => {
+      const collectionCheck = parseInt(req.params.collectionID)
+      const taskCheck = parseInt(req.params.taskID)
+      const groupCheck = parseInt(req.params.groupID)
+      const userCheck = parseInt(req.params.userID)
+      const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
+      const groupIndex = mockGroupTasks.findIndex((group) => group._id === groupCheck)
+      if(userIndex[0].user_id == 0)
+       return res(ctx.status(400))
+      else{
+        if(mockGroupTasks[groupIndex].groupMembers.includes(userIndex[0].username) || mockGroupTasks[groupIndex].groupAdmin.includes(userIndex[0].username)){
+          const collectionIndex = mockGroupTasks[groupIndex].collections.findIndex((collection) => collection._id === collectionCheck)
+          const deleteTask = mockGroupTasks[groupIndex].collections[collectionIndex].tasks.filter((task) => task._id != taskCheck)
+          return res(ctx.json(deleteTask))
+        } else
+          return res(ctx.status(400), ctx.json("You do not have permission to delete this task"))
+      }
+    }),
 ]

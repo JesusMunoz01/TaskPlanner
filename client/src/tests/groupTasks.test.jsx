@@ -308,8 +308,14 @@ describe('Testing mock API calls for group tasks page', () => {
         expect(data).toEqual("You do not have permission to add a task to this collection")
     })
 
-    test.skip('Test delete a task ', async () => {
+    test('Test delete a task ', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/deleteCollection/deleteTask/1/1/1', {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+        })
 
+        const data = await response.json()
+        expect(data).toEqual([{_id: 2, title: 'Created Task', description: 'Created Task Description', status: 'Incomplete'}])
     })
 
     test.skip('Test to update a task ', async () => {
