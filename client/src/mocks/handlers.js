@@ -51,6 +51,13 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
     {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", _id: 2, groupAdmin: ["TUser2"], 
       groupMembers: ["TUser1", "TUser3"], collections: []},]
 
+      const mockGroupTasks = [{groupName: "TestGroup1", groupDescription: "Test Group 1", groupStatus: "Incomplete", _id: 1, groupAdmin: ["TUser1"],
+      groupMembers: ["TUser2"], collections: [{collectionTitle: "mockCollection1 group1", collectionDescription: "fake collection response 1",
+      collectionStatus: "Incomplete", _id: 1, tasks: []}]},
+    {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", _id: 2, groupAdmin: ["TUser2"], 
+      groupMembers: ["TUser1", "TUser3"], collections: []}, {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", 
+      _id: 2, groupAdmin: ["TUser2"], groupMembers: ["TUser1", "TUser3"], collections: []},]
+
 export const handlers = [
   // -------------------------------------- Home Page Handlers --------------------------------------------------------
     rest.get('http://localhost:8080/fetchTasks/:userID', (req, res, ctx) => {
@@ -469,17 +476,17 @@ export const handlers = [
     rest.post('http://localhost:8080/groups/:groupID/addCollection/newTask', async (req, res, ctx) => {
       const data = await req.json()
       const userCheck = data.userID;
-      const groupCheck = req.params.groupID
+      const groupCheck = parseInt(req.params.groupID)
       const userIndex = mockDBGroups.filter((user) => user._id === userCheck)
       if(userIndex[0].user_id == 0)
        return res(ctx.status(400))
       else{
-        const groupIndex = mockGroup.findIndex((group) => group._id === groupCheck)
-        const collectionIndex = mockGroup[groupIndex].collections.findIndex((collection) => collection._id === data.collectionID)
+        const groupIndex = mockGroupTasks.findIndex((group) => group._id === groupCheck)
+        const collectionIndex = mockGroupTasks[groupIndex].collections.findIndex((collection) => collection._id === data.collectionID)
         let nextId = 1;
         let lastTask = [];
         try{
-        const dbCollection = mockGroup[groupIndex].collections[collectionIndex]
+        const dbCollection = mockGroupTasks[groupIndex].collections[collectionIndex]
         let localCopy = JSON.parse(JSON.stringify(dbCollection))
         if(localCopy.tasks)
             lastTask = localCopy.tasks.pop();
@@ -489,8 +496,8 @@ export const handlers = [
         const newTask = {title: data.title, description: data.desc, 
           status: data.status, _id: nextId}
 
-          mockGroup[groupIndex].collections[collectionIndex].tasks.push(newTask)
-          return res(ctx.json(mockGroup[groupIndex].collections[collectionIndex]))
+          mockGroupTasks[groupIndex].collections[collectionIndex].tasks.push(newTask)
+          return res(ctx.json(mockGroupTasks[groupIndex].collections[collectionIndex]))
         }
     }),
 ]
