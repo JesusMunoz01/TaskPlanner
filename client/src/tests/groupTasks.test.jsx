@@ -253,27 +253,87 @@ describe('Testing group tasks', () => {
 
 describe('Testing mock API calls for group tasks page', () => {
 
-    test.skip('Test to see if tasks are empty', async () => {
     
+    test('Test to add a task on group 1 (has no task)', async () => {
+        const response = await fetch('http://localhost:8080/groups/1/addCollection/newTask', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 1, 
+                collectionID: 1, 
+                title: 'Created Task', 
+                desc: 'Created Task Description', 
+                status: 'Incomplete'
+            })
+        })
+
+        const data = await response.json()
+        expect(data).toEqual({_id: 1, collectionTitle: 'mockCollection1 group1', collectionDescription: 'fake collection response 1', collectionStatus: "Incomplete",
+            tasks: [{_id: 1, title: 'Created Task', description: 'Created Task Description', status: 'Incomplete'}]})
     })
 
-    test.skip('Test to see if there are tasks', async () => {
+    test('Test to add a task on group 2 (has 1 tasks)', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/addCollection/newTask', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 1, 
+                collectionID: 1, 
+                title: 'Created Task', 
+                desc: 'Created Task Description', 
+                status: 'Incomplete'
+            })
+        })
 
+        const data = await response.json()
+        expect(data).toEqual({_id: 1, collectionTitle: 'mockCollection1 group2', collectionDescription: 'fake collection response 2', collectionStatus: "Incomplete",
+            tasks: [{_id: 1, title: 'Task1', description: 'Fake Task 1', status: 'Incomplete'}, {_id: 2, title: 'Created Task', 
+            description: 'Created Task Description', status: 'Incomplete'}]})
     })
-    
-    test.skip('Test to add a task on user 1 (has 3 tasks)', async () => {
 
+    test('Test to add a task on group 2 with a user not in group', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/addCollection/newTask', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 4, 
+                collectionID: 1, 
+                title: 'Created Task', 
+                desc: 'Created Task Description', 
+                status: 'Incomplete'
+            })
+        })
+
+        const data = await response.json()
+        expect(data).toEqual("You do not have permission to add a task to this collection")
     })
 
-    test.skip('Test to add a task on user 3 (has no tasks)', async () => {
+    test('Test delete a task ', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/deleteCollection/deleteTask/1/1/1', {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+        })
 
+        const data = await response.json()
+        expect(data).toEqual([{_id: 2, title: 'Created Task', description: 'Created Task Description', status: 'Incomplete'}])
     })
 
-    test.skip('Test delete a task ', async () => {
+    test('Test delete a task with an invalid user', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/deleteCollection/deleteTask/4/1/1', {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+        })
 
+        const data = await response.json()
+        expect(data).toEqual("You do not have permission to delete this task")
     })
 
     test.skip('Test to update a task ', async () => {
 
     })
+
+    test.skip('Test to update a task status', async () => {
+
+    })
+    
 })
