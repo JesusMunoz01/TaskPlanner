@@ -318,7 +318,7 @@ describe('Testing mock API calls for group tasks page', () => {
         expect(data).toEqual([{_id: 2, title: 'Created Task', description: 'Created Task Description', status: 'Incomplete'}])
     })
 
-    test('Test delete a task ', async () => {
+    test('Test delete a task with an invalid user', async () => {
         const response = await fetch('http://localhost:8080/groups/2/deleteCollection/deleteTask/4/1/1', {
             method: 'DELETE',
             headers: {'Content-Type': 'application/json'},
