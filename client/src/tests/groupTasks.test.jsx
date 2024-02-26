@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, cleanup, act} from '@testing-library/react'
+import { render, act} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { GroupCollectionTasks } from '../pages/groupCollectionTasks'
@@ -7,9 +7,6 @@ import { UserContext } from '../App'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 
 const user = userEvent.setup();
-
-// addTaskTitle, addTaskDesc, confirmAdd, taskTitle1, taskDesc1, editTaskTitle1, editTaskDesc1, confirmEdit1, delBtn1
-// /^task/
 
 describe('Testing group tasks', () => {
     
@@ -328,12 +325,72 @@ describe('Testing mock API calls for group tasks page', () => {
         expect(data).toEqual("You do not have permission to delete this task")
     })
 
-    test.skip('Test to update a task ', async () => {
+    test('Test to update a task ', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/updateCollection/task/data', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 1, 
+                collectionID: 1, 
+                taskID: 2, 
+                newTitle: 'Edited Task', 
+                newDesc: 'Edited Task Description'
+            })
+        })
 
+        const data = await response.json()
+        expect(data).toEqual([{_id: 1, title: 'Task1', description: 'Fake Task 1', status: 'Incomplete'},
+            {_id: 2, title: 'Edited Task', description: 'Edited Task Description', status: 'Incomplete'}])
     })
 
-    test.skip('Test to update a task status', async () => {
+    test('Test to update a task with an invalid user', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/updateCollection/task/data', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 4, 
+                collectionID: 1, 
+                taskID: 2, 
+                newTitle: 'Edited Task', 
+                newDesc: 'Edited Task Description'
+            })
+        })
 
+        const data = await response.json()
+        expect(data).toEqual("You do not have permission to update this task")
+    })
+
+    test('Test to update a task status', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/updateCollection/task/status', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 1, 
+                collectionID: 1, 
+                taskID: 2, 
+                newStatus: 'Complete'
+            })
+        })
+
+        const data = await response.json()
+        expect(data).toEqual([{_id: 1, title: 'Task1', description: 'Fake Task 1', status: 'Incomplete'},
+            {_id: 2, title: 'Edited Task', description: 'Edited Task Description', status: 'Complete'}])
+    })
+
+    test('Test to update a task status with an invalid user', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/updateCollection/task/status', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 4, 
+                collectionID: 1, 
+                taskID: 2, 
+                newStatus: 'Complete'
+            })
+        })
+
+        const data = await response.json()
+        expect(data).toEqual("You do not have permission to update this task")
     })
     
 })
