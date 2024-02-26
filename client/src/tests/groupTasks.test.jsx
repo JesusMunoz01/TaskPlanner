@@ -254,7 +254,7 @@ describe('Testing group tasks', () => {
 describe('Testing mock API calls for group tasks page', () => {
 
     
-    test('Test to add a task on group 1 (has 1 task)', async () => {
+    test('Test to add a task on group 1 (has no task)', async () => {
         const response = await fetch('http://localhost:8080/groups/1/addCollection/newTask', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -272,8 +272,23 @@ describe('Testing mock API calls for group tasks page', () => {
             tasks: [{_id: 1, title: 'Created Task', description: 'Created Task Description', status: 'Incomplete'}]})
     })
 
-    test.skip('Test to add a task on group 2 (has no tasks)', async () => {
+    test('Test to add a task on group 2 (has 1 tasks)', async () => {
+        const response = await fetch('http://localhost:8080/groups/2/addCollection/newTask', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userID: 1, 
+                collectionID: 1, 
+                title: 'Created Task', 
+                desc: 'Created Task Description', 
+                status: 'Incomplete'
+            })
+        })
 
+        const data = await response.json()
+        expect(data).toEqual({_id: 1, collectionTitle: 'mockCollection1 group2', collectionDescription: 'fake collection response 2', collectionStatus: "Incomplete",
+            tasks: [{_id: 1, title: 'Task1', description: 'Fake Task 1', status: 'Incomplete'}, {_id: 2, title: 'Created Task', 
+            description: 'Created Task Description', status: 'Incomplete'}]})
     })
 
     test.skip('Test delete a task ', async () => {

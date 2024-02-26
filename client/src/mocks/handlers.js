@@ -51,12 +51,14 @@ const mockDB = [{_id: 1, username: "TUser1", password: "TPassword1!",
     {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", _id: 2, groupAdmin: ["TUser2"], 
       groupMembers: ["TUser1", "TUser3"], collections: []},]
 
-      const mockGroupTasks = [{groupName: "TestGroup1", groupDescription: "Test Group 1", groupStatus: "Incomplete", _id: 1, groupAdmin: ["TUser1"],
+    const mockGroupTasks = [
+    {groupName: "TestGroup1", groupDescription: "Test Group 1", groupStatus: "Incomplete", _id: 1, groupAdmin: ["TUser1"],
       groupMembers: ["TUser2"], collections: [{collectionTitle: "mockCollection1 group1", collectionDescription: "fake collection response 1",
       collectionStatus: "Incomplete", _id: 1, tasks: []}]},
-    {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", _id: 2, groupAdmin: ["TUser2"], 
-      groupMembers: ["TUser1", "TUser3"], collections: []}, {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", 
-      _id: 2, groupAdmin: ["TUser2"], groupMembers: ["TUser1", "TUser3"], collections: []},]
+    {groupName: "TestGroup2", groupDescription: "Test Group 2", groupStatus: "Incomplete", 
+      _id: 2, groupAdmin: ["TUser2"], groupMembers: ["TUser1", "TUser3"], collections: [{collectionTitle: "mockCollection1 group2", 
+      collectionDescription: "fake collection response 2", collectionStatus: "Incomplete", _id: 1, tasks: [{_id: 1, title: "Task1", description: "Fake Task 1", 
+      status: "Incomplete"}]}]},]
 
 export const handlers = [
   // -------------------------------------- Home Page Handlers --------------------------------------------------------
