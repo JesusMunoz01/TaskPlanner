@@ -123,6 +123,7 @@ function App() {
             }
             <Route path="/groups/:groupID" element={<Group />}/>
             <Route path="/groups/:groupID/:collectionID/tasks" element={<GroupCollectionTasks isUserLogged={userLogin}/>}/>
+            <Route path="*" element={<div>Error</div>} />
           </Routes>
           </div>
         </div>
