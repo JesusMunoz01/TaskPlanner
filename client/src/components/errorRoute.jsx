@@ -16,7 +16,7 @@ export default function ErrorRoute() {
     }
 
     return (
-        <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+        <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", minHeight: "100vh"}}>
             <h1>404: Page Not Found</h1>
             <h2>Redirecting to landing page...</h2>
             <h2>in {timer} seconds</h2>
