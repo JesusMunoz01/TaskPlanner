@@ -12,6 +12,7 @@ export default function ErrorRoute() {
     }, [timer]);
 
     const redirect = () => {
+        window.sessionStorage.setItem("selectedRoute", "Home")
         window.location.href = "/landing";
     }
 
