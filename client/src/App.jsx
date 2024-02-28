@@ -12,6 +12,7 @@ import { Landing } from './pages/landing';
 import { Groups } from './pages/groups';
 import { Group } from './pages/group';
 import { GroupCollectionTasks } from './pages/groupCollectionTasks';
+import ErrorRoute from './components/errorRoute';
 
 export const UserContext = React.createContext();
 
@@ -123,7 +124,7 @@ function App() {
             }
             <Route path="/groups/:groupID" element={<Group />}/>
             <Route path="/groups/:groupID/:collectionID/tasks" element={<GroupCollectionTasks isUserLogged={userLogin}/>}/>
-            <Route path="*" element={<div>Error</div>} />
+            <Route path="*" element={<ErrorRoute />} />
           </Routes>
           </div>
         </div>
