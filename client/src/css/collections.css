@@ -20,7 +20,7 @@
 }
 
 .groupsBox-header{
-    background-color: white;
+    background-color: var(--header-color);
 }
 
 .groupsBox-headerLeft h1{

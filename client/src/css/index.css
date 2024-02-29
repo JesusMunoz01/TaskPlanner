@@ -22,6 +22,7 @@
   --primary-color: rgba(119, 136, 153, 0.377);
   --secondary-color: rgba(255, 255, 255, 0.87);
   --card-color: #2c2c2e;
+  --header-color: #2c2c2e;
   --links: green;
 }
 
@@ -34,7 +35,8 @@
   background-color: white;
   --primary-color: white;
   --secondary-color: #242424;
-  --card-color: #eeeeee;
+  --card-color: #f1f1f1;
+  --header-color: white;
   --links: blue;
 }
 
