@@ -24,7 +24,7 @@
     border: 1px solid var(--secondary-color);
     height: 300px;
     cursor: pointer;
-    color: white;
+    color: var(--secondary-color);
 }
 
 .groupCard::before{
@@ -55,7 +55,7 @@
     width: 0;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--blur-behind);
     backdrop-filter: blur(30px);
     transition: .3s ease;
     overflow-y: auto;
@@ -129,10 +129,6 @@
     background-color: var(--card-color);
 }
 
-.groupsBox-headerLeft h1{
-    color: black;
-}
-
 .groupsBox-headerActions{
     display: flex;
     flex-direction: row;
@@ -142,7 +138,7 @@
 .groupsBox-header h1{
     margin: 10px;
     font-size: 40px;
-    color: white;
+    color: var(--secondary-color);
 }
 
 #createGroup{
@@ -166,7 +162,7 @@
     padding: 0px 3px 0px 3px;
     height: 60%;
     border-radius: 10px;
-    color: white;
+    color: var(--secondary-color);
 }
 
 #groupInvitesNumber{
