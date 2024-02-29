@@ -129,6 +129,10 @@
     background-color: var(--card-color);
 }
 
+.groupsBox-headerLeft h1{
+    color: black;
+}
+
 .groupsBox-headerActions{
     display: flex;
     flex-direction: row;
