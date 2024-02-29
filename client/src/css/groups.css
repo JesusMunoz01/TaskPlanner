@@ -24,7 +24,7 @@
     border: 1px solid var(--secondary-color);
     height: 300px;
     cursor: pointer;
-    color: white;
+    color: var(--secondary-color);
 }
 
 .groupCard::before{
@@ -55,7 +55,7 @@
     width: 0;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--blur-behind);
     backdrop-filter: blur(30px);
     transition: .3s ease;
     overflow-y: auto;
@@ -138,7 +138,7 @@
 .groupsBox-header h1{
     margin: 10px;
     font-size: 40px;
-    color: white;
+    color: var(--secondary-color);
 }
 
 #createGroup{
@@ -162,7 +162,7 @@
     padding: 0px 3px 0px 3px;
     height: 60%;
     border-radius: 10px;
-    color: white;
+    color: var(--secondary-color);
 }
 
 #groupInvitesNumber{
@@ -179,7 +179,8 @@
     justify-content: space-around;
     align-items: center;
     align-self: center;
-    width: 750px;
+    width: 90vw;
+    max-width: 750px;
     height: 700px;
     background-color: var(--card-color);
     border: 1px solid;
@@ -206,6 +207,8 @@
 .promptForm input, .promptFormGroupCollection input, .promptFormCollections input{
     font-size: larger;
     color: var(--secondary-color);
+    max-width: 400px;
+    width: 60vw;
 }
 
 #closeCreateIcon{
@@ -220,10 +223,21 @@
     height: 40px;
     width: 100px;
     border-radius: 10px;
+    color: var(--secondary-color);
     background-color: var(--primary-color);
 }
 
 @media(max-width: 900px){
+
+    .groups{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        height: fit-content;
+        gap: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
 
     .groupsHome{
         display: flex;
@@ -243,6 +257,29 @@
 }
 
 @media(max-width: 390px){
+
+    .home{
+        display: flex;
+        width: 100%;
+        height: fit-content;
+    }
+
+    .groupsHome{
+        display: flex;
+        width: 100%;
+        height: fit-content;
+    }
+
+    .groups{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        height: fit-content;
+        gap: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+
     .groupsBox-header h1{
         font-size: 24px;
     }

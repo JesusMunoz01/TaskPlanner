@@ -19,6 +19,14 @@
     font-size: 32px;
 }
 
+.groupsBox-header{
+    background-color: var(--header-color);
+}
+
+.groupsBox-headerLeft h1{
+    color: var(--secondary-color);
+}
+
 .collections{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
