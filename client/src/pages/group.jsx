@@ -3,7 +3,7 @@ import { BsFillPersonLinesFill } from "react-icons/bs";
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Header } from "../components/header";
 import { SubmitForm } from "../components/submitForm";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CollectionsCard } from "../components/collectionsCard";
 import { UserContext } from "../App";
 import ConfirmationPopup from "../components/confirmationPopup";
@@ -22,6 +22,7 @@ export const Group = () => {
     const [editMode, setEditMode] = useState(false)
     const [deleteMode, setDeleteMode] = useState(false)
     const [leaveMode, setLeaveMode] = useState(false)
+
     
     function getCollection(params){
         setCollections(params)
