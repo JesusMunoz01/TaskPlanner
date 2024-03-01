@@ -184,6 +184,7 @@
     height: 700px;
     background-color: var(--card-color);
     border: 1px solid;
+    z-index: 2;
 }
 
 .addGroup h2, .addGroupCollection h2, .addCollections h2{
@@ -273,12 +274,12 @@
         gap: 20px;
         top: 100px;
         right: 2px;
-        width: 100%;
+        width: 10rem;
         height: 0;
         justify-content: center;
         align-items: center;
         background-color: var(--card-color);
-        border: 1px solid;
+        border: 0px solid;
         transition: .3s ease-in;
         overflow: hidden;
         z-index: 1;
@@ -329,7 +330,8 @@
         height: 15rem;
         width: 10rem;
         padding: 20px;
-      }
+        border: 1px solid;
+    }
 
     .home{
         display: flex;
