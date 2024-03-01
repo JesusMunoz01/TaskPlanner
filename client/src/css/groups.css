@@ -258,6 +258,48 @@
 
 @media(max-width: 390px){
 
+    .groupsBox-headerActions{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .groupsBox-headerActions #openMenu{
+        display: flex;
+        font-size: 20px;
+        position: absolute;
+        top: 50px;
+        background-color: red;
+    }
+    
+    .groupsBox-headerActions #closeMenu{
+        display: flex;
+        font-size: 30px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .groupsBox-headerActions #menu:checked~.groupsBox-headerActions #openMenu{
+        top: 30px;
+        display: none;
+        right: 0;
+        position: absolute;
+      }
+  
+    .groupsBox-headerActions #menu:checked~.groupsBox-headerActions #closeMenu{
+        display: block;
+        margin-top: 1px;
+        font-size: 32px;
+      }
+  
+    .groupsBox-headerActions #menu:checked~.navContent{
+        display: block;
+        margin-top: 1px;
+        font-size: 32px;
+        height: 15rem;
+      }
+
     .home{
         display: flex;
         width: 100%;

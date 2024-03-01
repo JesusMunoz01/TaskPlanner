@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "../css/groups.css"
-import { BsArrowLeft } from "react-icons/bs";
+import { BsArrowLeft, BsList, BsX } from "react-icons/bs";
 
 
 export const Header = ({title, backArrow, newAction, section, mainDiv}) => {
@@ -20,6 +20,13 @@ export const Header = ({title, backArrow, newAction, section, mainDiv}) => {
                     <h1 aria-label={`${title}-Header`}>{title}</h1>
                 </div>
                 <div className="groupsBox-headerActions">
+
+                <input type='checkbox' id='menu'/>
+                    <label htmlFor="menu" className='expandLinks'>
+                    <BsList id='openMenu'/>
+                    <BsX id='closeMenu'/>
+                </label>
+                
                     <button id="createGroup" aria-label="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
                     {newAction ? newAction : null}
                 </div>
