@@ -19,14 +19,14 @@ export const Header = ({title, backArrow, newAction, section, mainDiv}) => {
                     {backArrow  ? <Link id="goBack" to={`${backArrow}`}><BsArrowLeft /></Link> : null}
                     <h1 aria-label={`${title}-Header`}>{title}</h1>
                 </div>
-                <div className="groupsBox-headerActions">
 
-                <input type='checkbox' id='menu'/>
-                    <label htmlFor="menu" className='expandLinks'>
-                    <BsList id='openMenu'/>
-                    <BsX id='closeMenu'/>
+                <input type='checkbox' id='actionMenu'/>
+                    <label htmlFor="actionMenu" className='expandActions'>
+                    <BsList id='openActionMenu'/>
+                    <BsX id='closeActionMenu'/>
                 </label>
-                
+
+                <div className="groupsBox-headerActions">
                     <button id="createGroup" aria-label="createGroup" onClick={(e) => displayAddPrompt(e)}>Create New</button>
                     {newAction ? newAction : null}
                 </div>

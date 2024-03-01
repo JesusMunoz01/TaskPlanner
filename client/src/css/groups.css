@@ -258,21 +258,29 @@
 
 @media(max-width: 390px){
 
-    .groupsBox-headerActions{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    #actionMenu{
+        display: none;
     }
 
-    .groupsBox-headerActions #openMenu{
-        display: flex;
-        font-size: 20px;
+    .groupsBox-headerActions{
+        display: none;
         position: absolute;
-        top: 50px;
-        background-color: red;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1;
+        right: 0;
+        top: 100px;
+    }
+
+    .groupsBox-headerActions #openActionMenu{
+        display: flex;
+        font-size: 30px;
+        position: absolute;
+        top: -50px;
+        right: 0px;
     }
     
-    .groupsBox-headerActions #closeMenu{
+    .groupsBox-headerActions #closeActionMenu{
         display: flex;
         font-size: 30px;
         position: absolute;
@@ -280,20 +288,17 @@
         left: 0;
     }
 
-    .groupsBox-headerActions #menu:checked~.groupsBox-headerActions #openMenu{
-        top: 30px;
+    #actionMenu:checked~.groupsBox-headerActions #openActionMenu{
         display: none;
-        right: 0;
-        position: absolute;
       }
   
-    .groupsBox-headerActions #menu:checked~.groupsBox-headerActions #closeMenu{
+    #actionMenu:checked~.groupsBox-headerActions #closeActionMenu{
         display: block;
         margin-top: 1px;
         font-size: 32px;
       }
   
-    .groupsBox-headerActions #menu:checked~.navContent{
+    #actionMenu:checked~.groupsBox-headerActions{
         display: block;
         margin-top: 1px;
         font-size: 32px;
