@@ -21,7 +21,7 @@ export const Header = ({title, backArrow, newAction, section, mainDiv}) => {
                 </div>
 
                 <input type='checkbox' id='actionMenu'/>
-                    <label htmlFor="actionMenu" className='expandActions'>
+                <label htmlFor="actionMenu" className='expandActions'>
                     <BsList id='openActionMenu'/>
                     <BsX id='closeActionMenu'/>
                 </label>
