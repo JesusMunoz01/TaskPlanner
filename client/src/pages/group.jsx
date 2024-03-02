@@ -23,6 +23,12 @@ export const Group = () => {
     const [deleteMode, setDeleteMode] = useState(false)
     const [leaveMode, setLeaveMode] = useState(false)
 
+    useEffect(() => {
+        document.getElementById("createGroup").addEventListener("click", () => removeActions())
+        return () => {
+            document.getElementById("createGroup").removeEventListener("click", () => removeActions())
+        }
+    }, [])
     
     function getCollection(params){
         setCollections(params)
@@ -80,16 +86,20 @@ export const Group = () => {
             addBox.style.display = "none";
             document.getElementById("createGroup").disabled = false;
             document.getElementById("groupCollections").style.filter = "none";
+            removeActions();
         }
         if(addBox.style.display !== "none" && e.button === 0){
             addBox.style.display = "none";
             document.getElementById("createGroup").disabled = false;
             document.getElementById("groupCollections").style.filter = "none";
+            removeActions();
+        }
+        if(document.getElementById(`inviteUser`).style.display !== "flex"){
+            removeActions();
         }
     }
 
     function showPrompt(){
-        removeActions();
         let addBox = document.getElementById(`inviteUser`);
             if(addBox.style.display === "none")
                 setTimeout(() => {addBox.style.display = "flex"}, "200")
@@ -97,10 +107,16 @@ export const Group = () => {
                 addBox.style.display = "none";
         }
 
+    function editActions(editMode){
+        setEditMode(editMode)
+        removeActions();
+    }
 
     function removeActions(){
-        if(document.getElementById("groupUsers").checked === true)
-            document.getElementById("groupUsers").click();
+        if(document.getElementById("groupUsers").checked === true){
+            showPrompt();
+            document.getElementById("groupUsers").checked = false;
+        }
     }
 
     function displayPopup(e, variable, updateFunction){
@@ -120,7 +136,7 @@ export const Group = () => {
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>
-            <button id="editGroup" aria-label="editGroup" onClick={(e) => setEditMode(!editMode)}>Edit Group</button>
+            <button id="editGroup" aria-label="editGroup" onClick={(e) => editActions(!editMode)}>Edit Group</button>
             <button id="delGroup" aria-label="delGroup" onClick={(e) => displayPopup(e, deleteMode, setDeleteMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
             <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
