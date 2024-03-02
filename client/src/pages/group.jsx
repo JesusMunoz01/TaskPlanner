@@ -24,10 +24,17 @@ export const Group = () => {
     const [leaveMode, setLeaveMode] = useState(false)
 
     useEffect(() => {
-        document.getElementById("createGroup").addEventListener("click", () => removeActions())
-        return () => {
-            document.getElementById("createGroup").removeEventListener("click", () => removeActions())
+        const createGroup = document.getElementById("createGroup");
+
+        if(createGroup !== null){
+            createGroup.addEventListener("click", () => removeActions())
         }
+
+        return () => {
+            if(createGroup !== null)
+                createGroup.removeEventListener("click", () => removeActions())
+        }
+
     }, [])
     
     function getCollection(params){
@@ -113,9 +120,10 @@ export const Group = () => {
     }
 
     function removeActions(){
-        if(document.getElementById("groupUsers").checked === true){
+        const checkbox = document.getElementById("groupUsers");
+        if(checkbox && checkbox.checked === true){
             showPrompt();
-            document.getElementById("groupUsers").checked = false;
+            checkbox.checked = false;
         }
     }
 
