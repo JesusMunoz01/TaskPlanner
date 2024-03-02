@@ -3,7 +3,7 @@ import { BsFillPersonLinesFill } from "react-icons/bs";
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Header } from "../components/header";
 import { SubmitForm } from "../components/submitForm";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CollectionsCard } from "../components/collectionsCard";
 import { UserContext } from "../App";
 import ConfirmationPopup from "../components/confirmationPopup";
@@ -22,6 +22,20 @@ export const Group = () => {
     const [editMode, setEditMode] = useState(false)
     const [deleteMode, setDeleteMode] = useState(false)
     const [leaveMode, setLeaveMode] = useState(false)
+
+    useEffect(() => {
+        const createGroup = document.getElementById("createGroup");
+
+        if(createGroup !== null){
+            createGroup.addEventListener("click", () => removeActions())
+        }
+
+        return () => {
+            if(createGroup !== null)
+                createGroup.removeEventListener("click", () => removeActions())
+        }
+
+    }, [])
     
     function getCollection(params){
         setCollections(params)
@@ -79,11 +93,16 @@ export const Group = () => {
             addBox.style.display = "none";
             document.getElementById("createGroup").disabled = false;
             document.getElementById("groupCollections").style.filter = "none";
+            removeActions();
         }
         if(addBox.style.display !== "none" && e.button === 0){
             addBox.style.display = "none";
             document.getElementById("createGroup").disabled = false;
             document.getElementById("groupCollections").style.filter = "none";
+            removeActions();
+        }
+        if(document.getElementById(`inviteUser`).style.display !== "flex"){
+            removeActions();
         }
     }
 
@@ -95,6 +114,19 @@ export const Group = () => {
                 addBox.style.display = "none";
         }
 
+    function editActions(editMode){
+        setEditMode(editMode)
+        removeActions();
+    }
+
+    function removeActions(){
+        const checkbox = document.getElementById("groupUsers");
+        if(checkbox && checkbox.checked === true){
+            showPrompt();
+            checkbox.checked = false;
+        }
+    }
+
     function displayPopup(e, variable, updateFunction){
         let newState = !variable;
         if(newState){
@@ -103,21 +135,20 @@ export const Group = () => {
         else{
             document.getElementById("groupCollections").style.filter = "none";
         }
+        removeActions();
         updateFunction(newState)
     }
-
-
 
     return <div className="group" id="group">
         <div className="groupHeader" onMouseDown={(e) => hidePrompt(e, "Collection")}>
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
             <>
-            <button id="editGroup" aria-label="editGroup" onClick={(e) => setEditMode(!editMode)}>Edit Group</button>
+            <button id="editGroup" aria-label="editGroup" onClick={(e) => editActions(!editMode)}>Edit Group</button>
             <button id="delGroup" aria-label="delGroup" onClick={(e) => displayPopup(e, deleteMode, setDeleteMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
             <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
-            <div className="checkUsers">
+            <div className="checkUsers" id="checkUsers">
                     <span id="groups-NoInvites">Members</span>
             </div>
             </>
@@ -135,7 +166,7 @@ export const Group = () => {
                     <div className="groupCollection" id="groupCollections">
                         <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                             {collections.map((collection, index)=> (
-                                <div>
+                                <div key={index}>
                                     <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={true}
                                     index={index} returnCollection={getCollection} section="groupsCollection" route={`/groups/${from._id}`}
                                     link={`/groups/${groupID}/${collection._id}/tasks`}/>
