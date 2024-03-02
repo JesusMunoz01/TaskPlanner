@@ -89,12 +89,19 @@ export const Group = () => {
     }
 
     function showPrompt(){
+        removeActions();
         let addBox = document.getElementById(`inviteUser`);
             if(addBox.style.display === "none")
                 setTimeout(() => {addBox.style.display = "flex"}, "200")
             else
                 addBox.style.display = "none";
         }
+
+
+    function removeActions(){
+        if(document.getElementById("groupUsers").checked === true)
+            document.getElementById("groupUsers").click();
+    }
 
     function displayPopup(e, variable, updateFunction){
         let newState = !variable;
@@ -104,20 +111,8 @@ export const Group = () => {
         else{
             document.getElementById("groupCollections").style.filter = "none";
         }
+        removeActions();
         updateFunction(newState)
-        console.log("test")
-        document.getElementById("groups-NoInvites").style.backgroundColor = "red";
-    }
-
-    const test = () => {
-        const state = document.getElementById("groupUsers").checked;
-        console.log(state)
-        if(state === true){
-            document.getElementById("checkUsers").click();
-        }
-        else{
-
-        }
     }
 
     return <div className="group" id="group">
@@ -128,7 +123,7 @@ export const Group = () => {
             <button id="editGroup" aria-label="editGroup" onClick={(e) => setEditMode(!editMode)}>Edit Group</button>
             <button id="delGroup" aria-label="delGroup" onClick={(e) => displayPopup(e, deleteMode, setDeleteMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
-            <label id="groupUsers" htmlFor="groupUsers" onClick={test}><BsFillPersonLinesFill /></label>
+            <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
             <div className="checkUsers" id="checkUsers">
                     <span id="groups-NoInvites">Members</span>
             </div>
