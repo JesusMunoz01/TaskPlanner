@@ -105,9 +105,20 @@ export const Group = () => {
             document.getElementById("groupCollections").style.filter = "none";
         }
         updateFunction(newState)
+        console.log("test")
+        document.getElementById("groups-NoInvites").style.backgroundColor = "red";
     }
 
+    const test = () => {
+        const state = document.getElementById("groupUsers").checked;
+        console.log(state)
+        if(state === true){
+            document.getElementById("checkUsers").click();
+        }
+        else{
 
+        }
+    }
 
     return <div className="group" id="group">
         <div className="groupHeader" onMouseDown={(e) => hidePrompt(e, "Collection")}>
@@ -117,8 +128,8 @@ export const Group = () => {
             <button id="editGroup" aria-label="editGroup" onClick={(e) => setEditMode(!editMode)}>Edit Group</button>
             <button id="delGroup" aria-label="delGroup" onClick={(e) => displayPopup(e, deleteMode, setDeleteMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
-            <label id="groupUsers" htmlFor="groupUsers"><BsFillPersonLinesFill /></label>
-            <div className="checkUsers">
+            <label id="groupUsers" htmlFor="groupUsers" onClick={test}><BsFillPersonLinesFill /></label>
+            <div className="checkUsers" id="checkUsers">
                     <span id="groups-NoInvites">Members</span>
             </div>
             </>
@@ -136,7 +147,7 @@ export const Group = () => {
                     <div className="groupCollection" id="groupCollections">
                         <div className="collections" style={{width: "100%", height: "fit-content", border: "none"}}>
                             {collections.map((collection, index)=> (
-                                <div>
+                                <div key={index}>
                                     <CollectionsCard key={collection._id} data={collections} collection={collection} isLogged={true}
                                     index={index} returnCollection={getCollection} section="groupsCollection" route={`/groups/${from._id}`}
                                     link={`/groups/${groupID}/${collection._id}/tasks`}/>
