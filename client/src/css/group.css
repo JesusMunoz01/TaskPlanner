@@ -7,6 +7,19 @@
     overflow-y: auto;
 }
 
+.test{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    overflow-y: auto;
+    align-items: center;
+}
+
+.test button{
+    min-width: 50px;
+    min-height: 35px;
+}
+
 .groupContent{
     display: flex;
     justify-content: center;
@@ -351,6 +364,15 @@
 }
 
 @media (max-width: 900px){
+
+    .editGroupFormBackground{
+        height: 100%;
+    }
+
+    .editGroupFormContainer{
+        width: 95%;
+    }
+
     .checkUsers{
         margin-top: 100px;
     }
@@ -361,6 +383,19 @@
 }
 
 @media (max-width: 654px){
+
+    .editGroupForm div{
+        display: flex;
+        flex-direction: column !important;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .confirmationPopup{
+        width: 90%;
+    }
+
     .checkUsers{
         margin-top: 100px;
     }
@@ -369,6 +404,76 @@
         width: 25rem;
         height: 93%;
         font-size: 18px;
+    }
+
+    .inviteUser{
+        position: absolute;
+        font-size: 15px;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        right: 0;
+        margin-right: 0px;
+        top: 93%;
+        z-index: 100;
+    }
+}
+
+@media (max-width: 390px){
+    
+    .editGroupForm div{
+        display: flex;
+        flex-direction: column !important;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .groupsBox-headerActions{
+        font-size: 1px;
+    }
+
+    .test{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        flex-direction: column;
+        gap: 0px;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    .test button{
+        font-size: 10px;
+        margin: 0;
+
+    }
+
+    #createGroup{
+        font-size: 10px;
+        margin: 0;
+        width: 50px;
+        height: 50px;
+    }
+
+    .confirmationPopup{
+        width: 90%;
+    }
+
+    .checkUsers{
+        margin-top: 350px;
+    }
+
+    #groupUsers:checked~.checkUsers{
+        width: 100%;
+        height: 62%;
+        font-size: 18px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1000000;
     }
 
     .inviteUser{

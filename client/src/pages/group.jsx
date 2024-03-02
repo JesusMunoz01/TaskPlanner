@@ -159,7 +159,7 @@ export const Group = () => {
         <div className="groupHeader" onMouseDown={(e) => hidePrompt(e, "Collection")}>
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
-            <>
+            <div className="test">
             <button id="editGroup" aria-label="editGroup" onClick={(e) => editActions(!editMode)}>Edit Group</button>
             <button id="delGroup" aria-label="delGroup" onClick={(e) => displayPopup(e, deleteMode, setDeleteMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
@@ -167,7 +167,7 @@ export const Group = () => {
             <div className="checkUsers" id="checkUsers">
                     <span id="groups-NoInvites">Members</span>
             </div>
-            </>
+            </div>
             :
             <button id="leaveGroup" aria-label="leaveGroup" onClick={(e) => displayPopup(e, leaveMode, setLeaveMode)}>Leave Group</button>}/>
             <div className="inviteUser" id="inviteUser" style={{display: "none"}}>
