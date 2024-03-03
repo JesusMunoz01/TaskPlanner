@@ -84,7 +84,7 @@
     width: 0;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--blur-behind);
     backdrop-filter: blur(30px);
     transition: .3s ease;
     overflow-y: auto;
@@ -343,6 +343,7 @@
     margin-left: 10px;
     margin-bottom: 20px;
     resize: none;
+    background-color: var(--primary-color);
 }
 
 .editGroupFormActions{
@@ -351,7 +352,6 @@
     justify-content: center;
     margin-top: 20px;
     gap: 10px;
-    background-color: #282c34;
 }
 
 .editGroupFormActions button{
@@ -361,6 +361,7 @@
     border-style: none;
     border-radius: 10px;
     cursor: pointer;
+    color: var(--secondary-color);
 }
 
 @media (max-width: 900px){
