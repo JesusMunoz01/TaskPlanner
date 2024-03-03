@@ -4,9 +4,15 @@ import "../css/landing.css"
 import { Link } from "react-router-dom"
 import { Header } from "../components/header";
 const pages = [
-    {route: "/", name: "Basic Task Planner", img: "src/assets/checkList.png", imgSmall: "src/assets/checkListSmall.png", description: "Basic task planner"}, 
-    {route: "/collections", name: "Task Collections", img: "src/assets/collections.png", imgSmall: "src/assets/collectionsSmall.png", description: "Collection of Tasks"},
-    {route: "/groups", name: "Groups", img: "src/assets/groups.png", imgSmall: "src/assets/groups.png", description: "For team tasks"},
+    {route: "/", name: "Basic Task Planner", img: "src/assets/checkList.png", imgSmall: "src/assets/checkListSmall.png", 
+        description: "A Basic task planner for keeping track of tasks"
+    }, 
+    {route: "/collections", name: "Task Collections", img: "src/assets/collections.png", imgSmall: "src/assets/collectionsSmall.png", 
+        description: "Create and manage task collections, each with its own tasks"
+    },
+    {route: "/groups", name: "Groups", img: "src/assets/groups.png", imgSmall: "src/assets/groups.png", 
+        description: "Create and join groups, collaborate together by creating different collections and complete their respective tasks"
+    },
     /*{route: "/", name: "Groups"}, {route: "/", name: "home"}*/]
 
 export const Landing = () => {

@@ -46,7 +46,8 @@
     min-height: 500px;
     min-width: 40vw;
     justify-content: space-around;
-    width: 90vw;
+    gap: 10px;
+    width: 85vw;
     border: 1px solid;
     border-color: var(--secondary-color);
     color: var(--secondary-color);
@@ -63,7 +64,7 @@
 
 .landingPage-Card h1{
     height: 10%;
-    width: 100%;
+    width: 96%;
     font-size: 36px;
     margin: 0;
     border-bottom: 1px solid;
@@ -79,10 +80,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 40%;
 }
 
 #img1{
-    width: 400px;
+    width: 450px;
 }
 
 #landingPage-Title{
@@ -91,106 +93,85 @@
 }
 
 @media(max-width: 1150px){
+    
     .landingPage{
         min-height: 100vh;
         grid-template-columns: repeat(2, 1fr);
     }
+
     .landingPage-Card{
-        min-height: 500px;
-        min-width: 380px;
-        border: 1px solid;
-        border-color: var(--secondary-color);
-        color: var(--secondary-color);
-        overflow: auto;
-    }
-    .landingPage-Card img{
-        margin-top: 10px;
-        height: 360px;
-        width: 390px;
-        overflow: auto;
+        margin-right: 10px;
     }
 
-    #img1{
-        width: 390px;
+    .landingPage-Card img{
+        height: 350px;
+        width: 400px;
     }
 
     .landingPageContent{
-        display: flex;
-        height: 100%;
-        width: 100%;
-        align-items: center;
-        justify-content: space-around;
-        flex-direction: column;
+       width: 30%;
     }
 }
 
 @media(max-width: 800px){
-    .landingPage{
-        grid-template-columns: repeat(1, 1fr);
-        grid-template-rows: 50px;
-    }
 
-    .landingPage h1{
-        font-size: 32px;
-    }
-
-    .landingPage-Card{
-        min-height: 600px;
-        min-width: 40vw;
-        width: 99vw;
-        border: 1px solid;
-        border-color: var(--secondary-color);
-        color: var(--secondary-color);
-        overflow: auto;
-    }
 
     .landingPage-Card img{
-        margin-top: 10px;
-        height: 450px;
-        width: 220px;
-        overflow: auto;
-    }
-
-    .landingPageContent{
-        display: flex;
-        height: 100%;
-        width: 100%;
-        align-items: center;
-        justify-content: space-around;
-    }
-
-    .groupsBox-header{
-        grid-column: span 1;
+        height: 400px;
+        width: 300px;
     }
 
     #img1{
-        width: 175px;
+        height: 400px;
+        width: 200px;
     }
 
-    #landingPage-Title{
-        grid-column: span 1;
+}
+
+@media(max-width: 600px){
+
+
+    .landingPage-Card img{
+        height: 300px;
+        width: 250px;
     }
+
+    #img1{
+        height: 400px;
+        width: 200px;
+    }
+
+    .landingPageContent{
+        width: 35%;
+        word-wrap: break-word;
+    }
+
 }
 
 @media(max-width: 485px){
+
     .landingPage{
-        grid-template-columns: repeat(1, 1fr);
-        grid-template-rows: 50px auto;
+        grid-template-rows: 40px;
+        gap: 20px;
     }
 
     .landingPage h1{
         font-size: 24px;
+        margin-top: 10px;
+        width: 100%;
     }
 
     .landingPage-Card{
-        min-height: 600px;
+        min-height: 500px;
         min-width: 40vw;
         width: 90vw;
+        height: 100%;
         flex-direction: column;
         border: 1px solid;
         border-color: var(--secondary-color);
         color: var(--secondary-color);
         overflow: auto;
+        margin: 0;
     }
 
     .landingPage-Link:nth-child(4n-1) .landingPage-Card, .landingPage-Link:nth-child(4n) .landingPage-Card {
@@ -202,19 +183,26 @@
     }
 
     .landingPage-Card img{
-        margin-top: 10px;
-        height: 450px;
-        width: 350px;
-        overflow: auto;
+        min-height: 100px;
+        height: 100%;
+        max-height: 350px;
+        min-width: 100px;
+        width: 95%;
+        max-width: 350px;
     }
 
     .landingPageContent{
         display: flex;
         flex-direction: column;
+        width: 80%;
     }
 
     #img1{
-        width: 200px;
-        height: 450px;
+        min-height: 100px;
+        height: 100%;
+        max-height: 350px;
+        min-width: 100px;
+        width: 95%;
+        max-width: 350px;
     }
 }
