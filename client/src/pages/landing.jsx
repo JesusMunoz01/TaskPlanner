@@ -28,7 +28,6 @@ export const Landing = () => {
                         <img id={`img${index}`} src={page.imgSmall}></img> :
                         <img id={`img${index}`} src={page.img}></img>
                         }
-                        <p>{page.description}</p>
                     </div>
                 </div>
             </Link>
