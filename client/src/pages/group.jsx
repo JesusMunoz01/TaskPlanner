@@ -159,7 +159,7 @@ export const Group = () => {
         <div className="groupHeader" onMouseDown={(e) => hidePrompt(e, "Collection")}>
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
-            <div className="test">
+            <div className="extraActions">
             <button id="editGroup" aria-label="editGroup" onClick={(e) => editActions(!editMode)}>Edit Group</button>
             <button id="delGroup" aria-label="delGroup" onClick={(e) => displayPopup(e, deleteMode, setDeleteMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
