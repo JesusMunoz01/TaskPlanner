@@ -113,8 +113,8 @@ function App() {
           </div>
           <div className='home'>
           <Routes>
-            <Route path="/landing" element={<Landing/>}/>
-            <Route path="/" element={<Home data={taskData} isLogged={userLogin} updateTask={updateTask}/>} />
+            <Route path="/" element={<Landing/>}/>
+            <Route path="/tasks" element={<Home data={taskData} isLogged={userLogin} updateTask={updateTask}/>} />
             <Route path="/login" element={<Login loginStatus={loginStatus}/>} />
             <Route path="/collections" element={<Collections data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>} />
             <Route path="/collections/:collectionID" element={<CollectionTasks data={collectionData} isLogged={userLogin} updateCollection={updateCollection}/>}/>

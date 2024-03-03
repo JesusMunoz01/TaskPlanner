@@ -57,6 +57,7 @@ export const Navbar = ({loginStatus}) => {
                 <li aria-label='loginLink'>{!cookies.access_token ? (<Link id="Login" onClick={(e) => changeActive(e.target.innerText)} to={"/login"}>
                     <span>Login</span></Link>) : <button id="logoutBtn" onClick={logout}>Logout</button>}</li>
                 <li><Link id="Home" onClick={(e) => changeActive(e.target.innerText)} to={"/"}><span>Home</span></Link></li>
+                <li><Link id="Tasks" onClick={(e) => changeActive(e.target.innerText)} to={"/tasks"}><span id='tasksLink'>Tasks</span></Link></li>
                 <li><Link id="Collections" onClick={(e) => changeActive(e.target.innerText)} to={"/collections"}><span id='collectionLink'>Collections</span></Link></li>
                 <li><Link id="Groups" onClick={(e) => changeActive(e.target.innerText)} to={"/groups"}><span id='groupLink'>Groups</span></Link></li>
             </div>
