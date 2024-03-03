@@ -46,7 +46,8 @@
     min-height: 500px;
     min-width: 40vw;
     justify-content: space-around;
-    width: 90vw;
+    gap: 10px;
+    width: 85vw;
     border: 1px solid;
     border-color: var(--secondary-color);
     color: var(--secondary-color);
@@ -63,7 +64,7 @@
 
 .landingPage-Card h1{
     height: 10%;
-    width: 100%;
+    width: 96%;
     font-size: 36px;
     margin: 0;
     border-bottom: 1px solid;
@@ -79,10 +80,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 40%;
 }
 
 #img1{
-    width: 400px;
+    width: 450px;
 }
 
 #landingPage-Title{
@@ -91,36 +93,23 @@
 }
 
 @media(max-width: 1150px){
+    
     .landingPage{
         min-height: 100vh;
         grid-template-columns: repeat(2, 1fr);
     }
+
     .landingPage-Card{
-        min-height: 500px;
-        min-width: 380px;
-        border: 1px solid;
-        border-color: var(--secondary-color);
-        color: var(--secondary-color);
-        overflow: auto;
-    }
-    .landingPage-Card img{
-        margin-top: 10px;
-        height: 360px;
-        width: 390px;
-        overflow: auto;
+        margin-right: 10px;
     }
 
-    #img1{
-        width: 390px;
+    .landingPage-Card img{
+        height: 350px;
+        width: 400px;
     }
 
     .landingPageContent{
-        display: flex;
-        height: 100%;
-        width: 100%;
-        align-items: center;
-        justify-content: space-around;
-        flex-direction: column;
+       width: 30%;
     }
 }
 
