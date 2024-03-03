@@ -14,6 +14,7 @@
 .landingPage-Link{
     display: flex;
     justify-content: center;
+    grid-column: span 2;
 }
 
 .groupsBox-header{
@@ -41,7 +42,7 @@
 .landingPage-Card{
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     min-height: 500px;
     min-width: 40vw;
@@ -51,12 +52,25 @@
     background-color: var(--card-color);
 }
 
-.landingPage-Card h1{
-    height: 10%;
-    width: 100%;
-    font-size: 36px;
-    margin: 0;
-    border-bottom: 1px solid;
+.landingPage-Card{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 500px;
+    min-width: 40vw;
+    border: 1px solid;
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+    background-color: var(--card-color);
+}
+
+.landingPage-Card:nth-child(4n-1), .landingPage-Card:nth-child(4n){
+    flex-direction: row-reverse;
+}
+
+.landingPage-Card:nth-child(4n-3), .landingPage-Card:nth-child(4n-2) {
+    flex-direction: row;
 }
 
 .landingPage-Card img{
