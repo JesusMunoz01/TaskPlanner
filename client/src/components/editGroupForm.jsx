@@ -17,14 +17,15 @@ export default function EditGroupForm(params) {
             <div className="editGroupFormContainer">
                 <h1 aria-label="editForm">Edit Group</h1>
                 <form className="editGroupForm">
-                    <label htmlFor="groupName">Old Group Name: {params.groupName}</label>
-                    <div style={{display: "flex", flexDirection: "row", fontSize: "1.2rem"}}>
+                    <label htmlFor="groupName">Old Group Name: <br></br> {params.groupName}</label>
+                    <div style={{display: "flex", flexDirection: "row", fontSize: "1.2rem", alignItems: "center"}}>
                         <label htmlFor="newGroupName">Group Name:</label>
                         <input type="text" id="updtGroupName" aria-label="updtGroupName" value={newGroupName} 
                             onChange={(e) => setNewGroupName(e.target.value)}></input>
                     </div>
-                    <label htmlFor="groupDescription">Old Group Description: {params.groupDescription}</label>
-                    <div style={{display: "flex", flexDirection: "row", fontSize: "1.2rem"}}>
+                    <br></br>
+                    <label htmlFor="groupDescription">Old Group Description: <br></br> {params.groupDescription}</label>
+                    <div style={{display: "flex", flexDirection: "row", fontSize: "1.2rem", alignItems: "center", justifyContent: "center"}}>
                         <label htmlFor="newGroupDescription">Group Description:</label>
                         <textarea id="newGroupDescription" aria-label="updtGroupDesc" value={newGroupDescription} 
                             onChange={(e) => setNewGroupDescription(e.target.value)}></textarea>

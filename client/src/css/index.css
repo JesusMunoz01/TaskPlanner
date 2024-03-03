@@ -38,7 +38,7 @@
   --secondary-color: #242424;
   --card-color: #f1f1f1;
   --header-color: white;
-  --blur-behind: rgba(0, 0, 0, 0.1);
+  --blur-behind: rgba(0, 0, 0, 0.2);
   --links: blue;
 }
 

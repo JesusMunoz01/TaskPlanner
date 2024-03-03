@@ -27,7 +27,12 @@ export const Group = () => {
         const createGroup = document.getElementById("createGroup");
 
         if(createGroup !== null){
-            createGroup.addEventListener("click", () => removeActions())
+            createGroup.addEventListener("click", () => {
+                setDeleteMode(false);
+                setEditMode(false);
+                setLeaveMode(false);
+                removeActions()
+            })
         }
 
         return () => {
@@ -107,6 +112,10 @@ export const Group = () => {
     }
 
     function showPrompt(){
+        setDeleteMode(false);
+        setEditMode(false);
+        setLeaveMode(false);
+        document.getElementById("groupCollections").style.filter = "none";
         let addBox = document.getElementById(`inviteUser`);
             if(addBox.style.display === "none")
                 setTimeout(() => {addBox.style.display = "flex"}, "200")
@@ -115,8 +124,11 @@ export const Group = () => {
         }
 
     function editActions(editMode){
-        setEditMode(editMode)
+        setDeleteMode(false);
+        setLeaveMode(false);
         removeActions();
+        document.getElementById("groupCollections").style.filter = "none";
+        setEditMode(editMode)
     }
 
     function removeActions(){
@@ -129,6 +141,10 @@ export const Group = () => {
 
     function displayPopup(e, variable, updateFunction){
         let newState = !variable;
+        // Disable other actions
+        setDeleteMode(false);
+        setEditMode(false);
+        setLeaveMode(false);
         if(newState){
             document.getElementById("groupCollections").style.filter = "blur(5px)";
         }
@@ -143,7 +159,7 @@ export const Group = () => {
         <div className="groupHeader" onMouseDown={(e) => hidePrompt(e, "Collection")}>
         <Header title={`${from.groupName}`} section="GroupCollection" backArrow={"/groups"}
             mainDiv="groupCollections" newAction={ from.permissions === "Admin" ? 
-            <>
+            <div className="extraActions">
             <button id="editGroup" aria-label="editGroup" onClick={(e) => editActions(!editMode)}>Edit Group</button>
             <button id="delGroup" aria-label="delGroup" onClick={(e) => displayPopup(e, deleteMode, setDeleteMode)}>Delete Group</button>
             <input type="checkbox" id="groupUsers" onChange={showPrompt} style={{display: "none"}}/>
@@ -151,7 +167,7 @@ export const Group = () => {
             <div className="checkUsers" id="checkUsers">
                     <span id="groups-NoInvites">Members</span>
             </div>
-            </>
+            </div>
             :
             <button id="leaveGroup" aria-label="leaveGroup" onClick={(e) => displayPopup(e, leaveMode, setLeaveMode)}>Leave Group</button>}/>
             <div className="inviteUser" id="inviteUser" style={{display: "none"}}>
@@ -181,7 +197,7 @@ export const Group = () => {
             {deleteMode ? <ConfirmationPopup actionTitle="Delete Group" actionBody="Delete this group?" action={() => deleteAction(from._id)}
                 hidePrompt={(e) => displayPopup(e, deleteMode, setDeleteMode)}/> : null}
             {leaveMode ? <ConfirmationPopup actionTitle="Leave Group" actionBody="Leave this group?" action={() => leaveAction(from._id)}
-                hidePrompt={(e) => displayPopup(e, editMode)}/> : null}
+                hidePrompt={(e) => displayPopup(e, leaveMode, setLeaveMode)}/> : null}
             {editMode ? <EditGroupForm groupName={from.groupName} groupDescription={from.groupDescription} 
                 closeEdit={() => setEditMode(!editMode)} confirmChanges={editAction} groupID={from._id}/> : null}
             <SubmitForm hide={hidePrompt} title={"Create a Collection"} getData={getCollection} section="GroupCollection" isLogged={true}
