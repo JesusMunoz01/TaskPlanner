@@ -14,6 +14,7 @@
 .landingPage-Link{
     display: flex;
     justify-content: center;
+    grid-column: span 2;
 }
 
 .groupsBox-header{
@@ -41,14 +42,23 @@
 .landingPage-Card{
     position: relative;
     display: flex;
-    flex-direction: column;
     align-items: center;
     min-height: 500px;
     min-width: 40vw;
+    justify-content: space-around;
+    width: 90vw;
     border: 1px solid;
     border-color: var(--secondary-color);
     color: var(--secondary-color);
     background-color: var(--card-color);
+}
+
+.landingPage-Link:nth-child(4n-1) .landingPage-Card, .landingPage-Link:nth-child(4n) .landingPage-Card {
+    flex-direction: row-reverse;
+}
+
+.landingPage-Link:nth-child(4n-3) .landingPage-Card, .landingPage-Link:nth-child(4n-4) .landingPage-Card {
+    flex-direction: row;
 }
 
 .landingPage-Card h1{
@@ -62,6 +72,7 @@
 .landingPage-Card img{
     height: 389px;
     width: 500px;
+    border: 1px solid;
 }
 
 .landingPageContent{
@@ -87,7 +98,6 @@
     .landingPage-Card{
         min-height: 500px;
         min-width: 380px;
-        max-width: 400px;
         border: 1px solid;
         border-color: var(--secondary-color);
         color: var(--secondary-color);
@@ -133,6 +143,7 @@
         color: var(--secondary-color);
         overflow: auto;
     }
+
     .landingPage-Card img{
         margin-top: 10px;
         height: 450px;
@@ -146,7 +157,6 @@
         width: 100%;
         align-items: center;
         justify-content: space-around;
-        flex-direction: row;
     }
 
     .groupsBox-header{
@@ -176,17 +186,28 @@
         min-height: 600px;
         min-width: 40vw;
         width: 90vw;
+        flex-direction: column;
         border: 1px solid;
         border-color: var(--secondary-color);
         color: var(--secondary-color);
         overflow: auto;
     }
+
+    .landingPage-Link:nth-child(4n-1) .landingPage-Card, .landingPage-Link:nth-child(4n) .landingPage-Card {
+        flex-direction: column;
+    }
+    
+    .landingPage-Link:nth-child(4n-3) .landingPage-Card, .landingPage-Link:nth-child(4n-4) .landingPage-Card {
+        flex-direction: column;
+    }
+
     .landingPage-Card img{
         margin-top: 10px;
         height: 450px;
-        width: 220px;
+        width: 350px;
         overflow: auto;
     }
+
     .landingPageContent{
         display: flex;
         flex-direction: column;

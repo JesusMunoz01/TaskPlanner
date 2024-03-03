@@ -19,13 +19,15 @@ export const Landing = () => {
         {pages.map((page, index) => (
             <Link to={page.route} className="landingPage-Link">
                 <div className="landingPage-Card">
-                    <h1>{page.name}</h1>
                     <div class="landingPageContent">
+                        <h1>{page.name}</h1>
+                        <p>{page.description}</p>
+                    </div>
+                    <div class="landingPageImage">
                         {isLarge ?
                         <img id={`img${index}`} src={page.imgSmall}></img> :
                         <img id={`img${index}`} src={page.img}></img>
                         }
-                        <p>{page.description}</p>
                     </div>
                 </div>
             </Link>
