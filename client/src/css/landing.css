@@ -114,58 +114,36 @@
 }
 
 @media(max-width: 800px){
-    .landingPage{
-        grid-template-columns: repeat(1, 1fr);
-        grid-template-rows: 50px;
-    }
 
-    .landingPage h1{
-        font-size: 32px;
-    }
-
-    .landingPage-Card{
-        min-height: 600px;
-        min-width: 40vw;
-        width: 99vw;
-        border: 1px solid;
-        border-color: var(--secondary-color);
-        color: var(--secondary-color);
-        overflow: auto;
-    }
 
     .landingPage-Card img{
-        margin-top: 10px;
-        height: 450px;
-        width: 220px;
-        overflow: auto;
-    }
-
-    .landingPageContent{
-        display: flex;
-        height: 100%;
-        width: 100%;
-        align-items: center;
-        justify-content: space-around;
-    }
-
-    .groupsBox-header{
-        grid-column: span 1;
+        height: 400px;
+        width: 300px;
     }
 
     #img1{
-        width: 175px;
+        height: 400px;
+        width: 200px;
     }
 
-    #landingPage-Title{
-        grid-column: span 1;
+}
+
+@media(max-width: 600px){
+
+
+    .landingPage-Card img{
+        height: 300px;
+        width: 250px;
     }
+
+    #img1{
+        height: 400px;
+        width: 200px;
+    }
+
 }
 
 @media(max-width: 485px){
-    .landingPage{
-        grid-template-columns: repeat(1, 1fr);
-        grid-template-rows: 50px auto;
-    }
 
     .landingPage h1{
         font-size: 24px;
