@@ -118,12 +118,17 @@
 
     .landingPage-Card img{
         height: 400px;
-        width: 300px;
+        width: 225px;
     }
 
     #img1{
         height: 400px;
-        width: 200px;
+        width: 150px;
+    }
+
+    #img2{
+        height: 300px;
+        width: 300px;
     }
 
 }
@@ -133,12 +138,17 @@
 
     .landingPage-Card img{
         height: 300px;
-        width: 250px;
+        width: 200px;
     }
 
     #img1{
         height: 400px;
-        width: 200px;
+        width: 150px;
+    }
+
+    #img2{
+        height: 250px;
+        width: 280px;
     }
 
     .landingPageContent{
@@ -203,6 +213,12 @@
         max-height: 350px;
         min-width: 100px;
         width: 95%;
+        max-width: 350px;
+    }
+
+    #img2{
+        height: 250px;
+        width: 98%;
         max-width: 350px;
     }
 }
