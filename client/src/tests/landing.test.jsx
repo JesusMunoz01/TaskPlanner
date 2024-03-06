@@ -88,8 +88,27 @@ describe('Landing Page', () => {
         expect(collectionsRoute).toEqual('Collections')
     })
 
-    test.skip('Testing Groups Link', async () => {
-            
+    test('Testing Groups Link', async () => {
+        const renderedLanding = render(
+            <UserContext.Provider value={{}}>
+                <Router>
+                    <Navbar/>
+                    <Landing/>
+                </Router>
+            </UserContext.Provider>
+            );
+    
+        const groupsLink = await renderedLanding.findByText('Groups');
+    
+        await act(async () => {
+            await user.click(groupsLink);
+        });
+
+        const groupsRoute = window.sessionStorage.getItem("selectedRoute")
+        const route = window.location.pathname
+
+        expect(route).toEqual('/groups')
+        expect(groupsRoute).toEqual('Groups')
     })
 
 })
