@@ -3,7 +3,8 @@ import { render, cleanup, act } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { Landing } from '../pages/landing'
 import { UserContext } from '../App'
-import { MemoryRouter } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Navbar } from '../components/navbar'
 
 describe('Landing Page', () => {
 
@@ -24,9 +25,9 @@ describe('Landing Page', () => {
     test('Testing component display', async () => {
         const renderedLanding = render(
             <UserContext.Provider value={{}}>
-            <MemoryRouter>
+            <Router>
                 <Landing/>
-            </MemoryRouter>
+            </Router>
         </UserContext.Provider>)
         const links = await renderedLanding.findAllByRole('link')
         const taskLinkTitle = await renderedLanding.findByText('Basic Task Planner')
@@ -40,15 +41,28 @@ describe('Landing Page', () => {
     })
 
     test('Testing Tasks Link', async () => {
+
         const renderedLanding = render(
             <UserContext.Provider value={{}}>
-            <MemoryRouter>
-                <Landing/>
-            </MemoryRouter>
-        </UserContext.Provider>)
-        const taskLink = await renderedLanding.findByText('Basic Task Planner')
-        user.click(taskLink)
-        expect(window.location.pathname).toEqual('/tasks')
+                <Router>
+                    <Navbar/>
+                    <Landing/>
+                </Router>
+            </UserContext.Provider>
+            );
+    
+        const taskLink = await renderedLanding.findByText('Basic Task Planner');
+    
+        await act(async () => {
+            await user.click(taskLink);
+        });
+
+        const taskRoute = window.sessionStorage.getItem("selectedRoute")
+        const route = window.location.pathname
+        
+        expect(route).toEqual('/tasks')
+        expect(taskRoute).toEqual('Tasks')
+
     })
 
     test.skip('Testing Collections Link', async () => {

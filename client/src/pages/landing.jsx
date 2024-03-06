@@ -22,10 +22,11 @@ export const Landing = () => {
 
     const setActiveLink = (route) => {
         const target = route.split("/")[1];
-        window.sessionStorage.setItem("selectedRoute", target)
+        const capitalize = target.charAt(0).toUpperCase() + target.slice(1);
+        window.sessionStorage.setItem("selectedRoute", capitalize)
         const links = document.getElementById("links").children;
         for(const element of links) {
-            if(element.children[0].id === target)
+            if(element.children[0].id === capitalize)
                 element.children[0].className = "navbar active";
             else
                 element.children[0].className = "";
@@ -35,13 +36,13 @@ export const Landing = () => {
     return <div className="landingPage">
         <Header title="Task Planner"/>
         {pages.map((page, index) => (
-            <Link to={page.route} className="landingPage-Link" onClick={() => setActiveLink(`${page.route}`)}>
+            <Link key={index} to={page.route} className="landingPage-Link" onClick={() => setActiveLink(`${page.route}`)}>
                 <div className="landingPage-Card">
-                    <div class="landingPageContent">
+                    <div className="landingPageContent">
                         <h1 aria-label={`${page.name}`}>{page.name}</h1>
                         <p>{page.description}</p>
                     </div>
-                    <div class="landingPageImage">
+                    <div className="landingPageImage">
                         {isLarge ?
                         <img id={`img${index}`} src={page.imgSmall}></img> :
                         <img id={`img${index}`} src={page.img}></img>

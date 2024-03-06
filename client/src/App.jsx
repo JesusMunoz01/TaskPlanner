@@ -40,7 +40,7 @@ function App() {
 
   useEffect(() => {
     const selectedRoute = window.sessionStorage.getItem("selectedRoute");
-    const validRoutes = ["Login", "Home", "Collections", "Groups"];
+    const validRoutes = ["Login", "Home", "Collections", "Groups", "Tasks"];
     if (!selectedRoute || !validRoutes.includes(selectedRoute)) {
         window.sessionStorage.setItem("selectedRoute", "Home");
     }
