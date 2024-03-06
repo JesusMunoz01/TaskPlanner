@@ -39,8 +39,16 @@ describe('Landing Page', () => {
         expect(links.length).toEqual(3)
     })
 
-    test.skip('Testing Tasks Link', async () => {
-            
+    test('Testing Tasks Link', async () => {
+        const renderedLanding = render(
+            <UserContext.Provider value={{}}>
+            <MemoryRouter>
+                <Landing/>
+            </MemoryRouter>
+        </UserContext.Provider>)
+        const taskLink = await renderedLanding.findByText('Basic Task Planner')
+        user.click(taskLink)
+        expect(window.location.pathname).toEqual('/')
     })
 
     test.skip('Testing Collections Link', async () => {
