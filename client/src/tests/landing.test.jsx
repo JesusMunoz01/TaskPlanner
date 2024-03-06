@@ -30,9 +30,9 @@ describe('Landing Page', () => {
             </Router>
         </UserContext.Provider>)
         const links = await renderedLanding.findAllByRole('link')
-        const taskLinkTitle = await renderedLanding.findByText('Basic Task Planner')
-        const collectionsLinkTitle = await renderedLanding.findByText('Task Collections')
-        const groupsLinkTitle = await renderedLanding.findByText('Groups')
+        const taskLinkTitle = await renderedLanding.findByLabelText('Basic Task Planner')
+        const collectionsLinkTitle = await renderedLanding.findByLabelText('Task Collections')
+        const groupsLinkTitle = await renderedLanding.findByLabelText('Groups')
 
         expect(taskLinkTitle).toBeInTheDocument()
         expect(collectionsLinkTitle).toBeInTheDocument()
@@ -51,7 +51,7 @@ describe('Landing Page', () => {
             </UserContext.Provider>
             );
     
-        const taskLink = await renderedLanding.findByText('Basic Task Planner');
+        const taskLink = await renderedLanding.findByLabelText('Basic Task Planner');
     
         await act(async () => {
             await user.click(taskLink);
@@ -75,7 +75,7 @@ describe('Landing Page', () => {
             </UserContext.Provider>
             );
     
-        const collectionsLink = await renderedLanding.findByText('Task Collections');
+        const collectionsLink = await renderedLanding.findByLabelText('Task Collections');
     
         await act(async () => {
             await user.click(collectionsLink);
@@ -98,7 +98,7 @@ describe('Landing Page', () => {
             </UserContext.Provider>
             );
     
-        const groupsLink = await renderedLanding.findByText('Groups');
+        const groupsLink = await renderedLanding.findByLabelText('Groups');
     
         await act(async () => {
             await user.click(groupsLink);
