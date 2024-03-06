@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { render, cleanup, act } from '@testing-library/react'
+import { render, act } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { Landing } from '../pages/landing'
 import { UserContext } from '../App'
@@ -29,11 +29,13 @@ describe('Landing Page', () => {
                 <Landing/>
             </Router>
         </UserContext.Provider>)
+        const header = await renderedLanding.findByLabelText("Task Planner-Header")
         const links = await renderedLanding.findAllByRole('link')
         const taskLinkTitle = await renderedLanding.findByLabelText('Basic Task Planner')
         const collectionsLinkTitle = await renderedLanding.findByLabelText('Task Collections')
         const groupsLinkTitle = await renderedLanding.findByLabelText('Groups')
 
+        expect(header).toBeInTheDocument()
         expect(taskLinkTitle).toBeInTheDocument()
         expect(collectionsLinkTitle).toBeInTheDocument()
         expect(groupsLinkTitle).toBeInTheDocument()

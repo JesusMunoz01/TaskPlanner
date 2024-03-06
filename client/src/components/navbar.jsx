@@ -4,6 +4,7 @@ import { BsList } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
+import { setActiveLink } from '../utils/utils';
 
 export const Navbar = ({loginStatus}) => {
     const [cookies, setCookie, removeCookie] = useCookies(["access_token"]);
@@ -23,16 +24,8 @@ export const Navbar = ({loginStatus}) => {
 
     const changeActive = (target) => {
         setActive(target)
-        window.sessionStorage.setItem("selectedRoute", target)
-        const links = document.getElementById("links").children;
         const menu = document.getElementById("menu");
-        for(const element of links) {
-            if(element.children[0].id === target)
-                element.children[0].className = "navbar active";
-            else
-                element.children[0].className = "";
-        };
-
+        setActiveLink(target);
         menu.checked = false;
     }
 

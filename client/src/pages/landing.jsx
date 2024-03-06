@@ -3,6 +3,7 @@ import "../css/landing.css"
 //import checkList from "../assets/checkList.png"
 import { Link } from "react-router-dom"
 import { Header } from "../components/header";
+import { setActiveLink } from "../utils/utils";
 const pages = [
     {route: "/tasks", name: "Basic Task Planner", img: "src/assets/checkList.png", imgSmall: "src/assets/checkListSmall.png", 
         description: "A Basic task planner for keeping track of tasks"
@@ -20,23 +21,16 @@ export const Landing = () => {
     const size = window.matchMedia("(max-width: 800px)");
     size.addEventListener("change", (e) => {setSize(e.matches)})
 
-    const setActiveLink = (route) => {
+    const setLink = (route) => {
         const target = route.split("/")[1];
         const capitalize = target.charAt(0).toUpperCase() + target.slice(1);
-        window.sessionStorage.setItem("selectedRoute", capitalize)
-        const links = document.getElementById("links").children;
-        for(const element of links) {
-            if(element.children[0].id === capitalize)
-                element.children[0].className = "navbar active";
-            else
-                element.children[0].className = "";
-        };
+        setActiveLink(capitalize);
     }
     
     return <div className="landingPage">
         <Header title="Task Planner"/>
         {pages.map((page, index) => (
-            <Link key={index} to={page.route} className="landingPage-Link" onClick={() => setActiveLink(`${page.route}`)}>
+            <Link key={index} to={page.route} className="landingPage-Link" onClick={() => setLink(`${page.route}`)}>
                 <div className="landingPage-Card">
                     <div className="landingPageContent">
                         <h1 aria-label={`${page.name}`}>{page.name}</h1>
