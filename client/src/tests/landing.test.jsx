@@ -59,14 +59,33 @@ describe('Landing Page', () => {
 
         const taskRoute = window.sessionStorage.getItem("selectedRoute")
         const route = window.location.pathname
-        
+
         expect(route).toEqual('/tasks')
         expect(taskRoute).toEqual('Tasks')
 
     })
 
-    test.skip('Testing Collections Link', async () => {
-            
+    test('Testing Collections Link', async () => {
+        const renderedLanding = render(
+            <UserContext.Provider value={{}}>
+                <Router>
+                    <Navbar/>
+                    <Landing/>
+                </Router>
+            </UserContext.Provider>
+            );
+    
+        const collectionsLink = await renderedLanding.findByText('Task Collections');
+    
+        await act(async () => {
+            await user.click(collectionsLink);
+        });
+
+        const collectionsRoute = window.sessionStorage.getItem("selectedRoute")
+        const route = window.location.pathname
+
+        expect(route).toEqual('/collections')
+        expect(collectionsRoute).toEqual('Collections')
     })
 
     test.skip('Testing Groups Link', async () => {
