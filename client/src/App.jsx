@@ -39,8 +39,11 @@ function App() {
   }
 
   useEffect(() => {
-    if(!window.sessionStorage.getItem("selectedRoute"))
-      window.sessionStorage.setItem("selectedRoute", "Home")
+    const selectedRoute = window.sessionStorage.getItem("selectedRoute");
+    const validRoutes = ["Login", "Home", "Collections", "Groups"];
+    if (!selectedRoute || !validRoutes.includes(selectedRoute)) {
+        window.sessionStorage.setItem("selectedRoute", "Home");
+    }
     if(!logExpired.access_token){
       window.localStorage.removeItem("userId");}
     console.log("...calling effect");

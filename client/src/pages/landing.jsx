@@ -4,7 +4,7 @@ import "../css/landing.css"
 import { Link } from "react-router-dom"
 import { Header } from "../components/header";
 const pages = [
-    {route: "/", name: "Basic Task Planner", img: "src/assets/checkList.png", imgSmall: "src/assets/checkListSmall.png", 
+    {route: "/tasks", name: "Basic Task Planner", img: "src/assets/checkList.png", imgSmall: "src/assets/checkListSmall.png", 
         description: "A Basic task planner for keeping track of tasks"
     }, 
     {route: "/collections", name: "Task Collections", img: "src/assets/collections.png", imgSmall: "src/assets/collectionsSmall.png", 
@@ -19,11 +19,23 @@ export const Landing = () => {
     const [isLarge, setSize] = useState(false);
     const size = window.matchMedia("(max-width: 800px)");
     size.addEventListener("change", (e) => {setSize(e.matches)})
+
+    const setActiveLink = (route) => {
+        const target = route.split("/")[1];
+        window.sessionStorage.setItem("selectedRoute", target)
+        const links = document.getElementById("links").children;
+        for(const element of links) {
+            if(element.children[0].id === target)
+                element.children[0].className = "navbar active";
+            else
+                element.children[0].className = "";
+        };
+    }
     
     return <div className="landingPage">
         <Header title="Task Planner"/>
         {pages.map((page, index) => (
-            <Link to={page.route} className="landingPage-Link">
+            <Link to={page.route} className="landingPage-Link" onClick={() => setActiveLink(`${page.route}`)}>
                 <div className="landingPage-Card">
                     <div class="landingPageContent">
                         <h1 aria-label={`${page.name}`}>{page.name}</h1>

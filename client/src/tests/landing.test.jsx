@@ -48,7 +48,7 @@ describe('Landing Page', () => {
         </UserContext.Provider>)
         const taskLink = await renderedLanding.findByText('Basic Task Planner')
         user.click(taskLink)
-        expect(window.location.pathname).toEqual('/')
+        expect(window.location.pathname).toEqual('/tasks')
     })
 
     test.skip('Testing Collections Link', async () => {
