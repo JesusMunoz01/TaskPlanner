@@ -5,8 +5,18 @@ import { Landing } from '../pages/landing'
 
 describe('Landing Page', () => {
 
-    test.skip('Testing component display', async () => {
-        
+    test('Testing component display', async () => {
+        const renderedLanding = render(<Landing />)
+        const links = await renderedLanding.findAllByRole('link')
+        const taskLinkTitle = await renderedLanding.findByText('Basic Task Planner')
+        const collectionsLinkTitle = await renderedLanding.findByText('Task Collections')
+        const groupsLinkTitle = await renderedLanding.findByText('Groups')
+
+        expect(taskLinkTitle).toBeInTheDocument()
+        expect(collectionsLinkTitle).toBeInTheDocument()
+        expect(groupsLinkTitle).toBeInTheDocument()
+        expect(links.length).toEqual(3)
+
     })
 
     test.skip('Testing Tasks Link', async () => {

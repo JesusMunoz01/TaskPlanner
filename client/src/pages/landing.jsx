@@ -26,7 +26,7 @@ export const Landing = () => {
             <Link to={page.route} className="landingPage-Link">
                 <div className="landingPage-Card">
                     <div class="landingPageContent">
-                        <h1>{page.name}</h1>
+                        <h1 aria-label={`${page.name}`}>{page.name}</h1>
                         <p>{page.description}</p>
                     </div>
                     <div class="landingPageImage">
