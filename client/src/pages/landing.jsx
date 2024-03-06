@@ -3,8 +3,9 @@ import "../css/landing.css"
 //import checkList from "../assets/checkList.png"
 import { Link } from "react-router-dom"
 import { Header } from "../components/header";
+import { setActiveLink } from "../utils/utils";
 const pages = [
-    {route: "/", name: "Basic Task Planner", img: "src/assets/checkList.png", imgSmall: "src/assets/checkListSmall.png", 
+    {route: "/tasks", name: "Basic Task Planner", img: "src/assets/checkList.png", imgSmall: "src/assets/checkListSmall.png", 
         description: "A Basic task planner for keeping track of tasks"
     }, 
     {route: "/collections", name: "Task Collections", img: "src/assets/collections.png", imgSmall: "src/assets/collectionsSmall.png", 
@@ -19,17 +20,23 @@ export const Landing = () => {
     const [isLarge, setSize] = useState(false);
     const size = window.matchMedia("(max-width: 800px)");
     size.addEventListener("change", (e) => {setSize(e.matches)})
+
+    const setLink = (route) => {
+        const target = route.split("/")[1];
+        const capitalize = target.charAt(0).toUpperCase() + target.slice(1);
+        setActiveLink(capitalize);
+    }
     
     return <div className="landingPage">
         <Header title="Task Planner"/>
         {pages.map((page, index) => (
-            <Link to={page.route} className="landingPage-Link">
+            <Link key={index} to={page.route} className="landingPage-Link" onClick={() => setLink(`${page.route}`)}>
                 <div className="landingPage-Card">
-                    <div class="landingPageContent">
-                        <h1>{page.name}</h1>
+                    <div className="landingPageContent">
+                        <h1 aria-label={`${page.name}`}>{page.name}</h1>
                         <p>{page.description}</p>
                     </div>
-                    <div class="landingPageImage">
+                    <div className="landingPageImage">
                         {isLarge ?
                         <img id={`img${index}`} src={page.imgSmall}></img> :
                         <img id={`img${index}`} src={page.img}></img>
